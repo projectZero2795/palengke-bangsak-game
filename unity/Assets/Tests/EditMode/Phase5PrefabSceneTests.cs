@@ -21,15 +21,19 @@ public sealed class Phase5PrefabSceneTests
         var serialized = new SerializedObject(controller);
         var serializedHud = new SerializedObject(hud);
 
-        Assert.That(serialized.FindProperty("visualStyle").enumValueIndex, Is.EqualTo((int)BangActionVisualStyle.CartoonLightBeam));
+        Assert.That(serialized.FindProperty("visualStyle").enumValueIndex, Is.EqualTo((int)BangActionVisualStyle.TsinelasMarker));
         Assert.That(serialized.FindProperty("bangMarkerSprite").objectReferenceValue, Is.Not.Null);
         Assert.That(serialized.FindProperty("rangeIndicatorSprite").objectReferenceValue, Is.Not.Null);
+        Assert.That(serialized.FindProperty("impactSprite").objectReferenceValue, Is.Not.Null);
         Assert.That(serialized.FindProperty("cooldownSeconds").floatValue, Is.GreaterThan(0f));
+        Assert.That(serialized.FindProperty("effectDurationSeconds").floatValue, Is.GreaterThanOrEqualTo(0.5f));
         Assert.That(serialized.FindProperty("range").floatValue, Is.GreaterThan(0f));
-        Assert.That(serializedHud.FindProperty("buttonSize").vector2Value.x, Is.LessThanOrEqualTo(96f));
-        Assert.That(serializedHud.FindProperty("buttonSize").vector2Value.y, Is.LessThanOrEqualTo(96f));
+        Assert.That(serializedHud.FindProperty("buttonSize").vector2Value.x, Is.LessThanOrEqualTo(80f));
+        Assert.That(serializedHud.FindProperty("buttonSize").vector2Value.y, Is.LessThanOrEqualTo(80f));
         Assert.That(serializedHud.FindProperty("buttonOffset").vector2Value.x, Is.LessThan(0f));
         Assert.That(serializedHud.FindProperty("buttonOffset").vector2Value.y, Is.GreaterThan(0f));
+        Assert.That(serializedHud.FindProperty("buttonBackgroundSprite").objectReferenceValue, Is.Not.Null);
+        Assert.That(serializedHud.FindProperty("buttonIconSprite").objectReferenceValue, Is.Not.Null);
     }
 
     [Test]

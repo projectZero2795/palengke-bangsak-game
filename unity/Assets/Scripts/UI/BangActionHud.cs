@@ -10,16 +10,24 @@ namespace Palengke.BangSak.UI
         private BangActionController controller;
 
         [SerializeField]
-        private string buttonLabel = "BANG!";
+        private string buttonLabel = "";
 
         [SerializeField]
-        private Vector2 buttonSize = new Vector2(88f, 88f);
+        private Vector2 buttonSize = new Vector2(72f, 72f);
 
         [SerializeField]
         private Vector2 buttonOffset = new Vector2(-24f, 24f);
 
+        [SerializeField]
+        private Sprite buttonBackgroundSprite = null;
+
+        [SerializeField]
+        private Sprite buttonIconSprite = null;
+
         private GameObject hudRoot;
         private Button button;
+        private Image buttonImage;
+        private Image iconImage;
         private Text label;
 
         private void Start()
@@ -70,12 +78,28 @@ namespace Palengke.BangSak.UI
             rect.sizeDelta = buttonSize;
             rect.anchoredPosition = buttonOffset;
 
-            var image = buttonObject.AddComponent<Image>();
-            image.color = new Color(0.86f, 0.22f, 0.18f, 0.92f);
+            buttonImage = buttonObject.AddComponent<Image>();
+            buttonImage.sprite = buttonBackgroundSprite;
+            buttonImage.color = buttonBackgroundSprite != null ? Color.white : new Color(0.11f, 0.14f, 0.2f, 0.96f);
+            buttonImage.preserveAspect = true;
 
             button = buttonObject.AddComponent<Button>();
-            button.targetGraphic = image;
+            button.targetGraphic = buttonImage;
             button.onClick.AddListener(OnBangClicked);
+
+            var iconObject = new GameObject("Bang Button Tsinelas Icon");
+            iconObject.transform.SetParent(buttonObject.transform, false);
+
+            var iconRect = iconObject.AddComponent<RectTransform>();
+            iconRect.anchorMin = new Vector2(0.16f, 0.16f);
+            iconRect.anchorMax = new Vector2(0.84f, 0.84f);
+            iconRect.offsetMin = Vector2.zero;
+            iconRect.offsetMax = Vector2.zero;
+
+            iconImage = iconObject.AddComponent<Image>();
+            iconImage.sprite = buttonIconSprite;
+            iconImage.preserveAspect = true;
+            iconImage.raycastTarget = false;
 
             var textObject = new GameObject("Bang Button Label");
             textObject.transform.SetParent(buttonObject.transform, false);
@@ -97,6 +121,7 @@ namespace Palengke.BangSak.UI
             label.resizeTextMinSize = 12;
             label.resizeTextMaxSize = 20;
             label.color = Color.white;
+            label.raycastTarget = false;
         }
 
         private void OnDestroy()
@@ -125,6 +150,16 @@ namespace Palengke.BangSak.UI
             var now = Time.time;
             var canBang = controller.CanBang(now);
             button.interactable = canBang;
+
+            if (iconImage != null)
+            {
+                iconImage.enabled = canBang && buttonIconSprite != null;
+            }
+
+            if (buttonImage != null)
+            {
+                buttonImage.color = canBang ? Color.white : new Color(0.74f, 0.78f, 0.86f, 0.82f);
+            }
 
             if (label != null)
             {

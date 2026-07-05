@@ -32,7 +32,18 @@ RED = rgba("#d62828")
 BLUE = rgba("#4dabf7")
 WHITE = rgba("#fff7d6")
 INK = rgba("#1b2430")
-RANGE = rgba("#ffd166", 84)
+RANGE = rgba("#ef4444", 74)
+RANGE_EDGE = rgba("#fb8a7e", 170)
+GOLD = rgba("#ffd166")
+BROWN = rgba("#5b2f1c")
+DARK_BROWN = rgba("#2b1710")
+SANDAL_SOLE = rgba("#e28e4e")
+SANDAL_FOOTBED = rgba("#f7b76a")
+SANDAL_STRAP = rgba("#cd3034")
+SANDAL_STRAP_DARK = rgba("#6f171c")
+BUTTON_DARK = rgba("#1c2433")
+BUTTON_TOP = rgba("#3c4b66")
+BUTTON_RING = rgba("#ffd45a")
 TRANSPARENT = (0, 0, 0, 0)
 
 
@@ -323,45 +334,116 @@ DefaultImporter:
     )
 
 
-def draw_bang_marker() -> bytes:
+def draw_tsinelas_marker() -> bytes:
     c = Canvas()
-    points = []
-    for index in range(24):
-        angle = -math.pi / 2 + index * math.tau / 24
-        radius = 28 if index % 2 == 0 else 18
-        points.append((32 + math.cos(angle) * radius, 32 + math.sin(angle) * radius))
-    c.polygon(points, ORANGE)
-    inner = []
-    for index in range(20):
-        angle = -math.pi / 2 + index * math.tau / 20
-        radius = 22 if index % 2 == 0 else 15
-        inner.append((32 + math.cos(angle) * radius, 32 + math.sin(angle) * radius))
-    c.polygon(inner, YELLOW)
-    c.ellipse(32, 32, 13, 10, WHITE)
-    c.line(21, 32, 43, 32, 2.4, INK)
-    c.line(21, 26, 21, 38, 2.0, INK)
-    c.line(30, 25, 30, 39, 2.0, INK)
-    c.line(39, 26, 43, 38, 1.8, INK)
-    c.line(43, 26, 39, 38, 1.8, INK)
-    c.line(47, 23, 51, 35, 1.8, RED)
-    c.ellipse(52, 40, 2.2, 2.2, RED)
+    # The marker points to the right at zero rotation. The controller rotates it
+    # to match the player's facing direction.
+    c.ellipse(30, 40, 24, 8, (0, 0, 0, 42))
+    outer = [
+        (7, 34),
+        (11, 25),
+        (20, 18),
+        (37, 14),
+        (53, 21),
+        (58, 33),
+        (51, 44),
+        (33, 51),
+        (16, 47),
+    ]
+    c.polygon(outer, DARK_BROWN)
+    rim = [
+        (9, 34),
+        (13, 27),
+        (21, 20),
+        (37, 17),
+        (51, 23),
+        (55, 33),
+        (49, 42),
+        (33, 48),
+        (18, 45),
+    ]
+    c.polygon(rim, SANDAL_SOLE)
+    footbed = [
+        (14, 34),
+        (18, 28),
+        (25, 24),
+        (38, 22),
+        (48, 26),
+        (51, 33),
+        (46, 39),
+        (33, 43),
+        (22, 41),
+    ]
+    c.polygon(footbed, SANDAL_FOOTBED)
+    for x, y in ((22, 38), (29, 41), (39, 39), (47, 33), (25, 27), (38, 24)):
+        c.ellipse(x, y, 1.1, 1.1, (87, 45, 24, 96))
+    toe = (39, 33)
+    c.line(23, 25, toe[0], toe[1], 2.2, SANDAL_STRAP_DARK)
+    c.line(toe[0], toe[1], 28, 43, 2.2, SANDAL_STRAP_DARK)
+    c.line(toe[0], toe[1], 49, 28, 2.2, SANDAL_STRAP_DARK)
+    c.line(23, 25, toe[0], toe[1], 1.45, SANDAL_STRAP)
+    c.line(toe[0], toe[1], 28, 43, 1.45, SANDAL_STRAP)
+    c.line(toe[0], toe[1], 49, 28, 1.45, SANDAL_STRAP)
+    c.ellipse(toe[0], toe[1], 3.1, 3.1, SANDAL_STRAP_DARK)
+    c.ellipse(toe[0], toe[1], 1.25, 1.25, GOLD)
     return c.downsample()
 
 
-def draw_range_ring() -> bytes:
+def draw_range_cone() -> bytes:
     c = Canvas()
-    c.ellipse(32, 32, 28, 28, (255, 209, 102, 24))
-    c.ring(32, 32, 28, 2.5, RANGE)
-    c.ring(32, 32, 18, 1.2, (77, 171, 247, 68))
-    for angle in (0, math.pi / 2, math.pi, math.pi * 3 / 2):
+    # Cone points up at zero rotation. The controller rotates it to the
+    # player's facing direction and scales it to the configured range.
+    arc = []
+    radius = 30
+    for index in range(25):
+        angle = math.radians(-90 - 36 + index * 72 / 24)
+        arc.append((32 + math.cos(angle) * radius, 32 + math.sin(angle) * radius))
+    cone = [(32, 32)] + arc
+    c.polygon(cone, RANGE)
+    c.line(32, 32, arc[0][0], arc[0][1], 0.7, RANGE_EDGE)
+    c.line(32, 32, arc[-1][0], arc[-1][1], 0.7, RANGE_EDGE)
+    for index in range(len(arc) - 1):
+        c.line(arc[index][0], arc[index][1], arc[index + 1][0], arc[index + 1][1], 0.55, RANGE_EDGE)
+    c.ring(32, 32, 8, 0.8, rgba("#ffd166", 110))
+    return c.downsample()
+
+
+def draw_impact_burst() -> bytes:
+    c = Canvas()
+    points = []
+    for index in range(22):
+        angle = -math.pi / 2 + index * math.tau / 22
+        radius = 25 if index % 2 == 0 else 12
+        points.append((32 + math.cos(angle) * radius, 32 + math.sin(angle) * radius))
+    c.polygon(points, rgba("#ffd54a", 220))
+    inner = []
+    for index in range(18):
+        angle = -math.pi / 2 + index * math.tau / 18
+        radius = 15 if index % 2 == 0 else 8
+        inner.append((32 + math.cos(angle) * radius, 32 + math.sin(angle) * radius))
+    c.polygon(inner, rgba("#ff7a3d", 220))
+    c.ring(32, 32, 28, 2.0, rgba("#ffe58a", 135))
+    for angle in range(0, 360, 45):
+        radians = math.radians(angle)
         c.line(
-            32 + math.cos(angle) * 22,
-            32 + math.sin(angle) * 22,
-            32 + math.cos(angle) * 28,
-            32 + math.sin(angle) * 28,
-            1.1,
-            BLUE,
+            32 + math.cos(radians) * 10,
+            32 + math.sin(radians) * 10,
+            32 + math.cos(radians) * 28,
+            32 + math.sin(radians) * 28,
+            0.9,
+            rgba("#fff0a8", 160),
         )
+    return c.downsample()
+
+
+def draw_button_background() -> bytes:
+    c = Canvas()
+    c.ellipse(34, 36, 27, 27, (0, 0, 0, 92))
+    c.ellipse(32, 32, 29, 29, DARK_BROWN)
+    c.ring(32, 32, 29, 3.0, BUTTON_RING)
+    c.ellipse(32, 32, 23, 23, BUTTON_DARK)
+    c.ellipse(32, 24, 20, 13, BUTTON_TOP)
+    c.ring(32, 32, 23, 1.2, rgba("#ffffff", 42))
     return c.downsample()
 
 
@@ -370,8 +452,10 @@ def main() -> None:
     write_folder_meta(OUT_DIR)
 
     for name, image in {
-        "bang_marker_placeholder.png": draw_bang_marker(),
-        "bang_range_placeholder.png": draw_range_ring(),
+        "bang_marker_placeholder.png": draw_tsinelas_marker(),
+        "bang_range_placeholder.png": draw_range_cone(),
+        "bang_impact_placeholder.png": draw_impact_burst(),
+        "bang_button_dark_placeholder.png": draw_button_background(),
     }.items():
         path = OUT_DIR / name
         write_png(path, SIZE, SIZE, image)

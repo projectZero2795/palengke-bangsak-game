@@ -26,9 +26,9 @@ public sealed class BangActionControllerTests
     }
 
     [Test]
-    public void DefaultVisualStyle_IsSafeCartoonLightBeam()
+    public void DefaultVisualStyle_IsSafeTsinelasMarker()
     {
-        Assert.That(controller.VisualStyle, Is.EqualTo(BangActionVisualStyle.CartoonLightBeam));
+        Assert.That(controller.VisualStyle, Is.EqualTo(BangActionVisualStyle.TsinelasMarker));
     }
 
     [Test]
@@ -70,6 +70,14 @@ public sealed class BangActionControllerTests
 
         Assert.That(position.x, Is.EqualTo(origin.x + controller.MarkerDistance).Within(0.001f));
         Assert.That(position.y, Is.EqualTo(origin.y).Within(0.001f));
+    }
+
+    [Test]
+    public void GetRangeConeRotationZ_AlignsUpPointingConeWithFacingDirection()
+    {
+        Assert.That(controller.GetRangeConeRotationZ(PlayerFacingDirection.Up), Is.EqualTo(0f).Within(0.001f));
+        Assert.That(controller.GetRangeConeRotationZ(PlayerFacingDirection.Right), Is.EqualTo(-90f).Within(0.001f));
+        Assert.That(controller.GetRangeConeRotationZ(PlayerFacingDirection.Down), Is.EqualTo(-180f).Within(0.001f));
     }
 
     [Test]

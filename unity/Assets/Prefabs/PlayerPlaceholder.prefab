@@ -245,14 +245,18 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   animationController: {fileID: 6493258612035774221}
-  visualStyle: 2
+  visualStyle: 3
   bangMarkerSprite: {fileID: 21300000, guid: 5431fe616a2b573ea524c0f356db2e1a, type: 3}
   rangeIndicatorSprite: {fileID: 21300000, guid: 4aeb57a3b8e15b2397cc760984630bed, type: 3}
+  impactSprite: {fileID: 21300000, guid: a0ac8872ccb55137ba4e4ca817cf7172, type: 3}
   cooldownSeconds: 1.25
-  effectDurationSeconds: 0.35
+  effectDurationSeconds: 0.55
   range: 2.25
   markerDistance: 0.95
   showRangeIndicator: 1
+  arcHeight: 0.22
+  spinDegrees: 540
+  impactStartsAt: 0.72
 --- !u!114 &8313899227323467395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,6 +270,8 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   controller: {fileID: 5390065306357427573}
-  buttonLabel: BANG!
-  buttonSize: {x: 88, y: 88}
+  buttonLabel:
+  buttonSize: {x: 72, y: 72}
   buttonOffset: {x: -24, y: 24}
+  buttonBackgroundSprite: {fileID: 21300000, guid: 9910ba0894c35f85baed617490ef017a, type: 3}
+  buttonIconSprite: {fileID: 21300000, guid: 5431fe616a2b573ea524c0f356db2e1a, type: 3}
