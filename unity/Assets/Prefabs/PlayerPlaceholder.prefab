@@ -13,10 +13,13 @@ GameObject:
   - component: {fileID: 8163625992867164959}
   - component: {fileID: 8104555450261690452}
   - component: {fileID: 2601120000000000001}
+  - component: {fileID: 2701120000000000001}
   - component: {fileID: 3034037593118062986}
   - component: {fileID: 6493258612035774221}
   - component: {fileID: 5390065306357427573}
   - component: {fileID: 8313899227323467395}
+  - component: {fileID: 2701130000000000001}
+  - component: {fileID: 2701140000000000001}
   m_Layer: 0
   m_Name: PlayerPlaceholder
   m_TagString: Untagged
@@ -168,6 +171,21 @@ MonoBehaviour:
   spriteRenderer: {fileID: 8786889567334867629}
   hitFlashColor: {r: 0.65, g: 1, b: 0.55, a: 1}
   hitFlashSeconds: 0.18
+--- !u!114 &2701120000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664006932156598595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f76cb2847c1498ea0d71f6f99871b76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 8786889567334867629}
+  tagFlashColor: {r: 0.42, g: 0.92, b: 1, a: 1}
+  tagFlashSeconds: 0.18
 --- !u!114 &3034037593118062986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,3 +309,47 @@ MonoBehaviour:
   buttonOffset: {x: -24, y: 24}
   buttonBackgroundSprite: {fileID: 21300000, guid: 9910ba0894c35f85baed617490ef017a, type: 3}
   buttonIconSprite: {fileID: 21300000, guid: 5431fe616a2b573ea524c0f356db2e1a, type: 3}
+--- !u!114 &2701130000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664006932156598595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52f9ec9ed1ce48cda2a67bf32671a065, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  animationController: {fileID: 6493258612035774221}
+  tagFeedbackSprite: {fileID: 21300000, guid: a0ac8872ccb55137ba4e4ca817cf7172, type: 3}
+  cooldownSeconds: 0.8
+  effectDurationSeconds: 0.22
+  enableTagDetection: 1
+  blockTagWithSolidColliders: 1
+  tagDetectionLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  tagRange: 0.82
+  tagRadius: 0.32
+  tagStartOffset: 0.16
+  hitFeedbackColor: {r: 0.42, g: 0.92, b: 1, a: 1}
+  missFeedbackColor: {r: 1, g: 0.82, b: 0.42, a: 1}
+  blockedFeedbackColor: {r: 0.82, g: 0.88, b: 1, a: 1}
+--- !u!114 &2701140000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664006932156598595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9fcbf9a50b5489384ae1975e6c9dbfb, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  controller: {fileID: 2701130000000000001}
+  buttonLabel: TAG
+  buttonSize: {x: 64, y: 64}
+  buttonOffset: {x: -104, y: 24}
+  buttonBackgroundSprite: {fileID: 21300000, guid: 9910ba0894c35f85baed617490ef017a, type: 3}
