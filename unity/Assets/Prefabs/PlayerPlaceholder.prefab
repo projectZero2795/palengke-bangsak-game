@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8163625992867164959}
   - component: {fileID: 8104555450261690452}
   - component: {fileID: 3034037593118062986}
+  - component: {fileID: 6493258612035774221}
   m_Layer: 0
   m_Name: PlayerPlaceholder
   m_TagString: Untagged
@@ -159,7 +160,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7cdd11d209f84daabd71675baacf494, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   movementSpeed: 4
   readKeyboardInput: 1
+--- !u!114 &6493258612035774221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664006932156598595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e54aeda7868a48b8b34b93d873ce7c12, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 8786889567334867629}
+  movementController: {fileID: 3034037593118062986}
+  idleSprite: {fileID: 21300000, guid: 7c939c3d4f2a24f7396e4c73011ed818, type: 3}
+  walkSprites:
+  - {fileID: 21300000, guid: 7ae6dcfff72e742849098f3bbb399d6f, type: 3}
+  - {fileID: 21300000, guid: 6a551f84fe47540c8bf196b679cefb69, type: 3}
+  - {fileID: 21300000, guid: 14aaf3a5f874448bc901e9965ce07d79, type: 3}
+  - {fileID: 21300000, guid: 2e2c64f7426754c71afa32242e571727, type: 3}
+  framesPerSecond: 8
+  walkingInputThreshold: 0.01
+  flipHorizontally: 1
