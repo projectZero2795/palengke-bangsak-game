@@ -54,11 +54,18 @@ Phase 1 review found repeated Unity editor errors from `com.unity.inputsystem@1.
 
 If we need the newer Input System later, it should be reintroduced deliberately in a small reviewed phase with editor validation.
 
+The project explicitly sets Unity input handling to **Both** so Unity's legacy `Input` API remains available even if an editor remembers or imports newer Input System preferences. If the Console shows:
+
+`You are trying to read Input using the UnityEngine.Input class...`
+
+pull the latest repo and restart Unity so it reloads `ProjectSettings/ProjectSettings.asset`.
+
 ## Automated checks completed
 
 - Unity 2022.3.50f1 imported the project successfully.
 - EditMode tests passed: `7/7`.
-- Confirmed no `com.unity.inputsystem` dependency in `Packages` or `ProjectSettings`.
+- Confirmed no `com.unity.inputsystem` dependency in `Packages`.
+- Confirmed project input handling is set to `Both` for Phase 3 compatibility.
 - Confirmed the default prefab has movement physics components.
 - Confirmed `PrototypeMap` contains movement walls and mobile joystick placeholder.
 
