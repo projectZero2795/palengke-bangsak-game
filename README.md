@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 7: Close tag action**, ready for local safe close-range Tag review.
+This repository is currently in **Phase 8: Caught state**, ready for local caught-state review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -24,7 +24,9 @@ Phase 5 added the approved safe Bang action design: a compact circular tsinelas 
 
 Phase 6 added local Bang hit detection with safe feedback: range-limited circle-cast detection, wall blocking, hit/miss/block result tracking, target hit flash, and hittable practice-player prefabs.
 
-Phase 7 adds the harmless close-range Tag / Close Tap alternative: short-range detection, wall blocking, cooldown, TAG button, and friendly tag-hit flash feedback. Caught state, gameplay rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 7 added the harmless close-range Tag / Close Tap alternative: short-range detection, wall blocking, cooldown, TAG button, and friendly tag-hit flash feedback.
+
+Phase 8 adds local caught-state behavior for Bang and Tag hits: targets become caught, show a playful caught indicator, caught players lose movement/action controls until reset, and the prototype `Hiders Left` counter updates. Full role rules, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
 
 ## Safety and branding rules
 
@@ -82,3 +84,4 @@ Do not skip ahead.
 - [Phase 5 test notes](docs/phase-5-test.md)
 - [Phase 6 test notes](docs/phase-6-test.md)
 - [Phase 7 test notes](docs/phase-7-test.md)
+- [Phase 8 test notes](docs/phase-8-test.md)

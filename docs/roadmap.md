@@ -11,8 +11,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 4 | Player animation | Idle/walk animations and direction-facing. | Done. |
 | 5 | Bang action design | Safe animated tsinelas marker/effect, compact circular button, cooldown, forward-cone range indicator. | Done. |
 | 6 | Bang projectile / hit physics | Projectile/raycast hit detection and feedback. | Done. |
-| 7 | Close tag action | Harmless close-range Tag/Close Tap mechanic. | Ready for local close-tag review. |
-| 8 | Caught state | isCaught state, animation, HUD indicator. | Caught state reliable. |
+| 7 | Close tag action | Harmless close-range Tag/Close Tap mechanic. | Done. |
+| 8 | Caught state | isCaught state, animation, HUD indicator. | Ready for local caught-state review. |
 | 9 | Soil / ground tiles | Soil, road, grass, concrete tilemap. | Basic map floor ready. |
 | 10 | Trees and natural objects | Trees, bushes, plants, collision/occlusion. | Natural obstacles work. |
 | 11 | Houses | Houses, fences, gates, wall collisions. | Residential area works. |

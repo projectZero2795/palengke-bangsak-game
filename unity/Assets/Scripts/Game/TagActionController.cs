@@ -123,6 +123,11 @@ namespace Palengke.BangSak.Game
 
         public bool CanTag(float now)
         {
+            if (!isActiveAndEnabled)
+            {
+                return false;
+            }
+
             return CooldownRemaining(now) <= 0f;
         }
 

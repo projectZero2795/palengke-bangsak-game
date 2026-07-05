@@ -14,12 +14,14 @@ GameObject:
   - component: {fileID: 8104555450261690452}
   - component: {fileID: 2601120000000000001}
   - component: {fileID: 2701120000000000001}
+  - component: {fileID: 2801120000000000001}
   - component: {fileID: 3034037593118062986}
   - component: {fileID: 6493258612035774221}
   - component: {fileID: 5390065306357427573}
   - component: {fileID: 8313899227323467395}
   - component: {fileID: 2701130000000000001}
   - component: {fileID: 2701140000000000001}
+  - component: {fileID: 2801130000000000001}
   m_Layer: 0
   m_Name: PlayerPlaceholder
   m_TagString: Untagged
@@ -171,6 +173,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 8786889567334867629}
   hitFlashColor: {r: 0.65, g: 1, b: 0.55, a: 1}
   hitFlashSeconds: 0.18
+  caughtStateController: {fileID: 2801120000000000001}
 --- !u!114 &2701120000000000001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,6 +189,31 @@ MonoBehaviour:
   spriteRenderer: {fileID: 8786889567334867629}
   tagFlashColor: {r: 0.42, g: 0.92, b: 1, a: 1}
   tagFlashSeconds: 0.18
+  caughtStateController: {fileID: 2801120000000000001}
+--- !u!114 &2801120000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664006932156598595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a65e20f2d0db4b56ae13d01fd2e2a801, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 8786889567334867629}
+  movementController: {fileID: 3034037593118062986}
+  bangActionController: {fileID: 5390065306357427573}
+  tagActionController: {fileID: 2701130000000000001}
+  countAsHider: 0
+  disableMovementWhenCaught: 1
+  disableActionsWhenCaught: 1
+  caughtTint: {r: 1, g: 0.66, b: 0.35, a: 1}
+  caughtPulseTint: {r: 1, g: 0.94, b: 0.52, a: 1}
+  pulseSpeed: 7
+  indicatorText: CAUGHT
+  indicatorOffset: {x: 0, y: 0.58, z: 0}
 --- !u!114 &3034037593118062986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,3 +381,19 @@ MonoBehaviour:
   buttonSize: {x: 64, y: 64}
   buttonOffset: {x: -104, y: 24}
   buttonBackgroundSprite: {fileID: 21300000, guid: 9910ba0894c35f85baed617490ef017a, type: 3}
+--- !u!114 &2801130000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664006932156598595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46e0e3a8b134df8b5c8f0a975a4e208, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  labelPrefix: Hiders Left
+  labelSize: {x: 138, y: 58}
+  labelOffset: {x: -18, y: -18}
+  refreshIntervalSeconds: 0.2

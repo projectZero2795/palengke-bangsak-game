@@ -164,6 +164,11 @@ namespace Palengke.BangSak.Game
 
         public bool CanBang(float now)
         {
+            if (!isActiveAndEnabled)
+            {
+                return false;
+            }
+
             return CooldownRemaining(now) <= 0f;
         }
 
@@ -258,7 +263,7 @@ namespace Palengke.BangSak.Game
                 return BangHitResult.Miss(castOrigin, missPoint, directionVector, range, sequenceId);
             }
 
-            System.Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
+            System.Array.Sort(hits, CompareHitsByDistanceAndBlockPriority);
 
             foreach (var hit in hits)
             {
@@ -449,6 +454,37 @@ namespace Palengke.BangSak.Game
         private bool ShouldIgnoreCollider(Collider2D hitCollider)
         {
             return hitCollider.transform == transform || hitCollider.transform.IsChildOf(transform);
+        }
+
+        private int CompareHitsByDistanceAndBlockPriority(RaycastHit2D left, RaycastHit2D right)
+        {
+            var distanceComparison = left.distance.CompareTo(right.distance);
+            if (Mathf.Abs(left.distance - right.distance) > 0.001f)
+            {
+                return distanceComparison;
+            }
+
+            return GetHitPriority(left.collider).CompareTo(GetHitPriority(right.collider));
+        }
+
+        private int GetHitPriority(Collider2D hitCollider)
+        {
+            if (hitCollider == null || ShouldIgnoreCollider(hitCollider))
+            {
+                return 3;
+            }
+
+            if (blockBangWithSolidColliders && !hitCollider.isTrigger && hitCollider.GetComponentInParent<BangHitTarget>() == null)
+            {
+                return 0;
+            }
+
+            if (hitCollider.GetComponentInParent<BangHitTarget>() != null)
+            {
+                return 1;
+            }
+
+            return 2;
         }
 
         private Color GetFeedbackColor(BangHitOutcome outcome)

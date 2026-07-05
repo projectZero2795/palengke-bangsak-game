@@ -15,6 +15,9 @@ namespace Palengke.BangSak.Game
         [Min(0.05f)]
         private float tagFlashSeconds = 0.18f;
 
+        [SerializeField]
+        private CaughtStateController caughtStateController;
+
         private Color originalColor = Color.white;
         private float flashUntil = -1f;
         private int lastRegisteredSequenceId = -1;
@@ -56,7 +59,16 @@ namespace Palengke.BangSak.Game
             LastTagSource = source;
             LastTagResult = result;
             FlashTagFeedback();
+            MarkCaught(source, sequenceId);
             return true;
+        }
+
+        private void MarkCaught(TagActionController source, int sequenceId)
+        {
+            if (caughtStateController != null)
+            {
+                caughtStateController.MarkCaught(source, CaughtCause.Tag, sequenceId);
+            }
         }
 
         private void FlashTagFeedback()
@@ -80,6 +92,11 @@ namespace Palengke.BangSak.Game
             if (spriteRenderer == null)
             {
                 spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            }
+
+            if (caughtStateController == null)
+            {
+                caughtStateController = GetComponent<CaughtStateController>();
             }
         }
     }
