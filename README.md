@@ -8,11 +8,13 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 1: Unity base project**, ready for Unity Editor review.
+This repository is currently in **Phase 2: Player design**, ready for player-design review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
-Phase 1 adds the Unity 2D project foundation only. Gameplay code, player prefabs, sprites, Photon setup, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 1 added the Unity 2D project foundation.
+
+Phase 2 adds placeholder player sprites, a default player prefab, color-variant prefabs, and a non-gameplay preview row in `PrototypeMap`. Movement, physics, input, animation controllers, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
 
 ## Safety and branding rules
 
@@ -64,3 +66,4 @@ Do not skip ahead.
 - [Maintenance plan](docs/maintenance.md)
 - [Phase 0 review checklist](docs/phase-0-review.md)
 - [Phase 1 test notes](docs/phase-1-test.md)
+- [Phase 2 test notes](docs/phase-2-test.md)

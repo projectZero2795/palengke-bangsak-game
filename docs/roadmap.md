@@ -5,8 +5,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | Phase | Title | Goal | Exit criteria |
 | ---: | --- | --- | --- |
 | 0 | Repository and documentation | Create repo, docs, roadmap, maintenance plan, issues only. | Done. |
-| 1 | Unity base project | Create clean Unity 2D foundation. | Ready for Unity Editor review. |
-| 2 | Player design | Create first player sprite/prefab and color variants. | Player design approved. |
+| 1 | Unity base project | Create clean Unity 2D foundation. | Done. |
+| 2 | Player design | Create first player sprite/prefab and color variants. | Ready for player-design review. |
 | 3 | Player physics and movement | Rigidbody2D, Collider2D, keyboard movement, joystick placeholder. | Movement/collision stable. |
 | 4 | Player animation | Idle/walk animations and direction-facing. | Movement looks acceptable. |
 | 5 | Bang action design | Safe Bang marker/effect, button, cooldown, range indicator. | Action is safe and clear. |
