@@ -1,0 +1,18 @@
+# Unity generated folders are added in Phase 1.
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+UserSettings/
+
+# IDE/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Local environment
+.env
+.env.*
+
