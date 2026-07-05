@@ -4,8 +4,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 
 | Phase | Title | Goal | Exit criteria |
 | ---: | --- | --- | --- |
-| 0 | Repository and documentation | Create repo, docs, roadmap, maintenance plan, issues only. | Project structure approved; no gameplay code. |
-| 1 | Unity base project | Create clean Unity 2D foundation. | Empty scene loads without errors. |
+| 0 | Repository and documentation | Create repo, docs, roadmap, maintenance plan, issues only. | Done. |
+| 1 | Unity base project | Create clean Unity 2D foundation. | Ready for Unity Editor review. |
 | 2 | Player design | Create first player sprite/prefab and color variants. | Player design approved. |
 | 3 | Player physics and movement | Rigidbody2D, Collider2D, keyboard movement, joystick placeholder. | Movement/collision stable. |
 | 4 | Player animation | Idle/walk animations and direction-facing. | Movement looks acceptable. |
@@ -39,4 +39,3 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 ## Mandatory stop rule
 
 After each phase, stop and wait for review before continuing.
-
