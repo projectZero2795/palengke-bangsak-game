@@ -20,6 +20,7 @@ Included:
   - no damage, no catching, no hit validation.
 - `BangActionHud`
   - runtime-created `BANG!` button;
+  - compact lower-right screen anchoring;
   - cooldown text while the action is unavailable.
 - Placeholder assets:
   - `bang_marker_placeholder.png`;
@@ -63,7 +64,7 @@ This phase does not implement realistic weapons. `Bang` is represented as a play
 3. Open `unity/` in Unity 2022.3.50f1 or newer.
 4. Open `Assets/Scenes/PrototypeMap.unity`.
 5. Press Play.
-6. Confirm a `BANG!` button appears near the lower-right of the screen.
+6. Confirm a compact `BANG!` button appears fully inside the lower-right of the screen, without clipping off the edge.
 7. Confirm a soft range indicator appears around the player.
 8. Move in any direction and press `Space`.
 9. Confirm the cartoon Bang marker appears in the direction the player is facing.

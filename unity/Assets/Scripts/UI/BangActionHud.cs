@@ -13,11 +13,12 @@ namespace Palengke.BangSak.UI
         private string buttonLabel = "BANG!";
 
         [SerializeField]
-        private Vector2 buttonSize = new Vector2(118f, 84f);
+        private Vector2 buttonSize = new Vector2(88f, 88f);
 
         [SerializeField]
-        private Vector2 buttonOffset = new Vector2(-82f, 86f);
+        private Vector2 buttonOffset = new Vector2(-24f, 24f);
 
+        private GameObject hudRoot;
         private Button button;
         private Text label;
 
@@ -40,13 +41,14 @@ namespace Palengke.BangSak.UI
 
         private void CreateHud()
         {
-            if (button != null)
+            if (hudRoot != null)
             {
                 return;
             }
 
             var canvasObject = new GameObject("Phase 5 Bang HUD");
-            canvasObject.transform.SetParent(transform, false);
+            canvasObject.transform.SetParent(null, false);
+            hudRoot = canvasObject;
 
             var canvas = canvasObject.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -89,9 +91,20 @@ namespace Palengke.BangSak.UI
             label.alignment = TextAnchor.MiddleCenter;
             label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf")
                 ?? Resources.GetBuiltinResource<Font>("Arial.ttf");
-            label.fontSize = 24;
+            label.fontSize = 18;
             label.fontStyle = FontStyle.Bold;
+            label.resizeTextForBestFit = true;
+            label.resizeTextMinSize = 12;
+            label.resizeTextMaxSize = 20;
             label.color = Color.white;
+        }
+
+        private void OnDestroy()
+        {
+            if (hudRoot != null)
+            {
+                Destroy(hudRoot);
+            }
         }
 
         private void OnBangClicked()

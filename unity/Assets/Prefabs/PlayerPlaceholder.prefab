@@ -267,5 +267,5 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   controller: {fileID: 5390065306357427573}
   buttonLabel: BANG!
-  buttonSize: {x: 118, y: 84}
-  buttonOffset: {x: -82, y: 86}
+  buttonSize: {x: 88, y: 88}
+  buttonOffset: {x: -24, y: 24}
