@@ -28,11 +28,11 @@ public sealed class PlayerAnimationControllerTests
     public void ResolveFacingDirection_PrefersDominantHorizontalAxis()
     {
         Assert.That(
-            animationController.ResolveFacingDirection(new Vector2(-1f, 0.2f), PlayerFacingDirection.Down),
+            animationController.ResolveFacingDirection(new Vector2(-1f, 0.1f), PlayerFacingDirection.Down),
             Is.EqualTo(PlayerFacingDirection.Left));
 
         Assert.That(
-            animationController.ResolveFacingDirection(new Vector2(1f, 0.2f), PlayerFacingDirection.Down),
+            animationController.ResolveFacingDirection(new Vector2(1f, 0.1f), PlayerFacingDirection.Down),
             Is.EqualTo(PlayerFacingDirection.Right));
     }
 
@@ -49,6 +49,26 @@ public sealed class PlayerAnimationControllerTests
     }
 
     [Test]
+    public void ResolveFacingDirection_UsesAllDiagonalDirections()
+    {
+        Assert.That(
+            animationController.ResolveFacingDirection(new Vector2(1f, 1f), PlayerFacingDirection.Down),
+            Is.EqualTo(PlayerFacingDirection.UpRight));
+
+        Assert.That(
+            animationController.ResolveFacingDirection(new Vector2(-1f, 1f), PlayerFacingDirection.Down),
+            Is.EqualTo(PlayerFacingDirection.UpLeft));
+
+        Assert.That(
+            animationController.ResolveFacingDirection(new Vector2(1f, -1f), PlayerFacingDirection.Down),
+            Is.EqualTo(PlayerFacingDirection.DownRight));
+
+        Assert.That(
+            animationController.ResolveFacingDirection(new Vector2(-1f, -1f), PlayerFacingDirection.Down),
+            Is.EqualTo(PlayerFacingDirection.DownLeft));
+    }
+
+    [Test]
     public void ResolveFacingDirection_KeepsFallbackWhenStationary()
     {
         Assert.That(
@@ -57,22 +77,25 @@ public sealed class PlayerAnimationControllerTests
     }
 
     [Test]
-    public void ApplyAnimation_FlipsSpriteWhenFacingLeft()
+    public void ApplyAnimation_TracksLeftAndRightFacingWithoutFallbackFlip()
     {
         animationController.ApplyAnimation(Vector2.left, 0.2f);
 
         Assert.That(animationController.FacingDirection, Is.EqualTo(PlayerFacingDirection.Left));
-        Assert.That(spriteRenderer.flipX, Is.True);
-    }
+        Assert.That(spriteRenderer.flipX, Is.False);
 
-    [Test]
-    public void ApplyAnimation_UnflipsSpriteWhenFacingRight()
-    {
-        animationController.ApplyAnimation(Vector2.left, 0.2f);
         animationController.ApplyAnimation(Vector2.right, 0.2f);
 
         Assert.That(animationController.FacingDirection, Is.EqualTo(PlayerFacingDirection.Right));
         Assert.That(spriteRenderer.flipX, Is.False);
+    }
+
+    [Test]
+    public void ApplyAnimation_TracksDiagonalFacing()
+    {
+        animationController.ApplyAnimation(new Vector2(-1f, 1f), 0.2f);
+
+        Assert.That(animationController.FacingDirection, Is.EqualTo(PlayerFacingDirection.UpLeft));
     }
 
     [Test]
@@ -81,6 +104,22 @@ public sealed class PlayerAnimationControllerTests
         animationController.FramesPerSecond = 8f;
 
         Assert.That(animationController.ResolveNextWalkFrameIndex(3, 4, 0.125f), Is.EqualTo(0));
+    }
+
+    [Test]
+    public void ResolveDirectionalWalkSpriteIndex_UsesDirectionThenFrame()
+    {
+        Assert.That(
+            animationController.ResolveDirectionalWalkSpriteIndex(PlayerFacingDirection.Down, 0),
+            Is.EqualTo(0));
+
+        Assert.That(
+            animationController.ResolveDirectionalWalkSpriteIndex(PlayerFacingDirection.Right, 2),
+            Is.EqualTo(10));
+
+        Assert.That(
+            animationController.ResolveDirectionalWalkSpriteIndex(PlayerFacingDirection.DownLeft, 3),
+            Is.EqualTo(31));
     }
 
     [Test]

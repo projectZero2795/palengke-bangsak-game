@@ -17,6 +17,13 @@ public sealed class Phase4PrefabSceneTests
         Assert.That(animationController, Is.Not.Null);
         Assert.That(serialized.FindProperty("idleSprite").objectReferenceValue, Is.Not.Null);
         Assert.That(serialized.FindProperty("walkSprites").arraySize, Is.EqualTo(4));
+        Assert.That(serialized.FindProperty("directionalIdleSprites").arraySize, Is.EqualTo(8));
+        Assert.That(serialized.FindProperty("directionalWalkSprites").arraySize, Is.EqualTo(32));
+        Assert.That(serialized.FindProperty("walkFramesPerDirection").intValue, Is.EqualTo(4));
+        Assert.That(serialized.FindProperty("flipHorizontally").boolValue, Is.False);
+
+        AssertAllSpritesAreAssigned(serialized.FindProperty("directionalIdleSprites"));
+        AssertAllSpritesAreAssigned(serialized.FindProperty("directionalWalkSprites"));
     }
 
     [Test]
@@ -27,5 +34,16 @@ public sealed class Phase4PrefabSceneTests
 
         Assert.That(movementRoot, Is.Not.Null);
         Assert.That(movementRoot.GetComponentsInChildren<PlayerAnimationController>().Length, Is.EqualTo(1));
+    }
+
+    private static void AssertAllSpritesAreAssigned(SerializedProperty sprites)
+    {
+        for (var index = 0; index < sprites.arraySize; index++)
+        {
+            Assert.That(
+                sprites.GetArrayElementAtIndex(index).objectReferenceValue,
+                Is.Not.Null,
+                $"{sprites.name}[{index}] should be assigned.");
+        }
     }
 }

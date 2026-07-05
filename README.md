@@ -18,7 +18,7 @@ Phase 2 added placeholder player sprites, a default player prefab, color-variant
 
 Phase 3 added Rigidbody2D/Collider2D movement to the default playable player prefab, keyboard movement, placeholder mobile joystick controls, and simple wall-collision test objects in `PrototypeMap`.
 
-Phase 4 adds a script-based player animation controller to the default playable player prefab. It swaps idle/walk frames, tracks facing direction, and flips left/right while moving. Bang/Tag actions, gameplay rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 4 adds a script-based player animation controller to the default playable player prefab. It swaps idle/walk frames, tracks 8-direction facing, and selects direction-specific placeholder sprites while moving. Bang/Tag actions, gameplay rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
 
 ## Safety and branding rules
 

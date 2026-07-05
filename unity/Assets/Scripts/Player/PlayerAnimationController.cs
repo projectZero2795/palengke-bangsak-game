@@ -20,6 +20,17 @@ namespace Palengke.BangSak.Player
         [SerializeField]
         private Sprite[] walkSprites = new Sprite[0];
 
+        [Header("Directional Sprites")]
+        [SerializeField]
+        private Sprite[] directionalIdleSprites = new Sprite[8];
+
+        [SerializeField]
+        private Sprite[] directionalWalkSprites = new Sprite[32];
+
+        [SerializeField]
+        [Min(1)]
+        private int walkFramesPerDirection = 4;
+
         [Header("Timing")]
         [SerializeField]
         [Min(1f)]
@@ -30,7 +41,7 @@ namespace Palengke.BangSak.Player
         private float walkingInputThreshold = 0.01f;
 
         [SerializeField]
-        private bool flipHorizontally = true;
+        private bool flipHorizontally = false;
 
         private float frameTimer;
         private int walkFrameIndex;
@@ -41,6 +52,8 @@ namespace Palengke.BangSak.Player
         public PlayerFacingDirection FacingDirection => facingDirection;
 
         public int WalkFrameIndex => walkFrameIndex;
+
+        public int DirectionCount => 8;
 
         public float FramesPerSecond
         {
@@ -89,12 +102,44 @@ namespace Palengke.BangSak.Player
                 return fallbackDirection;
             }
 
-            if (Mathf.Abs(movementInput.x) >= Mathf.Abs(movementInput.y))
+            var degrees = Mathf.Atan2(movementInput.y, movementInput.x) * Mathf.Rad2Deg;
+
+            if (degrees >= -22.5f && degrees < 22.5f)
             {
-                return movementInput.x < 0f ? PlayerFacingDirection.Left : PlayerFacingDirection.Right;
+                return PlayerFacingDirection.Right;
             }
 
-            return movementInput.y < 0f ? PlayerFacingDirection.Down : PlayerFacingDirection.Up;
+            if (degrees >= 22.5f && degrees < 67.5f)
+            {
+                return PlayerFacingDirection.UpRight;
+            }
+
+            if (degrees >= 67.5f && degrees < 112.5f)
+            {
+                return PlayerFacingDirection.Up;
+            }
+
+            if (degrees >= 112.5f && degrees < 157.5f)
+            {
+                return PlayerFacingDirection.UpLeft;
+            }
+
+            if (degrees >= -67.5f && degrees < -22.5f)
+            {
+                return PlayerFacingDirection.DownRight;
+            }
+
+            if (degrees >= -112.5f && degrees < -67.5f)
+            {
+                return PlayerFacingDirection.Down;
+            }
+
+            if (degrees >= -157.5f && degrees < -112.5f)
+            {
+                return PlayerFacingDirection.DownLeft;
+            }
+
+            return PlayerFacingDirection.Left;
         }
 
         public int ResolveNextWalkFrameIndex(int currentIndex, int frameCount, float elapsedSeconds)
@@ -113,6 +158,22 @@ namespace Palengke.BangSak.Player
             return (currentIndex + frameStep) % frameCount;
         }
 
+        public int ResolveDirectionalWalkSpriteIndex(PlayerFacingDirection direction, int frameIndex)
+        {
+            var safeDirection = Mathf.Clamp((int)direction, 0, DirectionCount - 1);
+            var safeFrameCount = Mathf.Max(1, walkFramesPerDirection);
+            var safeFrame = Mathf.Abs(frameIndex) % safeFrameCount;
+
+            return safeDirection * safeFrameCount + safeFrame;
+        }
+
+        public int GetWalkFrameCount(PlayerFacingDirection direction)
+        {
+            return HasDirectionalWalkSprites(direction)
+                ? Mathf.Max(1, walkFramesPerDirection)
+                : Mathf.Max(0, walkSprites?.Length ?? 0);
+        }
+
         public bool IsMoving(Vector2 movementInput, float threshold)
         {
             return movementInput.sqrMagnitude > threshold * threshold;
@@ -120,7 +181,8 @@ namespace Palengke.BangSak.Player
 
         private void StepWalkAnimation(float deltaTime)
         {
-            if (walkSprites == null || walkSprites.Length == 0)
+            var frameCount = GetWalkFrameCount(facingDirection);
+            if (frameCount <= 0)
             {
                 ApplyIdleFrame();
                 return;
@@ -132,31 +194,107 @@ namespace Palengke.BangSak.Player
             while (frameTimer >= secondsPerFrame)
             {
                 frameTimer -= secondsPerFrame;
-                walkFrameIndex = (walkFrameIndex + 1) % walkSprites.Length;
+                walkFrameIndex = (walkFrameIndex + 1) % frameCount;
             }
 
             if (spriteRenderer != null)
             {
-                spriteRenderer.sprite = walkSprites[walkFrameIndex];
+                spriteRenderer.sprite = GetWalkSprite(facingDirection, walkFrameIndex);
             }
         }
 
         private void ApplyIdleFrame()
         {
-            if (spriteRenderer != null && idleSprite != null)
+            if (spriteRenderer != null)
             {
-                spriteRenderer.sprite = idleSprite;
+                spriteRenderer.sprite = GetIdleSprite(facingDirection);
             }
         }
 
         private void ApplyFacingDirection(PlayerFacingDirection direction)
         {
-            if (spriteRenderer == null || !flipHorizontally)
+            if (spriteRenderer == null)
+            {
+                return;
+            }
+
+            if (HasDirectionalIdleSprite(direction) || HasDirectionalWalkSprites(direction))
+            {
+                spriteRenderer.flipX = false;
+                return;
+            }
+
+            if (!flipHorizontally)
             {
                 return;
             }
 
             spriteRenderer.flipX = direction == PlayerFacingDirection.Left;
+        }
+
+        private Sprite GetIdleSprite(PlayerFacingDirection direction)
+        {
+            var directionIndex = (int)direction;
+            if (
+                directionalIdleSprites != null
+                && directionIndex >= 0
+                && directionIndex < directionalIdleSprites.Length
+                && directionalIdleSprites[directionIndex] != null
+            )
+            {
+                return directionalIdleSprites[directionIndex];
+            }
+
+            return idleSprite;
+        }
+
+        private Sprite GetWalkSprite(PlayerFacingDirection direction, int frameIndex)
+        {
+            if (HasDirectionalWalkSprites(direction))
+            {
+                var spriteIndex = ResolveDirectionalWalkSpriteIndex(direction, frameIndex);
+                return directionalWalkSprites[spriteIndex];
+            }
+
+            if (walkSprites == null || walkSprites.Length == 0)
+            {
+                return GetIdleSprite(direction);
+            }
+
+            return walkSprites[Mathf.Abs(frameIndex) % walkSprites.Length];
+        }
+
+        private bool HasDirectionalIdleSprite(PlayerFacingDirection direction)
+        {
+            var directionIndex = (int)direction;
+            return directionalIdleSprites != null
+                && directionIndex >= 0
+                && directionIndex < directionalIdleSprites.Length
+                && directionalIdleSprites[directionIndex] != null;
+        }
+
+        private bool HasDirectionalWalkSprites(PlayerFacingDirection direction)
+        {
+            if (directionalWalkSprites == null || walkFramesPerDirection <= 0)
+            {
+                return false;
+            }
+
+            var start = ResolveDirectionalWalkSpriteIndex(direction, 0);
+            if (start < 0 || start + walkFramesPerDirection > directionalWalkSprites.Length)
+            {
+                return false;
+            }
+
+            for (var frame = 0; frame < walkFramesPerDirection; frame++)
+            {
+                if (directionalWalkSprites[start + frame] == null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void ResolveReferences()
