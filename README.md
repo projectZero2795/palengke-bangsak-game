@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 4: Player animation**, ready for animation review.
+This repository is currently in **Phase 5: Bang action design**, ready for safe Bang action review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -18,7 +18,9 @@ Phase 2 added placeholder player sprites, a default player prefab, color-variant
 
 Phase 3 added Rigidbody2D/Collider2D movement to the default playable player prefab, keyboard movement, placeholder mobile joystick controls, and simple wall-collision test objects in `PrototypeMap`.
 
-Phase 4 adds a script-based player animation controller to the default playable player prefab. It swaps idle/walk frames, tracks 8-direction facing, and selects direction-specific placeholder sprites while moving. Bang/Tag actions, gameplay rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 4 added a script-based player animation controller to the default playable player prefab. It swaps idle/walk frames, tracks 8-direction facing, and selects direction-specific placeholder sprites while moving.
+
+Phase 5 adds a safe cartoon Bang action design: a `BANG!` button, cooldown, range indicator, and non-damaging directional marker effect. Projectile physics, hit detection, catching, gameplay rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
 
 ## Safety and branding rules
 
@@ -73,3 +75,4 @@ Do not skip ahead.
 - [Phase 2 test notes](docs/phase-2-test.md)
 - [Phase 3 test notes](docs/phase-3-test.md)
 - [Phase 4 test notes](docs/phase-4-test.md)
+- [Phase 5 test notes](docs/phase-5-test.md)

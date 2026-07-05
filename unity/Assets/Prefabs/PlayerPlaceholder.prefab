@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 8104555450261690452}
   - component: {fileID: 3034037593118062986}
   - component: {fileID: 6493258612035774221}
+  - component: {fileID: 5390065306357427573}
+  - component: {fileID: 8313899227323467395}
   m_Layer: 0
   m_Name: PlayerPlaceholder
   m_TagString: Untagged
@@ -230,3 +232,40 @@ MonoBehaviour:
   framesPerSecond: 8
   walkingInputThreshold: 0.01
   flipHorizontally: 0
+--- !u!114 &5390065306357427573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664006932156598595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bf107dc2dda43fd83373fc9a66cc803, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  animationController: {fileID: 6493258612035774221}
+  visualStyle: 2
+  bangMarkerSprite: {fileID: 21300000, guid: 5431fe616a2b573ea524c0f356db2e1a, type: 3}
+  rangeIndicatorSprite: {fileID: 21300000, guid: 4aeb57a3b8e15b2397cc760984630bed, type: 3}
+  cooldownSeconds: 1.25
+  effectDurationSeconds: 0.35
+  range: 2.25
+  markerDistance: 0.95
+  showRangeIndicator: 1
+--- !u!114 &8313899227323467395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664006932156598595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d317a753d3724a9684ad8fe07ffc3fec, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  controller: {fileID: 5390065306357427573}
+  buttonLabel: BANG!
+  buttonSize: {x: 118, y: 84}
+  buttonOffset: {x: -82, y: 86}
