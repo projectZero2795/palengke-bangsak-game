@@ -45,4 +45,19 @@ public sealed class Phase5PrefabSceneTests
         Assert.That(movementRoot, Is.Not.Null);
         Assert.That(movementRoot.GetComponentsInChildren<BangActionController>().Length, Is.EqualTo(1));
     }
+
+    [Test]
+    public void BangRangeCone_IsSmoothUiAsset()
+    {
+        const string assetPath = "Assets/Art/Placeholders/Bang/bang_range_placeholder.png";
+
+        var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
+        var importer = (TextureImporter)AssetImporter.GetAtPath(assetPath);
+
+        Assert.That(texture, Is.Not.Null);
+        Assert.That(texture.width, Is.EqualTo(256));
+        Assert.That(texture.height, Is.EqualTo(256));
+        Assert.That(importer.filterMode, Is.EqualTo(FilterMode.Bilinear));
+        Assert.That(importer.spritePixelsPerUnit, Is.EqualTo(256f));
+    }
 }

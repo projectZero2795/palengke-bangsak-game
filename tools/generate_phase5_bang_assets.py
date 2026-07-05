@@ -12,8 +12,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "unity" / "Assets" / "Art" / "Placeholders" / "Bang"
-SCALE = 4
-SIZE = 64
+DEFAULT_SIZE = 64
+DEFAULT_SCALE = 4
+RANGE_SIZE = 256
+RANGE_SCALE = 3
 
 
 def rgba(hex_color: str, alpha: int = 255) -> tuple[int, int, int, int]:
@@ -48,9 +50,11 @@ TRANSPARENT = (0, 0, 0, 0)
 
 
 class Canvas:
-    def __init__(self) -> None:
-        self.w = SIZE * SCALE
-        self.h = SIZE * SCALE
+    def __init__(self, size: int = DEFAULT_SIZE, scale: int = DEFAULT_SCALE) -> None:
+        self.size = size
+        self.scale = scale
+        self.w = size * scale
+        self.h = size * scale
         self.pixels = bytearray(self.w * self.h * 4)
 
     def blend(self, x: int, y: int, color: tuple[int, int, int, int]) -> None:
@@ -79,10 +83,10 @@ class Canvas:
         ry: float,
         color: tuple[int, int, int, int],
     ) -> None:
-        cx *= SCALE
-        cy *= SCALE
-        rx *= SCALE
-        ry *= SCALE
+        cx *= self.scale
+        cy *= self.scale
+        rx *= self.scale
+        ry *= self.scale
         min_x = math.floor(cx - rx)
         max_x = math.ceil(cx + rx)
         min_y = math.floor(cy - ry)
@@ -102,10 +106,10 @@ class Canvas:
         width: float,
         color: tuple[int, int, int, int],
     ) -> None:
-        cx *= SCALE
-        cy *= SCALE
-        outer = radius * SCALE
-        inner = max(0.0, (radius - width) * SCALE)
+        cx *= self.scale
+        cy *= self.scale
+        outer = radius * self.scale
+        inner = max(0.0, (radius - width) * self.scale)
         min_x = math.floor(cx - outer)
         max_x = math.ceil(cx + outer)
         min_y = math.floor(cy - outer)
@@ -117,7 +121,7 @@ class Canvas:
                     self.blend(x, y, color)
 
     def polygon(self, points: list[tuple[float, float]], color: tuple[int, int, int, int]) -> None:
-        scaled = [(x * SCALE, y * SCALE) for x, y in points]
+        scaled = [(x * self.scale, y * self.scale) for x, y in points]
         min_x = math.floor(min(x for x, _ in scaled))
         max_x = math.ceil(max(x for x, _ in scaled))
         min_y = math.floor(min(y for _, y in scaled))
@@ -136,7 +140,7 @@ class Canvas:
         width: float,
         color: tuple[int, int, int, int],
     ) -> None:
-        steps = max(1, int(math.hypot(x1 - x0, y1 - y0) * SCALE))
+        steps = max(1, int(math.hypot(x1 - x0, y1 - y0) * self.scale))
         for index in range(steps + 1):
             t = index / steps
             x = x0 + (x1 - x0) * t
@@ -144,22 +148,22 @@ class Canvas:
             self.ellipse(x, y, width, width, color)
 
     def rect(self, x0: float, y0: float, x1: float, y1: float, color: tuple[int, int, int, int]) -> None:
-        for y in range(math.floor(y0 * SCALE), math.ceil(y1 * SCALE)):
-            for x in range(math.floor(x0 * SCALE), math.ceil(x1 * SCALE)):
+        for y in range(math.floor(y0 * self.scale), math.ceil(y1 * self.scale)):
+            for x in range(math.floor(x0 * self.scale), math.ceil(x1 * self.scale)):
                 self.blend(x, y, color)
 
     def downsample(self) -> bytes:
-        out = bytearray(SIZE * SIZE * 4)
-        for y in range(SIZE):
-            for x in range(SIZE):
+        out = bytearray(self.size * self.size * 4)
+        for y in range(self.size):
+            for x in range(self.size):
                 totals = [0, 0, 0, 0]
-                for sy in range(SCALE):
-                    for sx in range(SCALE):
-                        idx = ((y * SCALE + sy) * self.w + (x * SCALE + sx)) * 4
+                for sy in range(self.scale):
+                    for sx in range(self.scale):
+                        idx = ((y * self.scale + sy) * self.w + (x * self.scale + sx)) * 4
                         for i in range(4):
                             totals[i] += self.pixels[idx + i]
-                dst = (y * SIZE + x) * 4
-                count = SCALE * SCALE
+                dst = (y * self.size + x) * 4
+                count = self.scale * self.scale
                 out[dst : dst + 4] = bytes(v // count for v in totals)
         return bytes(out)
 
@@ -207,7 +211,7 @@ def sprite_id(guid: str) -> str:
     return guid[:16] + "0800000000000000"
 
 
-def write_meta(path: Path) -> None:
+def write_meta(path: Path, pixels_per_unit: int = DEFAULT_SIZE, filter_mode: int = 0) -> None:
     relative = path.relative_to(ROOT)
     guid = asset_guid(relative)
     sid = sprite_id(guid)
@@ -248,7 +252,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: {filter_mode}
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -262,7 +266,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {{x: 0.5, y: 0.5}}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: {pixels_per_unit}
   spriteBorder: {{x: 0, y: 0, z: 0, w: 0}}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -390,21 +394,25 @@ def draw_tsinelas_marker() -> bytes:
 
 
 def draw_range_cone() -> bytes:
-    c = Canvas()
+    c = Canvas(RANGE_SIZE, RANGE_SCALE)
     # Cone points up at zero rotation. The controller rotates it to the
-    # player's facing direction and scales it to the configured range.
+    # player's facing direction and scales it to the configured range. This
+    # asset is intentionally larger and bilinear-filtered so the range UI
+    # stays smooth when scaled in-world, unlike the pixel-art player sprites.
     arc = []
-    radius = 30
-    for index in range(25):
-        angle = math.radians(-90 - 36 + index * 72 / 24)
-        arc.append((32 + math.cos(angle) * radius, 32 + math.sin(angle) * radius))
-    cone = [(32, 32)] + arc
-    c.polygon(cone, RANGE)
-    c.line(32, 32, arc[0][0], arc[0][1], 0.7, RANGE_EDGE)
-    c.line(32, 32, arc[-1][0], arc[-1][1], 0.7, RANGE_EDGE)
+    center = RANGE_SIZE / 2
+    radius = RANGE_SIZE * 0.46
+    half_angle = 34
+    samples = 96
+    for index in range(samples + 1):
+        angle = math.radians(-90 - half_angle + index * (half_angle * 2) / samples)
+        arc.append((center + math.cos(angle) * radius, center + math.sin(angle) * radius))
+    cone = [(center, center)] + arc
+    c.polygon(cone, rgba("#ef4444", 68))
+    c.line(center, center, arc[0][0], arc[0][1], 1.7, rgba("#ff8a80", 150))
+    c.line(center, center, arc[-1][0], arc[-1][1], 1.7, rgba("#ff8a80", 150))
     for index in range(len(arc) - 1):
-        c.line(arc[index][0], arc[index][1], arc[index + 1][0], arc[index + 1][1], 0.55, RANGE_EDGE)
-    c.ring(32, 32, 8, 0.8, rgba("#ffd166", 110))
+        c.line(arc[index][0], arc[index][1], arc[index + 1][0], arc[index + 1][1], 1.3, RANGE_EDGE)
     return c.downsample()
 
 
@@ -451,15 +459,15 @@ def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     write_folder_meta(OUT_DIR)
 
-    for name, image in {
-        "bang_marker_placeholder.png": draw_tsinelas_marker(),
-        "bang_range_placeholder.png": draw_range_cone(),
-        "bang_impact_placeholder.png": draw_impact_burst(),
-        "bang_button_dark_placeholder.png": draw_button_background(),
-    }.items():
+    for name, size, image, pixels_per_unit, filter_mode in (
+        ("bang_marker_placeholder.png", DEFAULT_SIZE, draw_tsinelas_marker(), DEFAULT_SIZE, 0),
+        ("bang_range_placeholder.png", RANGE_SIZE, draw_range_cone(), RANGE_SIZE, 1),
+        ("bang_impact_placeholder.png", DEFAULT_SIZE, draw_impact_burst(), DEFAULT_SIZE, 0),
+        ("bang_button_dark_placeholder.png", DEFAULT_SIZE, draw_button_background(), DEFAULT_SIZE, 0),
+    ):
         path = OUT_DIR / name
-        write_png(path, SIZE, SIZE, image)
-        write_meta(path)
+        write_png(path, size, size, image)
+        write_meta(path, pixels_per_unit=pixels_per_unit, filter_mode=filter_mode)
         print(path.relative_to(ROOT))
 
 

@@ -13,7 +13,7 @@ Included:
   - `TsinelasMarker`.
 - `BangActionController`
   - safe thrown `tsinelas` marker;
-  - red forward-cone range indicator;
+  - smooth red forward-cone range indicator without a center ring/halo around the player;
   - small impact burst;
   - cooldown;
   - keyboard trigger with `Space`;
@@ -45,6 +45,7 @@ Included:
   - cooldown progress;
   - 8-direction effect vectors;
   - forward-cone range rotation;
+  - smooth 256px bilinear range-cone import settings;
   - effect placement;
   - prefab wiring;
   - `PrototypeMap` playable-player wiring.
@@ -75,21 +76,22 @@ This phase does not implement realistic weapons. `Bang` is represented as a play
 5. Press Play.
 6. Confirm a compact circular button appears fully inside the lower-right of the screen, without clipping off the edge.
 7. Confirm the button uses the dark/gold circular background and static tsinelas icon.
-8. Confirm a red forward cone appears from the player and rotates when the player changes facing direction.
-9. Move in any direction and press `Space`.
-10. Confirm the tsinelas marker arcs/spins forward in the direction the player is facing.
-11. Confirm the small impact burst appears at the end of the throw.
-12. Press the circular Bang button.
-13. Confirm the cooldown prevents spam and the button displays cooldown text.
-14. Confirm the action does not catch, damage, delete, or affect another player.
-15. Confirm Console has no red errors.
+8. Confirm a smooth red forward cone appears from the player and rotates when the player changes facing direction.
+9. Confirm there is no separate green/yellow circle or halo around the player.
+10. Move in any direction and press `Space`.
+11. Confirm the tsinelas marker arcs/spins forward in the direction the player is facing.
+12. Confirm the small impact burst appears at the end of the throw.
+13. Press the circular Bang button.
+14. Confirm the cooldown prevents spam and the button displays cooldown text.
+15. Confirm the action does not catch, damage, delete, or affect another player.
+16. Confirm Console has no red errors.
 
 ## Exit criteria status
 
 - Safe tsinelas Bang visual metaphor: ready for review.
 - Circular Bang button: ready for review.
 - Cooldown: ready for review.
-- Forward-cone range indicator: ready for review.
+- Smooth forward-cone range indicator with no player halo: ready for review.
 - Effect direction follows facing: ready for review.
 - Tsinelas throw animation: ready for review.
 - Bang action approval: pending project owner review.
