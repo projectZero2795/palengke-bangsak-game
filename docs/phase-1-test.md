@@ -19,6 +19,7 @@ Not included:
 - player art;
 - player prefab;
 - movement scripts;
+- input system package;
 - gameplay code;
 - Photon;
 - WebGL build;
@@ -31,6 +32,15 @@ Not included:
 - Required script/art/prefab folders exist.
 - Scenes contain a `Main Camera`.
 - `EditorBuildSettings.asset` references both Phase 1 scenes.
+
+## Console error fix
+
+Unity 2022.3.50f1 on macOS produced repeated editor-console errors from `com.unity.inputsystem@1.7.0` during Phase 1 review:
+
+- `NullReferenceException` in `UnityEngine.InputSystem.InputSystem.InitializeInEditor`
+- `TypeInitializationException during event processing of Editor update`
+
+Phase 1 does not require input handling yet, so the Input System package was removed from `unity/Packages/manifest.json`. Input work belongs to Phase 3, where the package/version can be selected and tested intentionally with movement controls.
 
 ## Unity Editor availability
 
