@@ -8,13 +8,15 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 2: Player design**, ready for player-design review.
+This repository is currently in **Phase 3: Player physics and movement**, ready for movement/collision review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
 Phase 1 added the Unity 2D project foundation.
 
-Phase 2 adds placeholder player sprites, a default player prefab, color-variant prefabs, and a non-gameplay preview row in `PrototypeMap`. Movement, physics, input, animation controllers, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 2 added placeholder player sprites, a default player prefab, color-variant prefabs, and a non-gameplay preview row in `PrototypeMap`.
+
+Phase 3 adds Rigidbody2D/Collider2D movement to the default playable player prefab, keyboard movement, placeholder mobile joystick controls, and simple wall-collision test objects in `PrototypeMap`. Animation controllers, Bang/Tag actions, gameplay rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
 
 ## Safety and branding rules
 
@@ -67,3 +69,4 @@ Do not skip ahead.
 - [Phase 0 review checklist](docs/phase-0-review.md)
 - [Phase 1 test notes](docs/phase-1-test.md)
 - [Phase 2 test notes](docs/phase-2-test.md)
+- [Phase 3 test notes](docs/phase-3-test.md)
