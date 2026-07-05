@@ -9,8 +9,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 2 | Player design | Create first player sprite/prefab and color variants. | Done. |
 | 3 | Player physics and movement | Rigidbody2D, Collider2D, keyboard movement, joystick placeholder. | Done. |
 | 4 | Player animation | Idle/walk animations and direction-facing. | Done. |
-| 5 | Bang action design | Safe animated tsinelas marker/effect, compact circular button, cooldown, forward-cone range indicator. | Ready for safe Bang action review. |
-| 6 | Bang projectile / hit physics | Projectile/raycast hit detection and feedback. | Bang works consistently. |
+| 5 | Bang action design | Safe animated tsinelas marker/effect, compact circular button, cooldown, forward-cone range indicator. | Done. |
+| 6 | Bang projectile / hit physics | Projectile/raycast hit detection and feedback. | Ready for local Bang hit-detection review. |
 | 7 | Close tag action | Harmless close-range Tag/Close Tap mechanic. | Close-range tag works safely. |
 | 8 | Caught state | isCaught state, animation, HUD indicator. | Caught state reliable. |
 | 9 | Soil / ground tiles | Soil, road, grass, concrete tilemap. | Basic map floor ready. |

@@ -44,6 +44,34 @@ namespace Palengke.BangSak.Game
         [SerializeField]
         private bool showRangeIndicator = true;
 
+        [Header("Hit Detection")]
+        [SerializeField]
+        private bool enableHitDetection = true;
+
+        [SerializeField]
+        private bool blockBangWithSolidColliders = true;
+
+        [SerializeField]
+        private LayerMask hitDetectionLayers = Physics2D.DefaultRaycastLayers;
+
+        [SerializeField]
+        [Min(0.01f)]
+        private float hitRadius = 0.18f;
+
+        [SerializeField]
+        [Min(0f)]
+        private float hitStartOffset = 0.18f;
+
+        [Header("Hit Feedback")]
+        [SerializeField]
+        private Color hitFeedbackColor = new Color(0.65f, 1f, 0.55f, 1f);
+
+        [SerializeField]
+        private Color missFeedbackColor = new Color(1f, 0.72f, 0.35f, 1f);
+
+        [SerializeField]
+        private Color blockedFeedbackColor = new Color(0.85f, 0.9f, 1f, 1f);
+
         [Header("Tsinelas Animation")]
         [SerializeField]
         [Min(0f)]
@@ -68,6 +96,9 @@ namespace Palengke.BangSak.Game
         private Vector3 effectStartPosition;
         private Vector3 effectEndPosition;
         private Vector2 effectDirectionVector = Vector2.down;
+        private Color effectFeedbackColor = Color.white;
+        private int bangSequenceId;
+        private BangHitResult lastHitResult;
 
         public BangActionVisualStyle VisualStyle => visualStyle;
 
@@ -80,6 +111,12 @@ namespace Palengke.BangSak.Game
         public PlayerFacingDirection LastBangDirection => lastBangDirection;
 
         public bool IsEffectVisible => bangMarkerRenderer != null && bangMarkerRenderer.enabled;
+
+        public BangHitResult LastHitResult => lastHitResult;
+
+        public float HitRadius => hitRadius;
+
+        public bool BlockBangWithSolidColliders => blockBangWithSolidColliders;
 
         public PlayerFacingDirection CurrentFacingDirection =>
             animationController != null ? animationController.FacingDirection : fallbackFacingDirection;
@@ -119,7 +156,9 @@ namespace Palengke.BangSak.Game
 
             lastBangTime = now;
             lastBangDirection = CurrentFacingDirection;
-            ShowBangEffect(now, lastBangDirection);
+            bangSequenceId += 1;
+            lastHitResult = ResolveBangHit(transform.position, lastBangDirection, bangSequenceId);
+            ShowBangEffect(now, lastBangDirection, lastHitResult);
             return true;
         }
 
@@ -190,7 +229,71 @@ namespace Palengke.BangSak.Game
             fallbackFacingDirection = direction;
         }
 
-        private void ShowBangEffect(float now, PlayerFacingDirection direction)
+        public BangHitResult ResolveBangHit(Vector3 origin, PlayerFacingDirection direction, int sequenceId)
+        {
+            var directionVector = GetDirectionVector(direction).normalized;
+            if (directionVector.sqrMagnitude <= 0f)
+            {
+                directionVector = Vector2.down;
+            }
+
+            var castOrigin = (Vector2)origin + directionVector * hitStartOffset;
+            var castDistance = Mathf.Max(0f, range - hitStartOffset);
+            var missPoint = castOrigin + directionVector * castDistance;
+
+            if (!enableHitDetection || castDistance <= 0f)
+            {
+                return BangHitResult.Miss(castOrigin, missPoint, directionVector, range, sequenceId);
+            }
+
+            var hits = Physics2D.CircleCastAll(
+                castOrigin,
+                hitRadius,
+                directionVector,
+                castDistance,
+                hitDetectionLayers.value);
+
+            if (hits.Length <= 0)
+            {
+                return BangHitResult.Miss(castOrigin, missPoint, directionVector, range, sequenceId);
+            }
+
+            System.Array.Sort(hits, (left, right) => left.distance.CompareTo(right.distance));
+
+            foreach (var hit in hits)
+            {
+                if (hit.collider == null || ShouldIgnoreCollider(hit.collider))
+                {
+                    continue;
+                }
+
+                var hitPoint = ResolveHitPoint(hit, castOrigin, directionVector);
+                var distance = hitStartOffset + Mathf.Max(0f, hit.distance);
+                var target = hit.collider.GetComponentInParent<BangHitTarget>();
+                if (target != null && target.isActiveAndEnabled)
+                {
+                    var result = BangHitResult.HitTarget(
+                        target,
+                        hit.collider,
+                        castOrigin,
+                        hitPoint,
+                        directionVector,
+                        distance,
+                        sequenceId);
+                    target.RegisterBangHit(this, sequenceId, result);
+                    return result;
+                }
+
+                if (blockBangWithSolidColliders && !hit.collider.isTrigger)
+                {
+                    return BangHitResult.Blocked(hit.collider, castOrigin, hitPoint, directionVector, distance, sequenceId);
+                }
+            }
+
+            return BangHitResult.Miss(castOrigin, missPoint, directionVector, range, sequenceId);
+        }
+
+        private void ShowBangEffect(float now, PlayerFacingDirection direction, BangHitResult hitResult)
         {
             if (bangMarkerRenderer == null)
             {
@@ -201,7 +304,8 @@ namespace Palengke.BangSak.Game
             effectVisibleUntil = now + effectDurationSeconds;
             effectDirectionVector = GetDirectionVector(direction);
             effectStartPosition = transform.position + new Vector3(effectDirectionVector.x, effectDirectionVector.y, 0f) * 0.18f;
-            effectEndPosition = GetEffectPosition(transform.position, direction);
+            effectEndPosition = new Vector3(hitResult.Point.x, hitResult.Point.y, transform.position.z);
+            effectFeedbackColor = GetFeedbackColor(hitResult.Outcome);
             bangMarkerRenderer.enabled = true;
             if (impactRenderer != null)
             {
@@ -283,7 +387,11 @@ namespace Palengke.BangSak.Game
             impactRenderer.transform.position = effectEndPosition;
             impactRenderer.transform.localScale = Vector3.one * Mathf.Lerp(0.45f, 1.2f, impactProgress);
             impactRenderer.transform.rotation = Quaternion.Euler(0f, 0f, 35f * impactProgress);
-            impactRenderer.color = new Color(1f, 1f, 1f, 1f - impactProgress * 0.65f);
+            impactRenderer.color = new Color(
+                effectFeedbackColor.r,
+                effectFeedbackColor.g,
+                effectFeedbackColor.b,
+                effectFeedbackColor.a * (1f - impactProgress * 0.65f));
         }
 
         private void HideBangEffect()
@@ -336,6 +444,34 @@ namespace Palengke.BangSak.Game
             {
                 animationController = GetComponent<PlayerAnimationController>();
             }
+        }
+
+        private bool ShouldIgnoreCollider(Collider2D hitCollider)
+        {
+            return hitCollider.transform == transform || hitCollider.transform.IsChildOf(transform);
+        }
+
+        private Color GetFeedbackColor(BangHitOutcome outcome)
+        {
+            switch (outcome)
+            {
+                case BangHitOutcome.HitTarget:
+                    return hitFeedbackColor;
+                case BangHitOutcome.Blocked:
+                    return blockedFeedbackColor;
+                default:
+                    return missFeedbackColor;
+            }
+        }
+
+        private static Vector2 ResolveHitPoint(RaycastHit2D hit, Vector2 origin, Vector2 direction)
+        {
+            if (hit.point != Vector2.zero)
+            {
+                return hit.point;
+            }
+
+            return origin + direction * Mathf.Max(0f, hit.distance);
         }
     }
 }
