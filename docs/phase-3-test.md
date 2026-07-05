@@ -14,6 +14,7 @@ Included:
 - `MobileJoystickPlaceholder`
   - visual on-screen joystick placeholder;
   - drag input forwarded to the player controller;
+  - centered compact handle, with the handle anchored to the joystick base center;
   - no new Input System package required.
 - Default playable prefab updates:
   - `Rigidbody2D`;
@@ -32,6 +33,7 @@ Included:
   - playable prefab wiring;
   - wall collider presence;
   - mobile joystick presence.
+  - compact centered joystick handle.
 - Reproducible helper asset generator:
   - `tools/generate_phase3_placeholder_assets.py`
 
@@ -68,6 +70,7 @@ pull the latest repo and restart Unity so it reloads `ProjectSettings/ProjectSet
 - Confirmed project input handling is set to `Both` for Phase 3 compatibility.
 - Confirmed the default prefab has movement physics components.
 - Confirmed `PrototypeMap` contains movement walls and mobile joystick placeholder.
+- Added regression coverage for the compact centered joystick handle.
 
 ## Manual Unity Editor checks
 
@@ -83,7 +86,9 @@ pull the latest repo and restart Unity so it reloads `ProjectSettings/ProjectSet
 6. Confirm the player cannot pass through the boundary walls or center obstacle.
 7. Confirm movement feels smooth and does not jitter.
 8. In Game view, drag the lower-left joystick placeholder and confirm the player moves.
-9. Confirm Console has no red errors.
+9. Confirm the joystick handle starts centered inside the base and returns to center after release.
+10. Confirm the joystick is compact and no longer dominates the lower-left corner.
+11. Confirm Console has no red errors.
 
 ## Exit criteria status
 

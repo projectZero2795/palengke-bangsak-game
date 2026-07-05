@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Linq;
 using NUnit.Framework;
 using Palengke.BangSak.Player;
@@ -39,5 +40,37 @@ public sealed class Phase3PrefabSceneTests
 
         Assert.That(controlsRoot, Is.Not.Null);
         Assert.That(controlsRoot.GetComponentInChildren<MobileJoystickPlaceholder>(), Is.Not.Null);
+    }
+
+    [Test]
+    public void PrototypeMap_MobileJoystickHandleIsCenteredAndCompact()
+    {
+        var scene = EditorSceneManager.OpenScene("Assets/Scenes/PrototypeMap.unity");
+        var controlsRoot = scene.GetRootGameObjects().FirstOrDefault(root => root.name == "Phase 3 Mobile Controls");
+
+        Assert.That(controlsRoot, Is.Not.Null);
+
+        var joystick = controlsRoot.GetComponentInChildren<MobileJoystickPlaceholder>();
+
+        Assert.That(joystick, Is.Not.Null);
+
+        var baseTransform = GetPrivateRectTransform(joystick, "baseTransform");
+        var handleTransform = GetPrivateRectTransform(joystick, "handleTransform");
+
+        Assert.That(baseTransform.sizeDelta.x, Is.LessThanOrEqualTo(104.1f));
+        Assert.That(baseTransform.sizeDelta.y, Is.LessThanOrEqualTo(104.1f));
+        Assert.That(handleTransform.sizeDelta.x, Is.LessThanOrEqualTo(48.1f));
+        Assert.That(handleTransform.sizeDelta.y, Is.LessThanOrEqualTo(48.1f));
+        Assert.That(handleTransform.anchorMin, Is.EqualTo(new Vector2(0.5f, 0.5f)));
+        Assert.That(handleTransform.anchorMax, Is.EqualTo(new Vector2(0.5f, 0.5f)));
+        Assert.That(handleTransform.anchoredPosition, Is.EqualTo(Vector2.zero));
+    }
+
+    private static RectTransform GetPrivateRectTransform(MobileJoystickPlaceholder joystick, string fieldName)
+    {
+        var field = typeof(MobileJoystickPlaceholder).GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+
+        Assert.That(field, Is.Not.Null);
+        return (RectTransform)field.GetValue(joystick);
     }
 }

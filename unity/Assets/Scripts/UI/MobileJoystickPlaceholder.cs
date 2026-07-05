@@ -23,6 +23,18 @@ namespace Palengke.BangSak.UI
 
         public Vector2 InputVector => input;
 
+        private void Awake()
+        {
+            CenterHandle();
+        }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            CenterHandle();
+        }
+#endif
+
         public void SetTarget(PlayerMovementController player)
         {
             targetPlayer = player;
@@ -41,10 +53,7 @@ namespace Palengke.BangSak.UI
         public void OnPointerUp(PointerEventData eventData)
         {
             input = Vector2.zero;
-            if (handleTransform != null)
-            {
-                handleTransform.anchoredPosition = Vector2.zero;
-            }
+            CenterHandle();
 
             if (targetPlayer != null)
             {
@@ -77,6 +86,20 @@ namespace Palengke.BangSak.UI
             {
                 targetPlayer.SetExternalInput(input);
             }
+        }
+
+        private void CenterHandle()
+        {
+            if (handleTransform == null)
+            {
+                return;
+            }
+
+            var centeredAnchor = new Vector2(0.5f, 0.5f);
+            handleTransform.anchorMin = centeredAnchor;
+            handleTransform.anchorMax = centeredAnchor;
+            handleTransform.pivot = centeredAnchor;
+            handleTransform.anchoredPosition = Vector2.zero;
         }
     }
 }
