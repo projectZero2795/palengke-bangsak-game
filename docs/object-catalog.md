@@ -48,11 +48,11 @@ Reference image: [bang-sak-roadmap-reference.jpg](reference/bang-sak-roadmap-ref
 
 | Object | Phase | Notes |
 | --- | ---: | --- |
-| Small house | 11 | Solid wall collision. |
-| Medium house | 11 | Larger obstacle and visual anchor. |
-| Fence pieces | 11 | Maze/chase path shaping. |
-| Gates | 11 | Visual variety; can be blocker or passage. |
-| Roof sorting | 11 | Optional, if player passes behind/under edges. |
+| Small house | 11 | Warm-lit barangay house placeholder with solid wall collision. |
+| Medium house | 11 | Larger concrete barangay house placeholder and visual anchor. |
+| Fence pieces | 11 | Wooden/bamboo-style wall pieces for chase path shaping. |
+| Gates | 11 | Closed gate placeholder; solid blocker in this phase. |
+| Roof sorting | 11 | Position-based sorting for readable house/fence layering; advanced behind-roof movement comes later if needed. |
 
 ## Stores and marketplace objects
 
