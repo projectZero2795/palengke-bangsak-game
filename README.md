@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 8: Caught state**, ready for local caught-state review.
+This repository is currently in **Phase 9: Soil / ground tiles**, ready for local ground-tile review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -26,7 +26,9 @@ Phase 6 added local Bang hit detection with safe feedback: range-limited circle-
 
 Phase 7 added the harmless close-range Tag / Close Tap alternative: short-range detection, wall blocking, cooldown, TAG button, and friendly tag-hit flash feedback.
 
-Phase 8 adds local caught-state behavior for Bang and Tag hits: targets become caught, show a playful animated dizzy-star indicator, caught players lose movement/action controls until reset, and the prototype `Hiders Left` counter updates. Full role rules, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 8 added local caught-state behavior for Bang and Tag hits: targets become caught, show a playful animated dizzy-star indicator, caught players lose movement/action controls until reset, and the prototype `Hiders Left` counter updates.
+
+Phase 9 adds the first ground foundation: soil, road/path, grass, and concrete placeholder tiles, plus a runtime `Grid`/`Tilemap` builder in `PrototypeMap`. Object collisions, houses, trees, roles, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
 
 ## Safety and branding rules
 
@@ -85,3 +87,4 @@ Do not skip ahead.
 - [Phase 6 test notes](docs/phase-6-test.md)
 - [Phase 7 test notes](docs/phase-7-test.md)
 - [Phase 8 test notes](docs/phase-8-test.md)
+- [Phase 9 test notes](docs/phase-9-test.md)
