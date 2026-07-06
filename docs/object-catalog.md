@@ -58,11 +58,11 @@ Reference image: [bang-sak-roadmap-reference.jpg](reference/bang-sak-roadmap-ref
 
 | Object | Phase | Notes |
 | --- | ---: | --- |
-| Sari-sari store | 12 | Core Filipino theme object. |
-| Palengke stall | 12 | Market rows and hiding routes. |
-| Food stall | 12 | Visual variety. |
-| Signboards | 12 | Readable labels, e.g. SARI, GULAY. |
-| Crates/baskets | 12 | Small blockers/details. |
+| Sari-sari store | 12 | Core Filipino theme object with tight lower collision footprint. |
+| Palengke stall | 12 | Fruit/vegetable stall rows and future hiding routes. |
+| Food stall | 12 | Small street-food style stall for visual variety. |
+| Signboards | 12 | Readable label placeholders, e.g. SARI, GULAY. |
+| Crates/baskets | 12 | Small blockers/details with produce/basket silhouettes. |
 | Barrels/buckets | 12, 14 | Optional obstacle/detail objects. |
 
 ## Base and round objects

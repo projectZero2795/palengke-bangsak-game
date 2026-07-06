@@ -409,6 +409,61 @@ MonoBehaviour:
   gateSprite: {fileID: 21300000, guid: fb59d118e4335cb88693f9c2a8397bfc, type: 3}
   objectSortingOrder: 20
   buildOnAwake: 1
+--- !u!1 &291200000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 291200001}
+  - component: {fileID: 291200002}
+  m_Layer: 0
+  m_Name: Phase 12 Store Objects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &291200001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291200000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &291200002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291200000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa8bab53717b526bbb41b60b581d8860, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  componentId: prototype_store_object_spawner
+  componentVersion: 1
+  componentVariant: night_palengke_store_placeholders
+  groundTilemap: {fileID: 290900002}
+  sariSariStoreSprite: {fileID: 21300000, guid: fa7e96f06eab58f4bb75724f9e0d13c6, type: 3}
+  palengkeStallSprite: {fileID: 21300000, guid: e3e67ab466ca51ddbdbda1b89697c308, type: 3}
+  foodStallSprite: {fileID: 21300000, guid: 6aca14b437c55c70bd4cb98e66205daa, type: 3}
+  signboardSariSprite: {fileID: 21300000, guid: 7e5f66d4e1ad55d58385f2d58b7ff871, type: 3}
+  cratesBasketsSprite: {fileID: 21300000, guid: b225d5ce9bde5dbeb95748ade761d55f, type: 3}
+  objectSortingOrder: 24
+  buildOnAwake: 1
 --- !u!1 &220000
 GameObject:
   m_ObjectHideFlags: 0

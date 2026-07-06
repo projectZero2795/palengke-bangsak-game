@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 11: Houses**, ready for local residential-object review.
+This repository is currently in **Phase 12: Stores**, ready for local marketplace-object review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -32,7 +32,9 @@ Phase 9 added the first ground foundation: richer 128px nighttime soil, road/pat
 
 Phase 10 added versioned Filipino/barangay natural-object placeholders: a coconut/banana-style tropical tree, bougainvillea-style flowering bush, potted tropical plant, and bamboo/banana-style plant cluster. A runtime `PrototypeNaturalObjectSpawner` places them on valid Phase 9 future object cells. Trees and pots are solid obstacles; bushes and plant clusters are trigger placeholders reserved for later hiding/occlusion/reveal mechanics.
 
-Phase 11 adds versioned barangay residential placeholders: small warm-lit houses, medium concrete houses, wooden/bamboo fences, and closed gates. A runtime `PrototypeResidentialObjectSpawner` places them around the map edges with `BoxCollider2D` wall collisions while keeping center routes playable. Stores, base point, roles, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 11 added versioned barangay residential placeholders: small warm-lit houses, medium concrete houses, wooden/bamboo fences, and closed gates. A runtime `PrototypeResidentialObjectSpawner` places them around the map edges with `BoxCollider2D` wall collisions while keeping center routes playable.
+
+Phase 12 adds versioned Filipino marketplace placeholders: sari-sari store, palengke stall, food stall, SARI signboard, and crates/baskets. A runtime `PrototypeStoreObjectSpawner` places them around the existing market areas with tight `BoxCollider2D` wall collisions while avoiding road cells. Base point, roles, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
 
 ## Safety and branding rules
 
@@ -99,3 +101,4 @@ Do not skip ahead.
 - [Phase 9 test notes](docs/phase-9-test.md)
 - [Phase 10 test notes](docs/phase-10-test.md)
 - [Phase 11 test notes](docs/phase-11-test.md)
+- [Phase 12 test notes](docs/phase-12-test.md)

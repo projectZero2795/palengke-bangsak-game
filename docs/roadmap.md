@@ -15,8 +15,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 8 | Caught state | isCaught state, animation, HUD indicator. | Done. |
 | 9 | Soil / ground tiles | Soil, road, grass, concrete tilemap. | Done. |
 | 10 | Trees and natural objects | Trees, bushes, plants, collision/occlusion, optional future `RevealSource` light/animal placeholders. | Done. |
-| 11 | Houses | Houses, fences, gates, wall collisions, optional future `RevealSource` house-light placeholders. | Ready for local residential-object review. |
-| 12 | Stores | Sari-sari store, stalls, signboards, crates, optional future `RevealSource` environment props. | Marketplace area works. |
+| 11 | Houses | Houses, fences, gates, wall collisions, optional future `RevealSource` house-light placeholders. | Done. |
+| 12 | Stores | Sari-sari store, stalls, signboards, crates, optional future `RevealSource` environment props. | Ready for local marketplace-object review. |
 | 13 | Base point | Sak base trigger and hider-only interaction. | Base mechanic works locally. |
 | 14 | Map layout v1 | Place objects into playable map with spawn points and map component defaults. | First playable map approved. |
 | 15 | Role system | Taya/Hider roles, UI, markers, role component variants. | Roles work locally. |
