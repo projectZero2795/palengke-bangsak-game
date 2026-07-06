@@ -20,6 +20,9 @@ solid wall-collision obstacles before the full map layout phase.
 - Residential objects are placed around the map edges so the center routes stay
   playable.
 - Houses, fences, and gates use `BoxCollider2D` wall collisions.
+- House colliders intentionally cover only the lower walk-blocking footprint,
+  not the whole roof/visual sprite, so players do not collide with empty-looking
+  space around the roof.
 - Sorting order is calculated from map position so houses/fences sit above the
   ground and remain readable.
 - Added edit-mode tests for imported sprites, scene wiring, object specs,
@@ -44,8 +47,11 @@ fence, gate, or placement set without rewriting player movement or round rules.
 6. Confirm that houses, fences, and gates appear.
 7. Move the player into a house, fence, or gate.
    - Expected: the player should not pass through them.
-8. Confirm the central movement routes still feel open enough for chasing.
-9. Confirm the player, natural objects, Bang cone, Tag range, caught-state
+8. Walk close to the roof/upper visual area of a house.
+   - Expected: collision should feel tight to the actual lower footprint, not
+     like a large invisible box around the full sprite.
+9. Confirm the central movement routes still feel open enough for chasing.
+10. Confirm the player, natural objects, Bang cone, Tag range, caught-state
    stars, and nighttime ground remain readable with houses present.
 
 ## Automated checks

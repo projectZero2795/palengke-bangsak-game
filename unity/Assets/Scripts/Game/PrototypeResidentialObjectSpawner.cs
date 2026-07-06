@@ -175,23 +175,28 @@ namespace Palengke.BangSak.Game
 
         private ResidentialObjectSpec House(ResidentialObjectKind kind, Vector2Int cell)
         {
+            // Collider size/offset are local-space and then multiplied by object
+            // scale. Keep house colliders intentionally tight: they represent
+            // the lower walk-blocking footprint, not the full roof silhouette.
             if (kind == ResidentialObjectKind.MediumHouse)
             {
+                var scale = new Vector2(3.05f, 2.3f);
                 return new ResidentialObjectSpec(
                     kind,
                     cell,
-                    new Vector2(3.05f, 2.3f),
-                    new Vector2(2.15f, 0.92f),
-                    new Vector2(0f, -0.45f),
+                    scale,
+                    new Vector2(0.72f, 0.26f),
+                    new Vector2(0f, -0.24f),
                     false);
             }
 
+            var smallHouseScale = new Vector2(2.45f, 2.0f);
             return new ResidentialObjectSpec(
                 kind,
                 cell,
-                new Vector2(2.45f, 2.0f),
-                new Vector2(1.55f, 0.82f),
-                new Vector2(0f, -0.42f),
+                smallHouseScale,
+                new Vector2(0.62f, 0.24f),
+                new Vector2(0f, -0.23f),
                 false);
         }
 

@@ -93,7 +93,35 @@ public sealed class PrototypeResidentialObjectSpawnerTests
         Assert.That(renderers.All(renderer => renderer.sprite != null), Is.True);
         Assert.That(colliders.Length, Is.EqualTo(14));
         Assert.That(colliders.All(collider => !collider.isTrigger), Is.True);
-        Assert.That(colliders.Any(collider => collider.size.x > 1.5f && collider.size.y > 0.7f), Is.True);
+        Assert.That(colliders.Any(collider => collider.size.x > 1.5f && collider.size.y < 0.4f), Is.True);
+    }
+
+    [Test]
+    public void HouseSpecs_UseTightLowerFootprintColliders()
+    {
+        owner = new GameObject("Residential Object Spawner Test");
+        var ground = owner.AddComponent<PrototypeGroundTilemap>();
+        ground.SetMapSize(new Vector2Int(36, 26));
+        ground.SetMapSeed(2795);
+
+        var spawner = owner.AddComponent<PrototypeResidentialObjectSpawner>();
+        spawner.SetGroundTilemap(ground);
+
+        var houseSpecs = spawner.GetObjectSpecs()
+            .Where(spec => spec.Kind == ResidentialObjectKind.SmallHouse || spec.Kind == ResidentialObjectKind.MediumHouse)
+            .ToArray();
+
+        Assert.That(houseSpecs.Length, Is.EqualTo(4));
+
+        foreach (var spec in houseSpecs)
+        {
+            var worldColliderSize = Vector2.Scale(spec.ColliderSize, spec.Scale);
+            var worldColliderOffset = Vector2.Scale(spec.ColliderOffset, spec.Scale);
+
+            Assert.That(worldColliderSize.x, Is.LessThanOrEqualTo(2.2f));
+            Assert.That(worldColliderSize.y, Is.LessThanOrEqualTo(0.6f));
+            Assert.That(worldColliderOffset.y, Is.LessThan(0f));
+        }
     }
 
     private static Sprite CreateSolidSprite(Color color)
