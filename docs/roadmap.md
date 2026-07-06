@@ -14,18 +14,18 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 7 | Close tag action | Harmless close-range Tag/Close Tap mechanic. | Done. |
 | 8 | Caught state | isCaught state, animation, HUD indicator. | Done. |
 | 9 | Soil / ground tiles | Soil, road, grass, concrete tilemap. | Ready for local ground-tile review. |
-| 10 | Trees and natural objects | Trees, bushes, plants, collision/occlusion. | Natural obstacles work. |
-| 11 | Houses | Houses, fences, gates, wall collisions. | Residential area works. |
-| 12 | Stores | Sari-sari store, stalls, signboards, crates. | Marketplace area works. |
+| 10 | Trees and natural objects | Trees, bushes, plants, collision/occlusion, optional `RevealSource` light/animal placeholders. | Natural obstacles work. |
+| 11 | Houses | Houses, fences, gates, wall collisions, optional `RevealSource` house-light placeholders. | Residential area works. |
+| 12 | Stores | Sari-sari store, stalls, signboards, crates, optional future `RevealSource` environment props. | Marketplace area works. |
 | 13 | Base point | Sak base trigger and hider-only interaction. | Base mechanic works locally. |
-| 14 | Map layout v1 | Place objects into playable map with spawn points. | First playable map approved. |
-| 15 | Role system | Taya/Hider roles, UI, markers. | Roles work locally. |
-| 16 | Round rules | Timer, hider count, win conditions, restart, result screen. | Local prototype playable. |
+| 14 | Map layout v1 | Place objects into playable map with spawn points and map component defaults. | First playable map approved. |
+| 15 | Role system | Taya/Hider roles, UI, markers, role component variants. | Roles work locally. |
+| 16 | Round rules | Timer, hider count, stealth/reveal rules, win conditions, restart, result screen. | Local prototype playable. |
 | 17 | UI polish | Main menu, how-to, HUD, result, settings placeholder. | Local prototype usable. |
-| 18 | Photon setup | Install/configure Photon Fusion and room lifecycle. | Two clients join same room. |
+| 18 | Photon setup | Install/configure Photon Fusion, room lifecycle, and room component selection/vote placeholder. | Two clients join same room. |
 | 19 | Multiplayer player spawning | Network player prefab, ownership, spawn points. | Multiplayer movement foundation works. |
 | 20 | Multiplayer movement sync | Smooth remote movement and basic lag notes. | Movement sync stable. |
-| 21 | Multiplayer Bang/Tag sync | Networked catch mechanics and validation. | Online catching works. |
+| 21 | Multiplayer Bang/Tag sync | Networked catch mechanics, stealth/reveal sync, and validation. | Online catching works. |
 | 22 | Multiplayer Sak sync | Networked base interaction and round result. | Full online round works. |
 | 23 | WebGL build | Unity WebGL build and browser test. | WebGL works locally. |
 | 24 | Docker static hosting | Nginx Docker image for WebGL files. | Container serves game. |
@@ -39,3 +39,23 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 ## Mandatory stop rule
 
 After each phase, stop and wait for review before continuing.
+
+## Future gameplay rules to respect
+
+- Stealth/reveal rules are documented in [Gameplay Rules](gameplay-rules.md).
+- Object/component design/versioning is documented in
+  [Object Design, Implementation, and Versioning](object-design-versioning.md).
+- Every reusable piece of the game must be scalable, configurable, modifiable,
+  and versioned: objects, player movement, actions, UI, map generation, reveal
+  sources, network adapters, and API adapters.
+- The long-term selection model is documented in
+  [Object Design, Implementation, and Versioning](object-design-versioning.md):
+  admins can set defaults, rooms can select compatible component versions, and
+  players can vote for allowed maps/component sets.
+- Hiders can only hide safely for `5` seconds before a streetlight, house light,
+  or dog-bark clue reveals them.
+- Walking should stay quiet; running should reveal the hider direction through
+  short directional clues.
+- Reveal objects must use the scalable `RevealSource` category so future reveal
+  providers can be added by object type/version/variant rather than hardcoding
+  each provider into round rules.

@@ -75,6 +75,21 @@ Reference image: [bang-sak-roadmap-reference.jpg](reference/bang-sak-roadmap-ref
 | Camera boundary | 14 | Prevents camera showing outside map. |
 | Hiding routes | 14 | Paths around houses, trees, and stores. |
 
+## RevealSource objects
+
+RevealSource objects are scalable reveal providers. The core stealth system
+should depend on the shared `reveal_source` category, not hardcoded object IDs.
+This lets us add new reveal objects in future maps without rewriting the round
+rules.
+
+| RevealSource type | Example objects | Phase | Notes |
+| --- | --- | ---: | --- |
+| `light` | Streetlight, market lamp, string light | 10, 14, 16 | Flicker/sweep/turn-on clue after hide timeout. |
+| `house_light` | Window light, balcony light, door light | 11, 14, 16 | House-attached warm clue near hidden hider. |
+| `animal_sound` | Dog bark, rooster noise | 10, 14, 16 | Directional sound clue. Friendly only; no attack/chase behavior. |
+| `movement_noise` | Running footsteps, dust ripple, sound wave | 16, 21 | Running reveals direction. Walking stays quiet. |
+| `environment` | Loose can, hanging bell, bucket, plastic chair | 12, 16+ | Optional future noisy prop category after core stealth works. |
+
 ## UI objects
 
 | Object | Phase | Notes |
@@ -93,3 +108,10 @@ Reference image: [bang-sak-roadmap-reference.jpg](reference/bang-sak-roadmap-ref
 - Make objects chunky, readable, warm, Filipino-themed, and friendly.
 - Prioritize clear gameplay readability over visual noise.
 - Mobile UI must stay legible and thumb-friendly.
+- Bang-Sak is played at night, so objects need readable silhouettes, warm local
+  light, and cool shadow separation.
+- Every object/component that may appear in maps or gameplay should follow
+  [Object Design, Implementation, and Versioning](object-design-versioning.md):
+  design first, implementation contract second, version/variant metadata third.
+- This includes visual objects, gameplay systems, UI widgets, map generators,
+  reveal sources, networking adapters, and API adapters.

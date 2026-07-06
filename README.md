@@ -79,7 +79,9 @@ Do not skip ahead.
 
 - [Architecture](docs/architecture.md)
 - [Development roadmap](docs/roadmap.md)
+- [Gameplay rules](docs/gameplay-rules.md)
 - [Object catalog from the reference image](docs/object-catalog.md)
+- [Object/component design, implementation, and versioning](docs/object-design-versioning.md)
 - [Maintenance plan](docs/maintenance.md)
 - [Phase 0 review checklist](docs/phase-0-review.md)
 - [Phase 1 test notes](docs/phase-1-test.md)
