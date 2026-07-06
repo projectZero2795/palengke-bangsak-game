@@ -3,12 +3,14 @@
 Phase 9 adds the first ground foundation for `PrototypeMap`.
 
 The first review pass replaced the very basic tiles with the approved
-bottom-center direction: warmer street-market ground, painted accents, and a
-larger soil-heavy play area so future hiding objects have room to breathe.
+bottom-center direction, then shifted the palette to match the game premise:
+Bang-Sak is played at night. The ground now uses a nighttime street-market
+floor, muted painted accents, warm lamp pools, and a larger soil-heavy play
+area so future hiding objects have room to breathe.
 
 ## What changed
 
-- Added deterministic 128px placeholder sprites for:
+- Added deterministic 128px nighttime placeholder sprites for:
   - soil;
   - road/path;
   - grass;
@@ -35,7 +37,8 @@ larger soil-heavy play area so future hiding objects have room to breathe.
 3. Expected:
    - a larger tiled ground foundation appears;
    - soil is the dominant playable surface;
-   - it contains colorful market-style paths, grass patches, and concrete pads;
+   - it contains nighttime market-style paths, muted colored accents, grass patches, and concrete pads;
+   - the scene background/ambient color feels like night while remaining readable;
    - the player and practice targets render above the ground;
    - the prototype wall boundary gives the player much more room to move;
    - in the Inspector, `Phase 9 Ground Tilemap` exposes `Map Size` and
@@ -44,7 +47,7 @@ larger soil-heavy play area so future hiding objects have room to breathe.
 
 ## Scope notes
 
-- This is still placeholder art, but it now follows the chosen warmer
+- This is still placeholder art, but it now follows the chosen nighttime
   street-market visual direction.
 - Random object placement is prepared, but actual object spawning, object
   collisions, houses, trees, and hiding objects are intentionally not part of
