@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Generate deterministic Phase 9 ground tile placeholder sprites."""
+"""Generate deterministic Phase 9 ground tile placeholder sprites.
+
+The art direction is the approved "bottom-center" option from the review:
+a warm Filipino street-market plaza floor with colorful painted borders,
+small triangle markings, and open playable space. It stays tilemap-friendly
+and keeps Phase 9 focused on ground only.
+"""
 
 from __future__ import annotations
 
@@ -13,7 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "unity" / "Assets" / "Art" / "Placeholders" / "Ground"
-SIZE = 64
+SIZE = 128
 
 
 def rgba(hex_color: str, alpha: int = 255) -> tuple[int, int, int, int]:
@@ -196,24 +202,169 @@ def mix(a: tuple[int, int, int, int], b: tuple[int, int, int, int], t: float) ->
     )
 
 
+def clamp(value: float, low: int = 0, high: int = 255) -> int:
+    return max(low, min(high, int(value)))
+
+
+def speckle(
+    color: tuple[int, int, int, int],
+    target: tuple[int, int, int, int],
+    rng: random.Random,
+    chance: float,
+    strength: float,
+) -> tuple[int, int, int, int]:
+    if rng.random() >= chance:
+        return color
+
+    return mix(color, target, rng.uniform(strength * 0.35, strength))
+
+
+def distance_to_line(x: int, y: int, slope: float, offset: float) -> float:
+    return abs(y - (slope * x + offset)) / math.sqrt((slope * slope) + 1)
+
+
+def apply_market_paint(
+    color: tuple[int, int, int, int],
+    x: int,
+    y: int,
+    seed: int,
+    strength: float,
+) -> tuple[int, int, int, int]:
+    """Add subtle painted Filipino market-floor accents without overpowering play readability."""
+
+    stripes = (
+        (0.18, 18 + seed % 13, rgba("#d85f4c")),
+        (-0.12, 46 + seed % 19, rgba("#3c92a6")),
+        (0.10, 78 + seed % 17, rgba("#e3b64b")),
+    )
+
+    for slope, offset, paint in stripes:
+        if distance_to_line(x, y, slope, offset) < 1.15:
+            color = mix(color, paint, strength)
+
+    return color
+
+
+def inside_triangle(x: int, y: int, cx: int, cy: int, radius: int) -> bool:
+    local_x = abs(x - cx)
+    local_y = y - cy
+    return 0 <= local_y <= radius and local_x <= (radius - local_y) * 0.75
+
+
+def apply_triangle_markers(
+    color: tuple[int, int, int, int],
+    x: int,
+    y: int,
+    seed: int,
+    alpha: float,
+) -> tuple[int, int, int, int]:
+    markers = (
+        (25 + seed % 11, 34, rgba("#c44f3d")),
+        (70, 23 + seed % 17, rgba("#2d8aa0")),
+        (96, 77, rgba("#dfb044")),
+        (42, 96, rgba("#5f73bd")),
+    )
+
+    for cx, cy, marker in markers:
+        if inside_triangle(x, y, cx, cy, 7):
+            color = mix(color, marker, alpha)
+
+    return color
+
+
+def apply_market_border(
+    color: tuple[int, int, int, int],
+    x: int,
+    y: int,
+    inset: int,
+    strength: float,
+) -> tuple[int, int, int, int]:
+    border_colors = (
+        rgba("#d04f3e"),
+        rgba("#e0ad37"),
+        rgba("#2d8ca4"),
+        rgba("#466aa8"),
+    )
+
+    on_border = (
+        inset <= x <= SIZE - inset and abs(y - inset) <= 2
+        or inset <= x <= SIZE - inset and abs(y - (SIZE - inset)) <= 2
+        or inset <= y <= SIZE - inset and abs(x - inset) <= 2
+        or inset <= y <= SIZE - inset and abs(x - (SIZE - inset)) <= 2
+    )
+
+    if on_border:
+        color = mix(color, border_colors[((x // 18) + (y // 18)) % len(border_colors)], strength)
+
+    return color
+
+
 def tile(base: tuple[int, int, int, int], accent: tuple[int, int, int, int], seed: int, mode: str) -> bytes:
     rng = random.Random(seed)
     pixels = bytearray(SIZE * SIZE * 4)
+
     for y in range(SIZE):
         for x in range(SIZE):
-            wave = (math.sin((x + seed) * 0.27) + math.cos((y - seed) * 0.31)) * 0.5
-            noise = rng.random() * 0.08
-            color = mix(base, accent, max(0.0, min(1.0, 0.18 + wave * 0.08 + noise)))
-            if mode == "grass" and rng.random() < 0.10:
-                color = mix(color, rgba("#8fd16a"), 0.35)
-            if mode == "soil" and rng.random() < 0.075:
-                color = mix(color, rgba("#5b341f"), 0.35)
-            if mode == "concrete" and (x % 16 == 0 or y % 16 == 0):
-                color = mix(color, rgba("#bfc7c8"), 0.32)
-            if mode == "road" and (x + y) % 23 == 0:
-                color = mix(color, rgba("#a37a52"), 0.22)
+            wave = (math.sin((x + seed) * 0.095) + math.cos((y - seed) * 0.105)) * 0.5
+            fine_wave = math.sin((x + y + seed) * 0.41) * 0.04
+            noise = rng.random() * 0.10
+            t = max(0.0, min(1.0, 0.24 + wave * 0.12 + fine_wave + noise))
+            color = mix(base, accent, t)
+
+            if mode == "soil":
+                color = speckle(color, rgba("#5a3828"), rng, 0.030, 0.20)
+                color = speckle(color, rgba("#e1b66c"), rng, 0.018, 0.23)
+                color = apply_market_paint(color, x, y, seed, 0.16)
+                color = apply_triangle_markers(color, x, y, seed, 0.24)
+                if 24 < x < 104 and 24 < y < 104:
+                    color = apply_market_border(color, x, y, 25, 0.22)
+                if 58 < x < 67 or 58 < y < 67:
+                    color = mix(color, rgba("#6e5543"), 0.06)
+
+            if mode == "road":
+                worn_track = abs(y - (SIZE / 2 + math.sin((x + seed) * 0.08) * 6))
+                if worn_track < 14:
+                    color = mix(color, rgba("#c08a57"), 0.18)
+                for stripe_x, stripe_y, stripe_color in (
+                    (20, 26, rgba("#d04f3e")),
+                    (34, 30, rgba("#e3b447")),
+                    (49, 34, rgba("#2b899c")),
+                    (83, 91, rgba("#466aa8")),
+                    (98, 95, rgba("#e0ad37")),
+                    (112, 99, rgba("#c74d3d")),
+                ):
+                    if abs(x - stripe_x) <= 7 and abs(y - stripe_y) <= 2:
+                        color = mix(color, stripe_color, 0.58)
+                color = apply_triangle_markers(color, x, y, seed + 5, 0.30)
+                color = speckle(color, rgba("#5c3725"), rng, 0.040, 0.22)
+                color = speckle(color, rgba("#f3cd74"), rng, 0.012, 0.35)
+
+            if mode == "grass":
+                color = speckle(color, rgba("#8ed768"), rng, 0.110, 0.45)
+                color = speckle(color, rgba("#1e4629"), rng, 0.080, 0.32)
+                leaf_band = math.sin((x * 0.18) + (y * 0.11) + seed) > 0.92
+                if leaf_band:
+                    color = mix(color, rgba("#74bd56"), 0.38)
+
+            if mode == "concrete":
+                grout = (x % 32 <= 1) or (y % 32 <= 1)
+                if grout:
+                    color = mix(color, rgba("#4c3f35"), 0.34)
+                if (x + y + seed) % 41 == 0:
+                    color = mix(color, rgba("#e0d4a3"), 0.26)
+                color = apply_market_paint(color, x, y, seed + 17, 0.12)
+                color = apply_market_border(color, x, y, 18, 0.18)
+
             i = (y * SIZE + x) * 4
-            pixels[i : i + 4] = bytes(color)
+            pixels[i : i + 4] = bytes(
+                (
+                    clamp(color[0]),
+                    clamp(color[1]),
+                    clamp(color[2]),
+                    clamp(color[3]),
+                )
+            )
+
     return bytes(pixels)
 
 
@@ -222,10 +373,10 @@ def main() -> None:
     write_folder_meta(OUT_DIR)
 
     specs = (
-        ("soil_tile_placeholder.png", rgba("#7a4b2a"), rgba("#a2693c"), 901, "soil"),
-        ("road_tile_placeholder.png", rgba("#8e6844"), rgba("#c09a6e"), 902, "road"),
-        ("grass_tile_placeholder.png", rgba("#315f35"), rgba("#5f9f4b"), 903, "grass"),
-        ("concrete_tile_placeholder.png", rgba("#6e7778"), rgba("#aab2b3"), 904, "concrete"),
+        ("soil_tile_placeholder.png", rgba("#8f6843"), rgba("#c28d58"), 901, "soil"),
+        ("road_tile_placeholder.png", rgba("#8d6541"), rgba("#c88e55"), 902, "road"),
+        ("grass_tile_placeholder.png", rgba("#2f6639"), rgba("#669f48"), 903, "grass"),
+        ("concrete_tile_placeholder.png", rgba("#766b5f"), rgba("#aaa092"), 904, "concrete"),
     )
 
     for name, base, accent, seed, mode in specs:

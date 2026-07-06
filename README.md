@@ -28,7 +28,7 @@ Phase 7 added the harmless close-range Tag / Close Tap alternative: short-range 
 
 Phase 8 added local caught-state behavior for Bang and Tag hits: targets become caught, show a playful animated dizzy-star indicator, caught players lose movement/action controls until reset, and the prototype `Hiders Left` counter updates.
 
-Phase 9 adds the first ground foundation: soil, road/path, grass, and concrete placeholder tiles, plus a runtime `Grid`/`Tilemap` builder in `PrototypeMap`. Object collisions, houses, trees, roles, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 9 adds the first ground foundation: richer 128px soil, road/path, grass, and concrete placeholder tiles, plus a runtime `Grid`/`Tilemap` builder in `PrototypeMap`. The approved review direction is a warmer Filipino street-market ground style with a larger `36 x 26` soil-heavy play area, a configurable map seed, future random object-placement cells, and a wider prototype wall boundary. Actual object spawning/collisions, houses, trees, roles, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
 
 ## Safety and branding rules
 

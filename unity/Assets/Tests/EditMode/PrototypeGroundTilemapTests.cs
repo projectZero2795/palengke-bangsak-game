@@ -21,12 +21,44 @@ public sealed class PrototypeGroundTilemapTests
     {
         owner = new GameObject("Ground Tilemap Test");
         var builder = owner.AddComponent<PrototypeGroundTilemap>();
-        builder.SetMapSize(new Vector2Int(16, 12));
+        builder.SetMapSize(new Vector2Int(36, 26));
 
         Assert.That(builder.CountTiles(GroundTileKind.Soil), Is.GreaterThan(0));
         Assert.That(builder.CountTiles(GroundTileKind.Road), Is.GreaterThan(0));
         Assert.That(builder.CountTiles(GroundTileKind.Grass), Is.GreaterThan(0));
         Assert.That(builder.CountTiles(GroundTileKind.Concrete), Is.GreaterThan(0));
+    }
+
+    [Test]
+    public void SetMapSize_AllowsGroundToExpand()
+    {
+        owner = new GameObject("Ground Tilemap Test");
+        var builder = owner.AddComponent<PrototypeGroundTilemap>();
+        builder.SetMapSize(new Vector2Int(48, 34));
+
+        Assert.That(builder.MapSize, Is.EqualTo(new Vector2Int(48, 34)));
+        Assert.That(builder.CountTiles(GroundTileKind.Soil), Is.GreaterThan(36 * 26 / 2));
+    }
+
+    [Test]
+    public void FutureObjectPlacementCells_AreDeterministicAndDoNotUseRoadCells()
+    {
+        owner = new GameObject("Ground Tilemap Test");
+        var builder = owner.AddComponent<PrototypeGroundTilemap>();
+        builder.SetMapSize(new Vector2Int(36, 26));
+        builder.SetMapSeed(1234);
+
+        var firstRun = builder.GetFutureObjectPlacementCells(12);
+        var secondRun = builder.GetFutureObjectPlacementCells(12);
+
+        Assert.That(firstRun, Is.EqualTo(secondRun));
+        Assert.That(firstRun.Length, Is.EqualTo(12));
+
+        foreach (var cell in firstRun)
+        {
+            Assert.That(builder.IsValidFutureObjectCell(cell), Is.True);
+            Assert.That(builder.ResolveTileKind(cell.x, cell.y), Is.Not.EqualTo(GroundTileKind.Road));
+        }
     }
 
     [Test]

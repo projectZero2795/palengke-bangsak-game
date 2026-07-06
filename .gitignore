@@ -16,3 +16,6 @@ UserSettings/
 .env
 .env.*
 
+# Python helper scripts
+__pycache__/
+*.pyc
