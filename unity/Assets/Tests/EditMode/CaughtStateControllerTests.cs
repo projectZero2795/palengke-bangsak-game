@@ -43,7 +43,12 @@ public sealed class CaughtStateControllerTests
         Assert.That(movement.enabled, Is.False);
         Assert.That(bang.enabled, Is.False);
         Assert.That(tag.enabled, Is.False);
-        Assert.That(player.GetComponentInChildren<TextMesh>(true), Is.Not.Null);
+        Assert.That(player.GetComponentInChildren<TextMesh>(true), Is.Null);
+
+        var starRoot = player.transform.Find("Caught Dizzy Stars");
+        Assert.That(starRoot, Is.Not.Null);
+        Assert.That(starRoot.gameObject.activeSelf, Is.True);
+        Assert.That(starRoot.GetComponentsInChildren<SpriteRenderer>(true).Length, Is.EqualTo(3));
     }
 
     [Test]
@@ -60,6 +65,7 @@ public sealed class CaughtStateControllerTests
         Assert.That(movement.enabled, Is.True);
         Assert.That(bang.enabled, Is.True);
         Assert.That(tag.enabled, Is.True);
+        Assert.That(player.transform.Find("Caught Dizzy Stars").gameObject.activeSelf, Is.False);
     }
 
     [Test]

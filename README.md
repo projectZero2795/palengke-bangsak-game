@@ -26,7 +26,7 @@ Phase 6 added local Bang hit detection with safe feedback: range-limited circle-
 
 Phase 7 added the harmless close-range Tag / Close Tap alternative: short-range detection, wall blocking, cooldown, TAG button, and friendly tag-hit flash feedback.
 
-Phase 8 adds local caught-state behavior for Bang and Tag hits: targets become caught, show a playful caught indicator, caught players lose movement/action controls until reset, and the prototype `Hiders Left` counter updates. Full role rules, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 8 adds local caught-state behavior for Bang and Tag hits: targets become caught, show a playful animated dizzy-star indicator, caught players lose movement/action controls until reset, and the prototype `Hiders Left` counter updates. Full role rules, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
 
 ## Safety and branding rules
 

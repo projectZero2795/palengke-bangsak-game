@@ -13,7 +13,7 @@ Open `Assets/Scenes/PrototypeMap.unity`, press Play, and use the default player.
 3. Expected:
    - the target flashes;
    - the target changes into caught feedback;
-   - a small `CAUGHT` label appears above the target;
+   - three small dizzy stars appear and orbit above the target;
    - the `Hiders Left` counter decreases.
 
 ### Tag catches a target
@@ -23,7 +23,7 @@ Open `Assets/Scenes/PrototypeMap.unity`, press Play, and use the default player.
 3. Expected:
    - only close-range targets are caught;
    - walls still block the tag;
-   - the same `CAUGHT` label and counter behavior appear.
+   - the same dizzy-star and counter behavior appear.
 
 ### Caught state behavior
 
@@ -53,3 +53,4 @@ Phase 8 adds edit-mode coverage for:
 - Tag-to-caught integration;
 - prefab wiring;
 - practice counter updates.
+- text-free animated caught indicator.
