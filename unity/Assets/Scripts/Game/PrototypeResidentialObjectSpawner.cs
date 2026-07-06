@@ -202,13 +202,16 @@ namespace Palengke.BangSak.Game
 
         private ResidentialObjectSpec Fence(ResidentialObjectKind kind, Vector2Int cell)
         {
+            // Fence collider size/offset are also local-space and multiplied by
+            // object scale. Match the visible wood/metal footprint; otherwise
+            // fences feel like oversized invisible walls.
             if (kind == ResidentialObjectKind.FenceVertical)
             {
                 return new ResidentialObjectSpec(
                     kind,
                     cell,
                     new Vector2(0.72f, 1.8f),
-                    new Vector2(0.24f, 1.42f),
+                    new Vector2(0.24f, 0.66f),
                     Vector2.zero,
                     false);
             }
@@ -217,7 +220,7 @@ namespace Palengke.BangSak.Game
                 kind,
                 cell,
                 new Vector2(2.0f, 0.72f),
-                new Vector2(1.82f, 0.24f),
+                new Vector2(0.82f, 0.28f),
                 Vector2.zero,
                 false);
         }
@@ -227,7 +230,7 @@ namespace Palengke.BangSak.Game
                 ResidentialObjectKind.Gate,
                 cell,
                 new Vector2(1.4f, 0.78f),
-                new Vector2(1.1f, 0.22f),
+                new Vector2(0.62f, 0.28f),
                 Vector2.zero,
                 false);
 

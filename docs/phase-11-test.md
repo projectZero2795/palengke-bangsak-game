@@ -23,6 +23,9 @@ solid wall-collision obstacles before the full map layout phase.
 - House colliders intentionally cover only the lower walk-blocking footprint,
   not the whole roof/visual sprite, so players do not collide with empty-looking
   space around the roof.
+- Fence and gate colliders intentionally match the visible wood/metal footprint,
+  not the scaled full transparent sprite bounds, so players do not hit oversized
+  invisible walls beside fences.
 - Sorting order is calculated from map position so houses/fences sit above the
   ground and remain readable.
 - Added edit-mode tests for imported sprites, scene wiring, object specs,
@@ -50,8 +53,11 @@ fence, gate, or placement set without rewriting player movement or round rules.
 8. Walk close to the roof/upper visual area of a house.
    - Expected: collision should feel tight to the actual lower footprint, not
      like a large invisible box around the full sprite.
-9. Confirm the central movement routes still feel open enough for chasing.
-10. Confirm the player, natural objects, Bang cone, Tag range, caught-state
+9. Walk along the sides and ends of fences/gates.
+   - Expected: collision should match the visible wood/metal, not extend far
+     into nearby empty space.
+10. Confirm the central movement routes still feel open enough for chasing.
+11. Confirm the player, natural objects, Bang cone, Tag range, caught-state
    stars, and nighttime ground remain readable with houses present.
 
 ## Automated checks
