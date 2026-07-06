@@ -13,8 +13,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 6 | Bang projectile / hit physics | Projectile/raycast hit detection and feedback. | Done. |
 | 7 | Close tag action | Harmless close-range Tag/Close Tap mechanic. | Done. |
 | 8 | Caught state | isCaught state, animation, HUD indicator. | Done. |
-| 9 | Soil / ground tiles | Soil, road, grass, concrete tilemap. | Ready for local ground-tile review. |
-| 10 | Trees and natural objects | Trees, bushes, plants, collision/occlusion, optional `RevealSource` light/animal placeholders. | Natural obstacles work. |
+| 9 | Soil / ground tiles | Soil, road, grass, concrete tilemap. | Done. |
+| 10 | Trees and natural objects | Trees, bushes, plants, collision/occlusion, optional future `RevealSource` light/animal placeholders. | Ready for local natural-object review. |
 | 11 | Houses | Houses, fences, gates, wall collisions, optional `RevealSource` house-light placeholders. | Residential area works. |
 | 12 | Stores | Sari-sari store, stalls, signboards, crates, optional future `RevealSource` environment props. | Marketplace area works. |
 | 13 | Base point | Sak base trigger and hider-only interaction. | Base mechanic works locally. |

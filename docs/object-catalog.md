@@ -39,10 +39,10 @@ Reference image: [bang-sak-roadmap-reference.jpg](reference/bang-sak-roadmap-ref
 
 | Object | Phase | Notes |
 | --- | ---: | --- |
-| Tree | 10 | Solid trunk collision, canopy can provide partial hiding. |
-| Bush | 10 | Hiding/occlusion object. |
-| Plant pot | 10 | Small obstacle and theme detail. |
-| Large plant cluster | 10, 14 | Map variety and chase routes. |
+| Tree | 10 | Solid trunk collision, coconut/banana-style tropical silhouette, canopy can provide partial hiding later. |
+| Bush | 10 | Bougainvillea-style flowering hiding/occlusion object. |
+| Plant pot | 10 | Potted tropical plant, small obstacle and barangay theme detail. |
+| Large plant cluster | 10, 14 | Bamboo/banana-style cluster for map variety and chase routes. |
 
 ## Houses and residential objects
 

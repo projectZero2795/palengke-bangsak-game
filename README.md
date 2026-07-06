@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 9: Soil / ground tiles**, ready for local ground-tile review.
+This repository is currently in **Phase 10: Trees and natural objects**, ready for local natural-object review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -28,7 +28,9 @@ Phase 7 added the harmless close-range Tag / Close Tap alternative: short-range 
 
 Phase 8 added local caught-state behavior for Bang and Tag hits: targets become caught, show a playful animated dizzy-star indicator, caught players lose movement/action controls until reset, and the prototype `Hiders Left` counter updates.
 
-Phase 9 adds the first ground foundation: richer 128px nighttime soil, road/path, grass, and concrete placeholder tiles, plus a runtime `Grid`/`Tilemap` builder in `PrototypeMap`. The approved review direction is a Filipino street-market ground style for nighttime Bang-Sak play, with a larger `36 x 26` soil-heavy play area, a configurable map seed, future random object-placement cells, and a wider prototype wall boundary. Actual object spawning/collisions, houses, trees, roles, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 9 added the first ground foundation: richer 128px nighttime soil, road/path, grass, and concrete placeholder tiles, plus a runtime `Grid`/`Tilemap` builder in `PrototypeMap`. The approved review direction is a Filipino street-market ground style for nighttime Bang-Sak play, with a larger `36 x 26` soil-heavy play area, a configurable map seed, future random object-placement cells, and a wider prototype wall boundary.
+
+Phase 10 adds versioned Filipino/barangay natural-object placeholders: a coconut/banana-style tropical tree, bougainvillea-style flowering bush, potted tropical plant, and bamboo/banana-style plant cluster. A runtime `PrototypeNaturalObjectSpawner` places them on valid Phase 9 future object cells. Trees and pots are solid obstacles; bushes and plant clusters are trigger placeholders reserved for later hiding/occlusion/reveal mechanics. Houses, stores, roles, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
 
 ## Safety and branding rules
 
@@ -93,3 +95,4 @@ Do not skip ahead.
 - [Phase 7 test notes](docs/phase-7-test.md)
 - [Phase 8 test notes](docs/phase-8-test.md)
 - [Phase 9 test notes](docs/phase-9-test.md)
+- [Phase 10 test notes](docs/phase-10-test.md)
