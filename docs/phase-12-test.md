@@ -47,7 +47,7 @@ round logic.
    - Expected: collisions should feel tight to the visible lower footprint, not
      like a huge invisible box.
 9. Confirm the main movement routes still feel open enough for chasing.
-10. Confirm the player, houses, natural objects, Bang cone, Tag range,
+10. Confirm the player, houses, natural objects, Bang cone,
     caught-state stars, and nighttime ground remain readable.
 
 ## Automated checks

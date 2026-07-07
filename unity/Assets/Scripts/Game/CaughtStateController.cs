@@ -6,8 +6,7 @@ namespace Palengke.BangSak.Game
     public enum CaughtCause
     {
         None = 0,
-        Bang = 1,
-        Tag = 2
+        Bang = 1
     }
 
     [DisallowMultipleComponent]
@@ -22,9 +21,6 @@ namespace Palengke.BangSak.Game
 
         [SerializeField]
         private BangActionController bangActionController;
-
-        [SerializeField]
-        private TagActionController tagActionController;
 
         [Header("Gameplay")]
         [SerializeField]
@@ -81,7 +77,6 @@ namespace Palengke.BangSak.Game
         private readonly SpriteRenderer[] starRenderers = new SpriteRenderer[StarCount];
         private bool movementWasEnabled = true;
         private bool bangWasEnabled = true;
-        private bool tagWasEnabled = true;
         private bool capturedControlState;
 
         public bool IsCaught { get; private set; }
@@ -174,10 +169,6 @@ namespace Palengke.BangSak.Game
                 bangActionController.enabled = false;
             }
 
-            if (tagActionController != null)
-            {
-                tagActionController.enabled = false;
-            }
         }
 
         private void RestoreControls()
@@ -190,11 +181,6 @@ namespace Palengke.BangSak.Game
             if (capturedControlState && bangActionController != null)
             {
                 bangActionController.enabled = bangWasEnabled;
-            }
-
-            if (capturedControlState && tagActionController != null)
-            {
-                tagActionController.enabled = tagWasEnabled;
             }
 
             capturedControlState = false;
@@ -233,7 +219,6 @@ namespace Palengke.BangSak.Game
 
             movementWasEnabled = movementController == null || movementController.enabled;
             bangWasEnabled = bangActionController == null || bangActionController.enabled;
-            tagWasEnabled = tagActionController == null || tagActionController.enabled;
             capturedControlState = true;
         }
 
@@ -400,10 +385,6 @@ namespace Palengke.BangSak.Game
                 bangActionController = GetComponent<BangActionController>();
             }
 
-            if (tagActionController == null)
-            {
-                tagActionController = GetComponent<TagActionController>();
-            }
         }
     }
 }

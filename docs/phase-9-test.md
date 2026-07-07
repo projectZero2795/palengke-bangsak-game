@@ -43,7 +43,7 @@ area so future hiding objects have room to breathe.
    - the prototype wall boundary gives the player much more room to move;
    - in the Inspector, `Phase 9 Ground Tilemap` exposes `Map Size` and
      `Map Seed`, which can later be used to generate bigger/different maps;
-   - movement, Bang, Tag, and caught-state behavior still work.
+   - movement, Bang, and caught-state behavior still work.
 
 ## Scope notes
 

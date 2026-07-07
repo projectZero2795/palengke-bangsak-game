@@ -57,7 +57,7 @@ fence, gate, or placement set without rewriting player movement or round rules.
    - Expected: collision should match the visible wood/metal, not extend far
      into nearby empty space.
 10. Confirm the central movement routes still feel open enough for chasing.
-11. Confirm the player, natural objects, Bang cone, Tag range, caught-state
+11. Confirm the player, natural objects, Bang cone, caught-state
    stars, and nighttime ground remain readable with houses present.
 
 ## Automated checks

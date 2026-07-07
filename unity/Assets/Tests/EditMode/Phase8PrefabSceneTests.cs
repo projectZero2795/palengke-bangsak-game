@@ -29,6 +29,5 @@ public sealed class Phase8PrefabSceneTests
         Assert.That(caughtState, Is.Not.Null);
         Assert.That(caughtState.CountAsHider, Is.True);
         Assert.That(prefab.GetComponent<BangHitTarget>(), Is.Not.Null);
-        Assert.That(prefab.GetComponent<TagHitTarget>(), Is.Not.Null);
     }
 }

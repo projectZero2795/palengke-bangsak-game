@@ -55,7 +55,7 @@ code.
 8. Move near bushes or plant clusters.
    - Expected: they should be visual placeholders now; future hiding/reveal
      behavior is not implemented yet.
-9. Confirm the player, Bang cone, Tag range, caught-state stars, and ground
+9. Confirm the player, Bang cone, caught-state stars, and ground
    tiles still look readable with the natural objects present.
 
 ## Automated checks

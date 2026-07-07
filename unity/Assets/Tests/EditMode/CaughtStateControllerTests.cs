@@ -8,7 +8,6 @@ public sealed class CaughtStateControllerTests
     private GameObject player;
     private PlayerMovementController movement;
     private BangActionController bang;
-    private TagActionController tag;
     private CaughtStateController caughtState;
 
     [SetUp]
@@ -20,7 +19,6 @@ public sealed class CaughtStateControllerTests
         movement = player.AddComponent<PlayerMovementController>();
         player.AddComponent<PlayerAnimationController>();
         bang = player.AddComponent<BangActionController>();
-        tag = player.AddComponent<TagActionController>();
         caughtState = player.AddComponent<CaughtStateController>();
     }
 
@@ -42,7 +40,6 @@ public sealed class CaughtStateControllerTests
         Assert.That(caughtState.LastCaughtSource, Is.EqualTo(bang));
         Assert.That(movement.enabled, Is.False);
         Assert.That(bang.enabled, Is.False);
-        Assert.That(tag.enabled, Is.False);
         Assert.That(player.GetComponentInChildren<TextMesh>(true), Is.Null);
 
         var starRoot = player.transform.Find("Caught Dizzy Stars");
@@ -54,7 +51,7 @@ public sealed class CaughtStateControllerTests
     [Test]
     public void ResetCaughtState_RestoresMovementAndActions()
     {
-        caughtState.MarkCaught(tag, CaughtCause.Tag, 302);
+        caughtState.MarkCaught(bang, CaughtCause.Bang, 302);
 
         caughtState.ResetCaughtState();
 
@@ -64,7 +61,6 @@ public sealed class CaughtStateControllerTests
         Assert.That(caughtState.LastCaughtSource, Is.Null);
         Assert.That(movement.enabled, Is.True);
         Assert.That(bang.enabled, Is.True);
-        Assert.That(tag.enabled, Is.True);
         Assert.That(player.transform.Find("Caught Dizzy Stars").gameObject.activeSelf, Is.False);
     }
 
@@ -73,7 +69,7 @@ public sealed class CaughtStateControllerTests
     {
         Assert.That(caughtState.MarkCaught(bang, CaughtCause.Bang, 303), Is.True);
 
-        Assert.That(caughtState.MarkCaught(tag, CaughtCause.Tag, 304), Is.False);
+        Assert.That(caughtState.MarkCaught(bang, CaughtCause.Bang, 304), Is.False);
 
         Assert.That(caughtState.Cause, Is.EqualTo(CaughtCause.Bang));
         Assert.That(caughtState.CatchSequenceId, Is.EqualTo(303));

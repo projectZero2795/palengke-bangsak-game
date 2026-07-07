@@ -38,7 +38,7 @@ public sealed class CaughtStateCounterHudTests
         Assert.That(hud.LastTotal, Is.EqualTo(2));
         Assert.That(hud.LastRemaining, Is.EqualTo(2));
 
-        caught.MarkCaught(null, CaughtCause.Tag, 501);
+        caught.MarkCaught(null, CaughtCause.Bang, 501);
         hud.RefreshCounter();
 
         Assert.That(hud.LastTotal, Is.EqualTo(2));

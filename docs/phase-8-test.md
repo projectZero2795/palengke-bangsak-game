@@ -16,14 +16,13 @@ Open `Assets/Scenes/PrototypeMap.unity`, press Play, and use the default player.
    - three small dizzy stars appear and orbit above the target;
    - the `Hiders Left` counter decreases.
 
-### Tag catches a target
+### Historical Tag catch check
 
-1. Move close to a colored practice player.
-2. Press `E` or the `TAG` button.
-3. Expected:
-   - only close-range targets are caught;
-   - walls still block the tag;
-   - the same dizzy-star and counter behavior appear.
+> Removed in Phase 16. The caught-state foundation remains, but the old separate
+> TAG path no longer exists.
+
+Before Phase 16, this checked that the old TAG experiment could mark a target
+caught. The corrected rule replaces this later with a safe hider SAK counter.
 
 ### Caught state behavior
 
@@ -50,7 +49,6 @@ Phase 8 adds edit-mode coverage for:
 - caught state reset;
 - movement/action disabling while caught;
 - Bang-to-caught integration;
-- Tag-to-caught integration;
 - prefab wiring;
 - practice counter updates.
 - text-free animated caught indicator.

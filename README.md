@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 15: Remove incorrect SAK base**, ready for review before the old separate TAG experiment is removed.
+This repository is currently in **Phase 16: Remove separate TAG mechanic**, ready for review before roles are added.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -24,9 +24,9 @@ Phase 5 added the approved safe Bang action design: a compact circular tsinelas 
 
 Phase 6 added local Bang hit detection with safe feedback: range-limited circle-cast detection, wall blocking, hit/miss/block result tracking, target hit flash, and hittable practice-player prefabs.
 
-Phase 7 added an experimental separate TAG action. The corrected rule says SAK is the hider counter, not a separate TAG mechanic, so this experiment is now scheduled for removal in Phase 16.
+Phase 7 added an experimental separate TAG action. The corrected rule says SAK is the hider counter, not a separate TAG mechanic, so this experiment was removed in Phase 16.
 
-Phase 8 added local caught-state behavior for Bang and the old TAG experiment: targets become caught, show a playful animated dizzy-star indicator, caught players lose movement/action controls until reset, and the prototype `Hiders Left` counter updates. The caught-state foundation stays, but the old TAG path will be removed in Phase 16.
+Phase 8 added local caught-state behavior. Bang targets become caught, show a playful animated dizzy-star indicator, caught players lose movement/action controls until reset, and the prototype `Hiders Left` counter updates. The caught-state foundation stays for the corrected Bang/SAK rule.
 
 Phase 9 added the first ground foundation: richer 128px nighttime soil, road/path, grass, and concrete placeholder tiles, plus a runtime `Grid`/`Tilemap` builder in `PrototypeMap`. The approved review direction is a Filipino street-market ground style for nighttime Bang-Sak play, with a larger `36 x 26` soil-heavy play area, a configurable map seed, future random object-placement cells, and a wider prototype wall boundary.
 
@@ -41,6 +41,8 @@ Phase 13 added a first local SAK base based on an incorrect rule assumption. The
 Phase 14 documents the corrected rule: Taya finds hiders and calls `Bang + player name`; hiders do not run to a base; hiders can use `SAK` as a close-range counter against Taya. Unity code, scenes, prefabs, and assets are intentionally unchanged in this phase.
 
 Phase 15 removes only the incorrect base path from Phase 13: the base sprite, scene base object, base scripts, base HUD, base generator, and base-specific tests. Bang, movement, caught state, and the old separate TAG experiment are intentionally preserved so Phase 16 can remove TAG separately.
+
+Phase 16 removes only the old separate TAG path: TAG scripts, TAG HUD, TAG prefab components, and TAG-specific tests. Bang, movement, caught state, map objects, and hider target prefabs are preserved. The corrected safe hider SAK counter is still not implemented yet; that comes in a later phase after roles and named Bang behavior.
 
 ## Safety and branding rules
 
@@ -115,3 +117,4 @@ Do not skip ahead.
 - [Phase 13 test notes](docs/phase-13-test.md)
 - [Phase 14 rules documentation correction](docs/phase-14-rules-correction.md)
 - [Phase 15 SAK base removal](docs/phase-15-base-removal.md)
+- [Phase 16 TAG removal](docs/phase-16-tag-removal.md)

@@ -39,36 +39,15 @@ public sealed class CaughtStateIntegrationTests
     }
 
     [Test]
-    public void TagHitTarget_MarksCaughtState()
-    {
-        var source = CreateActionSource("Tag Source").AddComponent<TagActionController>();
-        var target = CreateTarget("Tag Target");
-        var tagTarget = target.GetComponent<TagHitTarget>();
-        var caughtState = target.GetComponent<CaughtStateController>();
-        var collider = target.GetComponent<Collider2D>();
-
-        tagTarget.RegisterTagHit(
-            source,
-            402,
-            TagHitResult.HitTarget(tagTarget, collider, Vector2.zero, Vector2.right, Vector2.right, 1f, 402));
-
-        Assert.That(caughtState.IsCaught, Is.True);
-        Assert.That(caughtState.Cause, Is.EqualTo(CaughtCause.Tag));
-        Assert.That(caughtState.LastCaughtSource, Is.EqualTo(source));
-    }
-
-    [Test]
-    public void CaughtPlayer_CannotTriggerBangOrTagAgain()
+    public void CaughtPlayer_CannotTriggerBangAgain()
     {
         var player = CreateActionSource("Caught Player");
         var bang = player.AddComponent<BangActionController>();
-        var tag = player.AddComponent<TagActionController>();
         var caughtState = player.AddComponent<CaughtStateController>();
 
-        caughtState.MarkCaught(tag, CaughtCause.Tag, 403);
+        caughtState.MarkCaught(bang, CaughtCause.Bang, 403);
 
         Assert.That(bang.TryBang(0f), Is.False);
-        Assert.That(tag.TryTag(0f), Is.False);
     }
 
     private GameObject CreateActionSource(string name)
@@ -90,7 +69,6 @@ public sealed class CaughtStateIntegrationTests
         obj.AddComponent<CircleCollider2D>();
         obj.AddComponent<CaughtStateController>();
         obj.AddComponent<BangHitTarget>();
-        obj.AddComponent<TagHitTarget>();
         return obj;
     }
 }
