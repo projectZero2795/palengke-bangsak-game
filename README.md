@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 12: Stores**, ready for local marketplace-object review.
+This repository is currently in **Phase 13: Base point**, ready for local SAK-base review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -34,7 +34,9 @@ Phase 10 added versioned Filipino/barangay natural-object placeholders: a coconu
 
 Phase 11 added versioned barangay residential placeholders: small warm-lit houses, medium concrete houses, wooden/bamboo fences, and closed gates. A runtime `PrototypeResidentialObjectSpawner` places them around the map edges with `BoxCollider2D` wall collisions while keeping center routes playable.
 
-Phase 12 adds versioned Filipino marketplace placeholders: sari-sari store, palengke stall, food stall, SARI signboard, and crates/baskets. A runtime `PrototypeStoreObjectSpawner` places them around the existing market areas with tight `BoxCollider2D` wall collisions while avoiding road cells. Base point, roles, round rules, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 12 added versioned Filipino marketplace placeholders: sari-sari store, palengke stall, food stall, SARI signboard, and crates/baskets. A runtime `PrototypeStoreObjectSpawner` places them around the existing market areas with tight `BoxCollider2D` wall collisions while avoiding road cells.
+
+Phase 13 adds the first local SAK base: a green circular base marker with flag, trigger-only `CircleCollider2D`, versioned `SakBaseController`, player-side `SakBaseActor`, and a SAK HUD button that appears only when the player is close enough. Roles, round win conditions, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
 
 ## Safety and branding rules
 
@@ -102,3 +104,4 @@ Do not skip ahead.
 - [Phase 10 test notes](docs/phase-10-test.md)
 - [Phase 11 test notes](docs/phase-11-test.md)
 - [Phase 12 test notes](docs/phase-12-test.md)
+- [Phase 13 test notes](docs/phase-13-test.md)

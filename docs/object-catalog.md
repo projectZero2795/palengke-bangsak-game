@@ -69,8 +69,8 @@ Reference image: [bang-sak-roadmap-reference.jpg](reference/bang-sak-roadmap-ref
 
 | Object | Phase | Notes |
 | --- | ---: | --- |
-| Sak base | 13 | Green circular base marker with flag. |
-| Base trigger collider | 13 | Enables Sak only for hiders nearby. |
+| Sak base | 13 | Green circular base marker with flag. Implemented as versioned `sak_base_controller` v1 / `green_flag_base_placeholder`. |
+| Base trigger collider | 13 | Trigger-only circle; enables SAK only for eligible nearby actors without blocking movement. |
 | Spawn points | 14, 19 | Taya/hider spawn positions. |
 | Camera boundary | 14 | Prevents camera showing outside map. |
 | Hiding routes | 14 | Paths around houses, trees, and stores. |
