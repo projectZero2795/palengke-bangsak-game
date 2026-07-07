@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 14: Rules documentation correction**, ready for review before any Unity cleanup begins.
+This repository is currently in **Phase 15: Remove incorrect SAK base**, ready for review before the old separate TAG experiment is removed.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -36,9 +36,11 @@ Phase 11 added versioned barangay residential placeholders: small warm-lit house
 
 Phase 12 added versioned Filipino marketplace placeholders: sari-sari store, palengke stall, food stall, SARI signboard, and crates/baskets. A runtime `PrototypeStoreObjectSpawner` places them around the existing market areas with tight `BoxCollider2D` wall collisions while avoiding road cells.
 
-Phase 13 added a first local SAK base based on an incorrect rule assumption. The corrected Bang-Sak rule has no base, so that work is now marked for removal in Phase 15. Phase 14 updates documentation only so the rule can be reviewed before code cleanup starts.
+Phase 13 added a first local SAK base based on an incorrect rule assumption. The corrected Bang-Sak rule has no base, so that work was marked for removal.
 
 Phase 14 documents the corrected rule: Taya finds hiders and calls `Bang + player name`; hiders do not run to a base; hiders can use `SAK` as a close-range counter against Taya. Unity code, scenes, prefabs, and assets are intentionally unchanged in this phase.
+
+Phase 15 removes only the incorrect base path from Phase 13: the base sprite, scene base object, base scripts, base HUD, base generator, and base-specific tests. Bang, movement, caught state, and the old separate TAG experiment are intentionally preserved so Phase 16 can remove TAG separately.
 
 ## Safety and branding rules
 
@@ -112,3 +114,4 @@ Do not skip ahead.
 - [Phase 12 test notes](docs/phase-12-test.md)
 - [Phase 13 test notes](docs/phase-13-test.md)
 - [Phase 14 rules documentation correction](docs/phase-14-rules-correction.md)
+- [Phase 15 SAK base removal](docs/phase-15-base-removal.md)

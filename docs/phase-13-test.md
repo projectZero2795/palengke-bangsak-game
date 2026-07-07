@@ -1,10 +1,10 @@
 # Phase 13 Test Notes
 
-> Superseded by Phase 14: the corrected Bang-Sak rule has no base. The Phase 13
-> base prototype remains in the repo until the dedicated Phase 15 cleanup, so it
-> can be removed and tested separately.
+> Superseded by Phase 14 and removed in Phase 15: the corrected Bang-Sak rule
+> has no base. This file is kept only as historical context for why the base
+> prototype existed.
 
-Phase 13 adds the first local SAK base mechanic.
+Phase 13 added the first local SAK base mechanic. That mechanic is now retired.
 
 ## What changed
 
@@ -24,27 +24,21 @@ Phase 13 adds the first local SAK base mechanic.
 - Added edit-mode tests for the base mechanic, sprite import settings, player
   prefab wiring, and scene wiring.
 
-## How to review in Unity
+## Historical review steps
 
-1. Pull the latest repository changes.
-2. Open the Unity project from the `unity` folder.
-3. Open `Assets/Scenes/PrototypeMap.unity`.
-4. Press Play.
-5. Move the playable red player toward the green base marker near the bottom
-   center of the map.
-6. Confirm:
-   - the player can walk over/through the base trigger area;
-   - the base does not block movement;
-   - the SAK button is hidden while far away;
-   - the SAK button appears only when the player is close enough;
-   - clicking SAK, or pressing `R`, triggers a brief green pulse on the base;
-   - leaving the base area hides the SAK button again.
+These steps were only valid before Phase 15 removed the base:
+
+- move the playable red player toward the green base marker near the bottom
+  center of the map;
+- confirm the base did not block movement;
+- confirm the SAK button appeared only while close to the base;
+- confirm clicking SAK, or pressing `R`, triggered a brief green pulse.
 
 ## Expected behavior
 
 - SAK is local-only in this phase.
 - The base uses a trigger collider, not a wall collider.
-- The playable player can use SAK because it has `SakBaseActor.canUseSak = true`.
+- The playable player could use SAK because it had `SakBaseActor.canUseSak = true`.
 - This is a mechanic foundation only: no Taya/Hider role enforcement, round win
   condition, scoring, multiplayer sync, or Palengke API call is added yet.
 

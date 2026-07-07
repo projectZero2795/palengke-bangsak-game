@@ -18,8 +18,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 11 | Houses | Houses, fences, gates, wall collisions, optional future `RevealSource` house-light placeholders. | Done. |
 | 12 | Stores | Sari-sari store, stalls, signboards, crates, optional future `RevealSource` environment props. | Done. |
 | 13 | Incorrect base prototype | Sak base trigger was implemented from the wrong rule assumption. | Superseded; remove in Phase 15. |
-| 14 | Rules documentation correction | Document the corrected rule and adapt the phase plan without changing Unity code. | Correct rule and next phases are reviewable. |
-| 15 | Remove incorrect SAK base | Remove only base object/scripts/HUD/sprite/tests. | No base remains; Bang/movement still work. |
+| 14 | Rules documentation correction | Document the corrected rule and adapt the phase plan without changing Unity code. | Done. |
+| 15 | Remove incorrect SAK base | Remove only base object/scripts/HUD/sprite/tests. | Ready for review; no base remains and Bang/movement/TAG are preserved. |
 | 16 | Remove separate TAG mechanic | Remove only old TAG action/button/components/tests. | No separate TAG mechanic remains. |
 | 17 | Role system | Taya/Hider roles, UI, markers, role component variants. | Roles work locally. |
 | 18 | Corrected Bang-name rule | Taya uses `Bang + player name` to catch hiders. | Local named catch rule works. |
