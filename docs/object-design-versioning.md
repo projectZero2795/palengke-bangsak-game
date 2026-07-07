@@ -6,7 +6,7 @@ component needs a stable contract, not only art or code.
 
 This applies to normal objects such as trees, houses, stalls, and crates, and to
 stealth/reveal objects such as streetlights, house lights, and dog-bark clues.
-It also applies to systems/components such as player movement, Bang/Tag actions,
+It also applies to systems/components such as player movement, Bang/SAK actions,
 hide/reveal logic, HUD widgets, map generation, spawn rules, networking adapters,
 and Palengke API adapters.
 
@@ -19,12 +19,11 @@ Examples:
 - `player_movement`
 - `player_animation`
 - `bang_action`
-- `tag_action`
+- `sak_counter_action`
 - `caught_state`
 - `ground_generator`
 - `reveal_source`
 - `round_timer`
-- `sak_base`
 - `mobile_joystick`
 - `role_badge_hud`
 - `photon_room_adapter`
@@ -58,7 +57,7 @@ Design fields:
   `streetlight_reveal`, `player_movement`, or `bang_action`.
 - `displayName`: human-readable name, for example `Streetlight reveal`.
 - `phase`: first implementation phase.
-- `category`: `ground`, `obstacle`, `hiding`, `reveal_source`, `base`, `ui`,
+- `category`: `ground`, `obstacle`, `hiding`, `reveal_source`, `ui`,
   `movement`, `action`, `round_rule`, `network`, `api`, etc.
 - `visualRole`: what the player should understand at a glance.
 - `gameplayRole`: blocker, occluder, reveal clue, decoration, trigger, spawn, etc.
@@ -217,7 +216,7 @@ existing categories do not fit.
 | --- | --- | --- |
 | `movement` | `player_movement`, walk/run tuning, joystick input | speed profiles, input providers, stamina/noise variants |
 | `animation` | `player_animation`, caught stars, action effects | direction sets, frame sets, sprite variants |
-| `action` | `bang_action`, `tag_action`, `sak_action` | cooldown, range, visual marker, role restrictions |
+| `action` | `bang_action`, `sak_counter_action` | cooldown, range, visual marker, role restrictions |
 | `round_rule` | hide timeout, hiders-left, win rules, timer | tuning values, enabled/disabled rule modules |
 | `reveal_source` | streetlight, dog bark, house light, running noise | source type, reveal mode, trigger, variant |
 | `map_object` | tree, bush, house, stall, crate | version, variant, collider profile, placement rules |
@@ -286,7 +285,7 @@ components:
       - fast_taya_no_extra_power
     defaults:
       canBang: true
-      canTag: true
+      canSakCounter: false
       safeVisualOnly: true
     selectableBy:
       - admin

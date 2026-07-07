@@ -30,7 +30,9 @@ Before merging or deploying any gameplay phase, verify:
 - no knives;
 - no blood/gore;
 - no lethal framing;
-- action labels remain playful: Bang, Tag, Close Tap, Sak;
+- action labels remain playful: Bang and SAK;
+- SAK is represented as a harmless surprise tap, foam mark, or cartoon effect;
+- SAK must never use realistic knife, killing, blood, gore, or lethal visuals;
 - visuals stay suitable for a Filipino community game.
 
 ## Deployment rule
@@ -56,4 +58,3 @@ Each release should include:
 - test summary;
 - known issues;
 - rollback notes once deployment phases begin.
-

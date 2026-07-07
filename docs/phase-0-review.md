@@ -26,10 +26,9 @@ Phase 0 is complete only when all items are true.
 - [ ] Docs forbid knives.
 - [ ] Docs forbid blood/gore.
 - [ ] Docs define Bang as a safe cartoon marker/action.
-- [ ] Docs rename close-range combat to Tag or Close Tap.
+- [ ] Docs represent SAK as a safe close-range hider counter, never a realistic knife or lethal action.
 
 ## Review outcome
 
 - [ ] Phase 0 approved.
 - [ ] Phase 1 can start only after approval.
-

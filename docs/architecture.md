@@ -31,7 +31,7 @@ The project must stay incremental:
 - Scenes: menu, lobby, prototype map, result, leaderboard.
 - Player controller: top-down movement, physics, collision, animation.
 - Local game state: roles, timer, caught state, hider count, result flow.
-- Safe actions: Bang marker/projectile, Tag/Close Tap, Sak base interaction.
+- Safe actions: Taya `Bang + player name` marker and hider close-range SAK counter.
 - UI: desktop and mobile HUD, joystick, buttons, menus.
 
 ### Multiplayer later
@@ -40,7 +40,7 @@ The project must stay incremental:
 - Room create/join/leave.
 - Network player spawning.
 - Network movement sync.
-- Network Bang/Tag/Sak validation.
+- Network Bang-name and SAK-counter validation.
 - Networked round state and results.
 
 ### Palengke API later
@@ -64,4 +64,3 @@ The project must stay incremental:
 - Do not commit production secrets.
 - Photon App ID is client-visible config, but should still be loaded through runtime config when practical.
 - Palengke API credentials and tokens must never be embedded in the WebGL client.
-

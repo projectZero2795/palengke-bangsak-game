@@ -11,30 +11,30 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 4 | Player animation | Idle/walk animations and direction-facing. | Done. |
 | 5 | Bang action design | Safe animated tsinelas marker/effect, compact circular button, cooldown, forward-cone range indicator. | Done. |
 | 6 | Bang projectile / hit physics | Projectile/raycast hit detection and feedback. | Done. |
-| 7 | Close tag action | Harmless close-range Tag/Close Tap mechanic. | Done. |
+| 7 | Experimental TAG action | Separate close-range TAG action prototype. | Superseded; remove in Phase 16. |
 | 8 | Caught state | isCaught state, animation, HUD indicator. | Done. |
 | 9 | Soil / ground tiles | Soil, road, grass, concrete tilemap. | Done. |
 | 10 | Trees and natural objects | Trees, bushes, plants, collision/occlusion, optional future `RevealSource` light/animal placeholders. | Done. |
 | 11 | Houses | Houses, fences, gates, wall collisions, optional future `RevealSource` house-light placeholders. | Done. |
 | 12 | Stores | Sari-sari store, stalls, signboards, crates, optional future `RevealSource` environment props. | Done. |
-| 13 | Base point | Sak base trigger and hider-only interaction. | Ready for local SAK-base review. |
-| 14 | Map layout v1 | Place objects into playable map with spawn points and map component defaults. | First playable map approved. |
-| 15 | Role system | Taya/Hider roles, UI, markers, role component variants. | Roles work locally. |
-| 16 | Round rules | Timer, hider count, stealth/reveal rules, win conditions, restart, result screen. | Local prototype playable. |
-| 17 | UI polish | Main menu, how-to, HUD, result, settings placeholder. | Local prototype usable. |
-| 18 | Photon setup | Install/configure Photon Fusion, room lifecycle, and room component selection/vote placeholder. | Two clients join same room. |
-| 19 | Multiplayer player spawning | Network player prefab, ownership, spawn points. | Multiplayer movement foundation works. |
-| 20 | Multiplayer movement sync | Smooth remote movement and basic lag notes. | Movement sync stable. |
-| 21 | Multiplayer Bang/Tag sync | Networked catch mechanics, stealth/reveal sync, and validation. | Online catching works. |
-| 22 | Multiplayer Sak sync | Networked base interaction and round result. | Full online round works. |
-| 23 | WebGL build | Unity WebGL build and browser test. | WebGL works locally. |
-| 24 | Docker static hosting | Nginx Docker image for WebGL files. | Container serves game. |
-| 25 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Public game reachable. |
-| 26 | Argo CD integration | GitOps-managed deployment. | Argo sync and rollback work. |
-| 27 | Palengke API placeholder | Mock API client, mock user, mock leaderboard/coins. | Game works without real API. |
-| 28 | Real Palengke integration | Login, score submit, leaderboard, rewards. | Palengke-connected safely. |
-| 29 | Monitoring and maintenance | Logs, error tracking plan, versioning, release notes. | Production maintenance documented. |
-| 30 | Polish and content expansion | More maps, sprites, skins, badges, events, sounds. | Content expansion plan approved. |
+| 13 | Incorrect base prototype | Sak base trigger was implemented from the wrong rule assumption. | Superseded; remove in Phase 15. |
+| 14 | Rules documentation correction | Document the corrected rule and adapt the phase plan without changing Unity code. | Correct rule and next phases are reviewable. |
+| 15 | Remove incorrect SAK base | Remove only base object/scripts/HUD/sprite/tests. | No base remains; Bang/movement still work. |
+| 16 | Remove separate TAG mechanic | Remove only old TAG action/button/components/tests. | No separate TAG mechanic remains. |
+| 17 | Role system | Taya/Hider roles, UI, markers, role component variants. | Roles work locally. |
+| 18 | Corrected Bang-name rule | Taya uses `Bang + player name` to catch hiders. | Local named catch rule works. |
+| 19 | Safe SAK counter | Hiders use safe close-range SAK counter against Taya. | Local SAK counter works safely. |
+| 20 | Map layout v1 | Place objects into playable map with spawn points and map component defaults. | First playable map approved. |
+| 21 | Round rules | Timer, hider count, stealth/reveal rules, Bang/SAK win conditions, restart, result screen. | Local prototype playable. |
+| 22 | UI polish | Main menu, how-to, HUD, result, settings placeholder. | Local prototype usable. |
+| 23 | Photon setup | Install/configure Photon Fusion, room lifecycle, and room component selection/vote placeholder. | Two clients join same room. |
+| 24 | Multiplayer player spawning | Network player prefab, ownership, spawn points. | Multiplayer movement foundation works. |
+| 25 | Multiplayer movement sync | Smooth remote movement and basic lag notes. | Movement sync stable. |
+| 26 | Multiplayer Bang/SAK sync | Networked named catch, SAK counter, stealth/reveal sync, and validation. | Online catching/countering works. |
+| 27 | WebGL build | Unity WebGL build and browser test. | WebGL works locally. |
+| 28 | Docker static hosting | Nginx Docker image for WebGL files. | Container serves game. |
+| 29 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Public game reachable. |
+| 30 | Argo CD, Palengke API, monitoring, polish | GitOps, real Palengke rewards/leaderboard, monitoring, and content expansion after WebGL/deploy foundations. | Production expansion plan approved. |
 
 ## Mandatory stop rule
 
@@ -43,6 +43,9 @@ After each phase, stop and wait for review before continuing.
 ## Future gameplay rules to respect
 
 - Stealth/reveal rules are documented in [Gameplay Rules](gameplay-rules.md).
+- The corrected Bang-Sak core rule is documented in [Gameplay Rules](gameplay-rules.md):
+  Taya catches by `Bang + player name`; hiders counter with close-range SAK;
+  there is no base.
 - Object/component design/versioning is documented in
   [Object Design, Implementation, and Versioning](object-design-versioning.md).
 - Every reusable piece of the game must be scalable, configurable, modifiable,

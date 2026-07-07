@@ -22,8 +22,7 @@ Reference image: [bang-sak-roadmap-reference.jpg](reference/bang-sak-roadmap-ref
 | --- | ---: | --- |
 | Bang marker | 5 | Finger-gun pose, toy dart, light beam, foam tag, or tsinelas. No realistic gun. |
 | Bang projectile/effect | 6 | Cartoon sparkle, toy dart, or tsinelas projectile. No bullets/blood. |
-| Close Tag / Close Tap | 7 | Harmless touch/foam tag visual. Do not call it knife. |
-| Sak base button | 13, 22 | Green base action for hiders near base. |
+| SAK counter | 19, 26 | Hider close-range counter against Taya. Represent as harmless surprise tap, foam mark, or cartoon `SAK!` effect. No realistic knife or lethal visual. |
 
 ## Ground and map foundation
 
@@ -69,8 +68,6 @@ Reference image: [bang-sak-roadmap-reference.jpg](reference/bang-sak-roadmap-ref
 
 | Object | Phase | Notes |
 | --- | ---: | --- |
-| Sak base | 13 | Green circular base marker with flag. Implemented as versioned `sak_base_controller` v1 / `green_flag_base_placeholder`. |
-| Base trigger collider | 13 | Trigger-only circle; enables SAK only for eligible nearby actors without blocking movement. |
 | Spawn points | 14, 19 | Taya/hider spawn positions. |
 | Camera boundary | 14 | Prevents camera showing outside map. |
 | Hiding routes | 14 | Paths around houses, trees, and stores. |
@@ -98,7 +95,7 @@ rules.
 | Lobby panel | 18 | Room code, players, roles, ready state, map preview. |
 | HUD | 15-17 | Role badge, timer, hiders-left, buttons. |
 | Mobile joystick | 3, 17 | Bottom-left movement control. |
-| Bang/Tag/Sak buttons | 5, 7, 13, 17 | Role-aware action buttons. |
+| Bang/SAK buttons | 5, 19, 22 | Role-aware action buttons: Taya uses Bang, hiders use SAK counter when valid. |
 | Result screen | 16-17 | Taya/Hider win, caught list, rewards. |
 | Leaderboard | 27-28 | Mock first, real later. |
 

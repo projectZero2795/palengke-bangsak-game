@@ -1,5 +1,9 @@
 # Phase 13 Test Notes
 
+> Superseded by Phase 14: the corrected Bang-Sak rule has no base. The Phase 13
+> base prototype remains in the repo until the dedicated Phase 15 cleanup, so it
+> can be removed and tested separately.
+
 Phase 13 adds the first local SAK base mechanic.
 
 ## What changed

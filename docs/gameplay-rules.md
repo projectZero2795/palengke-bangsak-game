@@ -4,6 +4,40 @@ This file captures gameplay decisions that must be considered when their
 implementation phase arrives. Do not implement a later rule early just because
 it is documented here.
 
+## Core Bang-Sak rule
+
+Bang-Sak has two roles:
+
+- `Taya`
+- `Hider`
+
+The corrected game loop is:
+
+1. Taya searches for all hiders.
+2. When Taya sees a hider, Taya calls `Bang` plus that hider/player name.
+3. A valid `Bang + name` catches or neutralizes that hider for the round.
+4. Hiders do not run to a base.
+5. Hiders can use `SAK` as a close-range counter against Taya.
+
+`SAK` is the hider counter. In the Palengke game it must be represented safely:
+
+- harmless surprise tap;
+- foam mark;
+- cartoon `SAK!` burst;
+- friendly non-lethal impact feedback.
+
+Do not implement realistic knives, killing animations, blood, gore, or lethal
+combat.
+
+Phase plan for this correction:
+
+- Phase 14: document the corrected rule only.
+- Phase 15: remove the incorrect SAK base only.
+- Phase 16: remove the separate TAG mechanic only.
+- Phase 17: add Taya/Hider roles.
+- Phase 18: add the local `Bang + player name` catch rule.
+- Phase 19: add the safe hider SAK counter.
+
 ## Stealth and reveal rule
 
 Bang-Sak is a nighttime barangay/palengke game. Hiding should be useful, but

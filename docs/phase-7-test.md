@@ -1,5 +1,9 @@
 # Phase 7 Test Notes
 
+> Superseded by Phase 14: the corrected Bang-Sak rule uses SAK as the hider
+> close-range counter. The separate TAG prototype remains in the repo until the
+> dedicated Phase 16 cleanup, so it can be removed and tested separately.
+
 ## Scope
 
 Phase 7 adds the harmless close-range alternative to Bang: `Tag`.

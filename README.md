@@ -1,6 +1,6 @@
 # Bang-Sak for Palengke
 
-Bang-Sak is a safe Filipino community hide-and-seek/tag game planned for Unity 2D WebGL at `games.palengke.es`.
+Bang-Sak is a safe Filipino community hide-and-seek game planned for Unity 2D WebGL at `games.palengke.es`.
 
 The target experience is the reference image provided by the project owner: a polished 2D top-down barangay/palengke game with menu, lobby, round gameplay, result screen, leaderboard, mobile controls, and later Photon multiplayer.
 
@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 13: Base point**, ready for local SAK-base review.
+This repository is currently in **Phase 14: Rules documentation correction**, ready for review before any Unity cleanup begins.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -24,9 +24,9 @@ Phase 5 added the approved safe Bang action design: a compact circular tsinelas 
 
 Phase 6 added local Bang hit detection with safe feedback: range-limited circle-cast detection, wall blocking, hit/miss/block result tracking, target hit flash, and hittable practice-player prefabs.
 
-Phase 7 added the harmless close-range Tag / Close Tap alternative: short-range detection, wall blocking, cooldown, TAG button, and friendly tag-hit flash feedback.
+Phase 7 added an experimental separate TAG action. The corrected rule says SAK is the hider counter, not a separate TAG mechanic, so this experiment is now scheduled for removal in Phase 16.
 
-Phase 8 added local caught-state behavior for Bang and Tag hits: targets become caught, show a playful animated dizzy-star indicator, caught players lose movement/action controls until reset, and the prototype `Hiders Left` counter updates.
+Phase 8 added local caught-state behavior for Bang and the old TAG experiment: targets become caught, show a playful animated dizzy-star indicator, caught players lose movement/action controls until reset, and the prototype `Hiders Left` counter updates. The caught-state foundation stays, but the old TAG path will be removed in Phase 16.
 
 Phase 9 added the first ground foundation: richer 128px nighttime soil, road/path, grass, and concrete placeholder tiles, plus a runtime `Grid`/`Tilemap` builder in `PrototypeMap`. The approved review direction is a Filipino street-market ground style for nighttime Bang-Sak play, with a larger `36 x 26` soil-heavy play area, a configurable map seed, future random object-placement cells, and a wider prototype wall boundary.
 
@@ -36,7 +36,9 @@ Phase 11 added versioned barangay residential placeholders: small warm-lit house
 
 Phase 12 added versioned Filipino marketplace placeholders: sari-sari store, palengke stall, food stall, SARI signboard, and crates/baskets. A runtime `PrototypeStoreObjectSpawner` places them around the existing market areas with tight `BoxCollider2D` wall collisions while avoiding road cells.
 
-Phase 13 adds the first local SAK base: a green circular base marker with flag, trigger-only `CircleCollider2D`, versioned `SakBaseController`, player-side `SakBaseActor`, and a SAK HUD button that appears only when the player is close enough. Roles, round win conditions, Photon setup, WebGL builds, Docker files, Kubernetes manifests, and deployment files must wait for their specific phases.
+Phase 13 added a first local SAK base based on an incorrect rule assumption. The corrected Bang-Sak rule has no base, so that work is now marked for removal in Phase 15. Phase 14 updates documentation only so the rule can be reviewed before code cleanup starts.
+
+Phase 14 documents the corrected rule: Taya finds hiders and calls `Bang + player name`; hiders do not run to a base; hiders can use `SAK` as a close-range counter against Taya. Unity code, scenes, prefabs, and assets are intentionally unchanged in this phase.
 
 ## Safety and branding rules
 
@@ -56,9 +58,13 @@ Do not implement:
 
 Use safe visual metaphors instead:
 
-- `Bang` = finger-gun marker, toy dart, cartoon light beam, foam tag, or tsinelas projectile;
-- close-range action = `Tag`, `Close Tap`, or harmless foam-touch action;
+- `Bang` = Taya's spoken `Bang + player name` call plus a safe marker effect;
+- `SAK` = hider close-range counter against Taya, represented with a harmless cartoon `SAK!` / surprise-tap / foam-mark effect;
 - caught state = dizzy stars, playful freeze, waiting-zone state, or friendly HUD indicator.
+
+The real-world wording of SAK must not become a realistic weapon mechanic in
+the Palengke game. Do not show realistic knives, killing, blood, gore, or
+lethal combat.
 
 ## Target stack
 
@@ -105,3 +111,4 @@ Do not skip ahead.
 - [Phase 11 test notes](docs/phase-11-test.md)
 - [Phase 12 test notes](docs/phase-12-test.md)
 - [Phase 13 test notes](docs/phase-13-test.md)
+- [Phase 14 rules documentation correction](docs/phase-14-rules-correction.md)
