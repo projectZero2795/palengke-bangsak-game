@@ -14,9 +14,11 @@ or multiplayer.
 - Added `PlayerRoleController`:
   - stores the local role;
   - exposes `IsTaya`, `IsHider`, and `CanUseBang`;
-  - shows a small role badge above the player;
   - marks Hiders as countable hiders for the `Hiders Left` counter;
   - keeps Bang available only for Taya.
+- Roles are gameplay-only in this phase. There are no floating `TAYA` or
+  `HIDER` labels above players because the abilities should make each role
+  clear: Taya can throw tsinelas, and Hiders will use SAK in the later phase.
 - Updated the Bang HUD so it can be hidden by role.
 - Updated Bang visuals so disabling Bang hides the range/effect visuals.
 - Wired prefabs:
@@ -31,10 +33,10 @@ or multiplayer.
 3. Open `Assets/Scenes/PrototypeMap.unity`.
 4. Press Play.
 5. Confirm:
-   - the playable red player shows a `TAYA` badge;
-   - color-variant practice players show `HIDER` badges;
+   - no player has a floating `TAYA` or `HIDER` text label;
    - the playable Taya still has the Bang button;
    - Hider prefabs do not show old TAG/base UI;
+   - Hider prefabs do not show the Bang button;
    - Bang still catches Hiders and shows dizzy stars;
    - `Hiders Left` still counts the Hider prefabs;
    - there are no missing-script warnings.

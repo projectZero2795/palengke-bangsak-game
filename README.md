@@ -44,7 +44,7 @@ Phase 15 removes only the incorrect base path from Phase 13: the base sprite, sc
 
 Phase 16 removes only the old separate TAG path: TAG scripts, TAG HUD, TAG prefab components, and TAG-specific tests. Bang, movement, caught state, map objects, and hider target prefabs are preserved. The corrected safe hider SAK counter is still not implemented yet; that comes in a later phase after roles and named Bang behavior.
 
-Phase 17 adds the first local role system: `Taya` and `Hider`, role badges above players, role-aware hider counting, and Taya-only Bang availability. The default playable player is configured as Taya, and the color-variant practice players are configured as Hiders. This phase intentionally does not add `Bang + player name`, the corrected SAK counter, round rules, or multiplayer.
+Phase 17 adds the first local role system: `Taya` and `Hider`, role-aware hider counting, and Taya-only Bang availability. Roles are gameplay-only for now, without floating text labels above players: Taya can throw tsinelas, and Hiders will get SAK later. The default playable player is configured as Taya, and the color-variant practice players are configured as Hiders. This phase intentionally does not add `Bang + player name`, the corrected SAK counter, round rules, or multiplayer.
 
 ## Safety and branding rules
 

@@ -55,12 +55,16 @@ public sealed class PlayerRoleControllerTests
     }
 
     [Test]
-    public void RoleLabels_AreReadableForPrototypeReview()
+    public void RolesAreGameplayOnlyWithoutFloatingLabels()
     {
         roleController.SetRole(PlayerRole.Taya);
-        Assert.That(roleController.RoleLabel, Is.EqualTo("TAYA"));
+        Assert.That(roleController.IsTaya, Is.True);
+        Assert.That(roleController.IsHider, Is.False);
+        Assert.That(player.GetComponentInChildren<TextMesh>(true), Is.Null);
 
         roleController.SetRole(PlayerRole.Hider);
-        Assert.That(roleController.RoleLabel, Is.EqualTo("HIDER"));
+        Assert.That(roleController.IsTaya, Is.False);
+        Assert.That(roleController.IsHider, Is.True);
+        Assert.That(player.GetComponentInChildren<TextMesh>(true), Is.Null);
     }
 }
