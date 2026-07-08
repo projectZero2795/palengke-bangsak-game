@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Palengke.BangSak.Network;
 
 namespace Palengke.BangSak.UI
 {
@@ -35,6 +36,9 @@ namespace Palengke.BangSak.UI
         private GameObject ownedEventSystem;
         private GameObject howToPanel;
         private GameObject settingsPanel;
+        private GameObject networkPanel;
+        private Text networkStatusLabel;
+        private PrototypeNetworkRoomController roomController;
         private static Sprite roundedPanelSprite;
 
         public string ComponentIdValue => componentId;
@@ -76,9 +80,20 @@ namespace Palengke.BangSak.UI
                 return;
             }
 
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                ShowNetworkRoom();
+                return;
+            }
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 HidePanels();
+            }
+
+            if (networkPanel != null && networkPanel.activeSelf)
+            {
+                RefreshNetworkPanel();
             }
         }
 
@@ -114,6 +129,14 @@ namespace Palengke.BangSak.UI
             settingsPanel.SetActive(true);
         }
 
+        public void ShowNetworkRoom()
+        {
+            CreateMenu();
+            HidePanels();
+            RefreshNetworkPanel();
+            networkPanel.SetActive(true);
+        }
+
         public void HidePanels()
         {
             if (howToPanel != null)
@@ -124,6 +147,11 @@ namespace Palengke.BangSak.UI
             if (settingsPanel != null)
             {
                 settingsPanel.SetActive(false);
+            }
+
+            if (networkPanel != null)
+            {
+                networkPanel.SetActive(false);
             }
         }
 
@@ -148,6 +176,7 @@ namespace Palengke.BangSak.UI
             }
 
             menuRoot = canvasObject;
+            ResolveRoomController();
 
             var canvas = canvasObject.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -164,6 +193,7 @@ namespace Palengke.BangSak.UI
             CreateMainCard(canvasObject.transform);
             CreateHowToPanel(canvasObject.transform);
             CreateSettingsPanel(canvasObject.transform);
+            CreateNetworkPanel(canvasObject.transform);
             HidePanels();
         }
 
@@ -177,6 +207,22 @@ namespace Palengke.BangSak.UI
                 ownedEventSystem = null;
                 howToPanel = null;
                 settingsPanel = null;
+                networkPanel = null;
+                networkStatusLabel = null;
+            }
+        }
+
+        private void ResolveRoomController()
+        {
+            if (roomController != null)
+            {
+                return;
+            }
+
+            roomController = GetComponent<PrototypeNetworkRoomController>();
+            if (roomController == null)
+            {
+                roomController = gameObject.AddComponent<PrototypeNetworkRoomController>();
             }
         }
 
@@ -247,21 +293,32 @@ namespace Palengke.BangSak.UI
             CreateDashboardTile(
                 card,
                 "PLAY",
-                "Local test",
-                "Start a round",
-                new Vector2(-210f, -38f),
-                new Vector2(160f, 122f),
+                "Local",
+                "Start round",
+                new Vector2(-234f, -38f),
+                new Vector2(132f, 122f),
                 new Color(0.1f, 0.2f, 0.34f, 1f),
                 new Color(0.36f, 0.58f, 1f, 1f),
                 PlayLocal);
 
             CreateDashboardTile(
                 card,
+                "ROOM",
+                "Photon",
+                "Create / join",
+                new Vector2(-78f, -38f),
+                new Vector2(132f, 122f),
+                new Color(0.08f, 0.18f, 0.28f, 1f),
+                new Color(0.35f, 0.85f, 1f, 1f),
+                ShowNetworkRoom);
+
+            CreateDashboardTile(
+                card,
                 "HOW",
                 "Rules",
-                "Learn Bang + SAK",
-                new Vector2(0f, -38f),
-                new Vector2(160f, 122f),
+                "Learn",
+                new Vector2(78f, -38f),
+                new Vector2(132f, 122f),
                 new Color(0.32f, 0.16f, 0.08f, 1f),
                 new Color(1f, 0.58f, 0.28f, 1f),
                 ShowHowTo);
@@ -270,16 +327,16 @@ namespace Palengke.BangSak.UI
                 card,
                 "SET",
                 "Options",
-                "Prototype settings",
-                new Vector2(210f, -38f),
-                new Vector2(160f, 122f),
+                "Settings",
+                new Vector2(234f, -38f),
+                new Vector2(132f, 122f),
                 new Color(0.08f, 0.2f, 0.12f, 1f),
                 new Color(0.35f, 0.92f, 0.52f, 1f),
                 ShowSettings);
 
             var footer = CreatePanel(card, "Dashboard Footer", new Vector2(0f, -163f), new Vector2(560f, 48f), new Color(0.015f, 0.026f, 0.048f, 0.96f));
             CreateText(footer, "Guest Player", new Vector2(-205f, 0f), new Vector2(130f, 24f), 14, FontStyle.Bold, new Color(0.9f, 0.96f, 1f, 1f));
-            CreateText(footer, "P Play   ·   H Help   ·   Esc Close", new Vector2(80f, 0f), new Vector2(330f, 24f), 12, FontStyle.Bold, new Color(0.55f, 0.66f, 0.82f, 1f));
+            CreateText(footer, "P Play   ·   R Room   ·   H Help   ·   Esc Close", new Vector2(80f, 0f), new Vector2(360f, 24f), 12, FontStyle.Bold, new Color(0.55f, 0.66f, 0.82f, 1f));
         }
 
         private void CreateStatusBadge(Transform parent, string text, Vector2 position, Vector2 size, Color fillColor, Color textColor)
@@ -360,6 +417,64 @@ namespace Palengke.BangSak.UI
             CreateText(panel, "SETTINGS", new Vector2(0f, 112f), new Vector2(430f, 42f), 30, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
             CreateText(panel, "Placeholder for the local prototype.\nLater phases can add volume, language, controls, and accessibility here.", new Vector2(0f, 25f), new Vector2(420f, 86f), 17, FontStyle.Bold, new Color(0.82f, 0.9f, 1f, 1f));
             CreateButton(panel, "BACK", new Vector2(0f, -102f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+        }
+
+        private void CreateNetworkPanel(Transform parent)
+        {
+            networkPanel = CreatePanel(parent, "Network Room Panel", Vector2.zero, new Vector2(560f, 430f), new Color(0.025f, 0.04f, 0.075f, 0.97f)).gameObject;
+            var panel = networkPanel.transform;
+
+            CreateText(panel, "ROOM", new Vector2(0f, 165f), new Vector2(500f, 44f), 30, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
+            CreateText(panel, "Photon-ready scaffold. The real Fusion adapter is wired after the SDK is imported.", new Vector2(0f, 126f), new Vector2(470f, 28f), 13, FontStyle.Bold, new Color(0.72f, 0.82f, 1f, 1f));
+
+            var statusCard = CreatePanel(panel, "Room Status Card", new Vector2(0f, 42f), new Vector2(470f, 138f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
+            networkStatusLabel = CreateText(statusCard, string.Empty, Vector2.zero, new Vector2(424f, 104f), 15, FontStyle.Bold, new Color(0.86f, 0.93f, 1f, 1f));
+
+            CreateButton(panel, "CREATE", new Vector2(-170f, -72f), new Vector2(140f, 42f), new Color(0.94f, 0.3f, 0.12f, 1f), OnCreateRoomClicked);
+            CreateButton(panel, "JOIN 1234", new Vector2(0f, -72f), new Vector2(150f, 42f), new Color(0.22f, 0.42f, 0.92f, 1f), OnJoinDefaultRoomClicked);
+            CreateButton(panel, "LEAVE", new Vector2(170f, -72f), new Vector2(140f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), OnLeaveRoomClicked);
+
+            CreateButton(panel, "BACK", new Vector2(0f, -156f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+            RefreshNetworkPanel();
+        }
+
+        private void OnCreateRoomClicked()
+        {
+            ResolveRoomController();
+            roomController.CreateRoom();
+            RefreshNetworkPanel();
+        }
+
+        private void OnJoinDefaultRoomClicked()
+        {
+            ResolveRoomController();
+            roomController.JoinDefaultRoom();
+            RefreshNetworkPanel();
+        }
+
+        private void OnLeaveRoomClicked()
+        {
+            ResolveRoomController();
+            roomController.LeaveRoom();
+            RefreshNetworkPanel();
+        }
+
+        private void RefreshNetworkPanel()
+        {
+            if (networkStatusLabel == null)
+            {
+                return;
+            }
+
+            ResolveRoomController();
+            var sdkStatus = roomController.IsFusionSdkAvailable ? "Fusion SDK: detected" : "Fusion SDK: not imported";
+            var room = roomController.HasActiveRoom ? roomController.ActiveRoomCode : "none";
+            networkStatusLabel.text =
+                $"{sdkStatus}\n" +
+                $"Provider: {roomController.ProviderName}\n" +
+                $"State: {roomController.State}\n" +
+                $"Room: {room}\n" +
+                roomController.StatusMessage;
         }
 
         private void CreateGlow(Transform parent, string name, Vector2 position, Vector2 size, Color color)

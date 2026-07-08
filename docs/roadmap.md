@@ -27,7 +27,7 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 20 | Map layout v1 | Place objects into playable map with spawn points and map component defaults. | Ready for review; map layout component and playable boundary are configured. |
 | 21 | Round rules | Timer, hider count, Bang/SAK win conditions, restart, result screen. | Ready for review; local round loop works. |
 | 22 | UI polish | Main menu, how-to, HUD, result, settings placeholder. | Ready for review; local prototype has a menu/how-to/settings loop. |
-| 23 | Photon setup | Install/configure Photon Fusion, room lifecycle, and room component selection/vote placeholder. | Two clients join same room. |
+| 23 | Photon setup | Add Photon-ready room lifecycle scaffold, room menu, and document SDK import path without committing the App ID. | Scaffold ready for review; real two-client Photon join remains pending until Fusion SDK import/adapter. |
 | 24 | Multiplayer player spawning | Network player prefab, ownership, spawn points. | Multiplayer movement foundation works. |
 | 25 | Multiplayer movement sync | Smooth remote movement and basic lag notes. | Movement sync stable. |
 | 26 | Multiplayer Bang/SAK sync | Networked named catch, SAK counter, stealth/reveal sync, and validation. | Online catching/countering works. |
