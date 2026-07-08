@@ -11,7 +11,7 @@ namespace Palengke.BangSak.UI
         private PrototypeRoundRulesController controller;
 
         [SerializeField]
-        private Vector2 statusPanelSize = new Vector2(230f, 58f);
+        private Vector2 statusPanelSize = new Vector2(560f, 76f);
 
         [SerializeField]
         private Vector2 statusPanelOffset = new Vector2(0f, -18f);
@@ -26,11 +26,14 @@ namespace Palengke.BangSak.UI
         private GameObject resultPanel;
         private Text timerLabel;
         private Text hidersLabel;
+        private Text roundLabel;
         private Text resultTitleLabel;
         private Text resultMessageLabel;
         private Button restartButton;
 
         public PrototypeRoundRulesController Controller => controller;
+
+        public Vector2 StatusPanelSize => statusPanelSize;
 
         public bool HasRuntimeHud => hudRoot != null;
 
@@ -78,7 +81,16 @@ namespace Palengke.BangSak.UI
 
             if (hidersLabel != null)
             {
-                hidersLabel.text = $"Hiders {controller.RemainingHiders} / {controller.TotalHiders}";
+                hidersLabel.text = $"HIDERS\n{controller.RemainingHiders} / {controller.TotalHiders}";
+            }
+
+            if (roundLabel != null)
+            {
+                roundLabel.text = controller.IsFinished
+                    ? "FINISHED"
+                    : controller.IsRunning
+                        ? $"ROUND {controller.RoundNumber}"
+                        : "READY";
             }
 
             var showResult = controller.IsFinished;
@@ -151,9 +163,65 @@ namespace Palengke.BangSak.UI
 
             var background = panel.AddComponent<Image>();
             background.color = new Color(0.02f, 0.035f, 0.06f, 0.88f);
+            AddOutline(panel, new Color(0.16f, 0.22f, 0.32f, 0.82f), new Vector2(2f, -2f));
+            AddShadow(panel, new Color(0f, 0f, 0f, 0.48f), new Vector2(0f, -4f));
 
-            timerLabel = CreateText(panel.transform, "02:30", new Vector2(0f, 10f), new Vector2(statusPanelSize.x, 28f), 23, FontStyle.Bold, Color.white);
-            hidersLabel = CreateText(panel.transform, "Hiders 0 / 0", new Vector2(0f, -18f), new Vector2(statusPanelSize.x, 24f), 15, FontStyle.Bold, new Color(0.82f, 0.9f, 1f, 1f));
+            var timerChip = CreateChip(
+                panel.transform,
+                "Timer Chip",
+                new Vector2(-192f, 0f),
+                new Vector2(144f, 52f),
+                new Color(0.08f, 0.11f, 0.16f, 0.94f),
+                new Color(1f, 0.72f, 0.22f, 0.9f));
+
+            timerLabel = CreateText(timerChip, "02:30", Vector2.zero, new Vector2(138f, 48f), 31, FontStyle.Bold, Color.white);
+            timerLabel.lineSpacing = 0.88f;
+
+            var hidersChip = CreateChip(
+                panel.transform,
+                "Hiders Chip",
+                Vector2.zero,
+                new Vector2(166f, 52f),
+                new Color(0.07f, 0.12f, 0.19f, 0.94f),
+                new Color(0.35f, 0.55f, 1f, 0.74f));
+
+            hidersLabel = CreateText(hidersChip, "HIDERS\n0 / 0", Vector2.zero, new Vector2(156f, 48f), 17, FontStyle.Bold, new Color(0.86f, 0.92f, 1f, 1f));
+            hidersLabel.lineSpacing = 0.82f;
+
+            var roundChip = CreateChip(
+                panel.transform,
+                "Round Chip",
+                new Vector2(192f, 0f),
+                new Vector2(166f, 52f),
+                new Color(0.06f, 0.1f, 0.17f, 0.94f),
+                new Color(0.42f, 1f, 0.58f, 0.62f));
+
+            roundLabel = CreateText(roundChip, "ROUND 1", Vector2.zero, new Vector2(156f, 48f), 18, FontStyle.Bold, new Color(0.88f, 1f, 0.9f, 1f));
+        }
+
+        private Transform CreateChip(
+            Transform parent,
+            string name,
+            Vector2 position,
+            Vector2 size,
+            Color fillColor,
+            Color outlineColor)
+        {
+            var chip = new GameObject(name);
+            chip.transform.SetParent(parent, false);
+
+            var rect = chip.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = size;
+            rect.anchoredPosition = position;
+
+            var image = chip.AddComponent<Image>();
+            image.color = fillColor;
+            AddOutline(chip, outlineColor, new Vector2(2f, -2f));
+            AddShadow(chip, new Color(0f, 0f, 0f, 0.32f), new Vector2(0f, -2f));
+            return chip.transform;
         }
 
         private void CreateResultPanel(Transform parent)
@@ -195,6 +263,22 @@ namespace Palengke.BangSak.UI
             restartLabel.alignment = TextAnchor.MiddleCenter;
 
             resultPanel.SetActive(false);
+        }
+
+        private static void AddOutline(GameObject target, Color color, Vector2 distance)
+        {
+            var outline = target.AddComponent<Outline>();
+            outline.effectColor = color;
+            outline.effectDistance = distance;
+            outline.useGraphicAlpha = true;
+        }
+
+        private static void AddShadow(GameObject target, Color color, Vector2 distance)
+        {
+            var shadow = target.AddComponent<Shadow>();
+            shadow.effectColor = color;
+            shadow.effectDistance = distance;
+            shadow.useGraphicAlpha = true;
         }
 
         private Text CreateText(

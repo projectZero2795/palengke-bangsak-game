@@ -38,6 +38,7 @@ public sealed class PrototypeRoundRulesControllerTests
 
         Assert.That(roundRules.State, Is.EqualTo(PrototypeRoundState.Running));
         Assert.That(roundRules.Result, Is.EqualTo(PrototypeRoundResult.None));
+        Assert.That(roundRules.RoundNumber, Is.EqualTo(1));
         Assert.That(roundRules.TotalHiders, Is.EqualTo(2));
         Assert.That(roundRules.RemainingHiders, Is.EqualTo(2));
         Assert.That(roundRules.FormatRemainingTime(), Is.EqualTo("02:30"));
@@ -94,6 +95,7 @@ public sealed class PrototypeRoundRulesControllerTests
 
         Assert.That(roundRules.State, Is.EqualTo(PrototypeRoundState.Running));
         Assert.That(roundRules.Result, Is.EqualTo(PrototypeRoundResult.None));
+        Assert.That(roundRules.RoundNumber, Is.EqualTo(2));
         Assert.That(firstHider.GetComponent<CaughtStateController>().IsCaught, Is.False);
         Assert.That(secondHider.GetComponent<CaughtStateController>().IsCaught, Is.False);
         Assert.That(roundRules.RemainingHiders, Is.EqualTo(2));

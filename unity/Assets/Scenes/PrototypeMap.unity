@@ -632,7 +632,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   controller: {fileID: 292100002}
-  statusPanelSize: {x: 230, y: 58}
+  statusPanelSize: {x: 560, y: 76}
   statusPanelOffset: {x: 0, y: -18}
   resultPanelSize: {x: 360, y: 210}
   sortingOrder: 24

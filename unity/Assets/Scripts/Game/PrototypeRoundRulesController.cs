@@ -95,6 +95,8 @@ namespace Palengke.BangSak.Game
 
         public float RemainingSeconds { get; private set; } = DefaultRoundDurationSeconds;
 
+        public int RoundNumber { get; private set; }
+
         public bool IsRunning => State == PrototypeRoundState.Running;
 
         public bool IsFinished => State == PrototypeRoundState.Finished;
@@ -147,6 +149,7 @@ namespace Palengke.BangSak.Game
             CaptureTayaCounterBaselines();
             RecalculateHiderCounts();
 
+            RoundNumber += 1;
             roundStartedAt = now;
             roundEndsAt = now + roundDurationSeconds;
             RemainingSeconds = roundDurationSeconds;

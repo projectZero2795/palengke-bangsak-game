@@ -28,6 +28,7 @@ public sealed class Phase21PrefabSceneTests
         Assert.That(roundRules.MapLayout, Is.Not.Null);
         Assert.That(hud, Is.Not.Null);
         Assert.That(hud.Controller, Is.EqualTo(roundRules));
+        Assert.That(hud.StatusPanelSize, Is.EqualTo(new Vector2(560f, 76f)));
     }
 
     [Test]

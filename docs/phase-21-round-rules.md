@@ -5,7 +5,7 @@
 Make the local single-device prototype play as a complete round.
 
 This phase connects the existing Taya/Hider roles, Bang catch state, safe SAK
-counter, Phase 20 map layout, and a small round HUD.
+counter, Phase 20 map layout, and a round command-bar HUD.
 
 ## What changed
 
@@ -14,11 +14,13 @@ counter, Phase 20 map layout, and a small round HUD.
 - Added `Phase 21 Round Rules` to `PrototypeMap`.
 - The round starts automatically in Play mode.
 - Round duration is `150` seconds (`02:30`).
-- The HUD shows:
+- The HUD uses the approved Option E command-bar layout with three compact
+  chips:
   - timer;
   - hiders remaining;
-  - result panel;
-  - Restart button.
+  - round state/round number.
+- The result panel still appears when the round ends and includes a Restart
+  button.
 - Taya wins when all Hiders are caught.
 - Hiders win when Taya is countered by SAK.
 - Hiders win by default if the timer expires.
@@ -46,14 +48,16 @@ review.
 2. Open the project in Unity Hub using the `/unity` folder.
 3. Open `Assets/Scenes/PrototypeMap.unity`.
 4. Press Play.
-5. Confirm the round HUD appears at the top:
+5. Confirm the round command bar appears at the top:
    - timer starts at `02:30`;
-   - hiders count appears under it.
+   - hiders count appears in the middle chip;
+   - round state appears as `ROUND 1`.
 6. Confirm the actors start on Phase 20 spawn points.
 7. As Taya, catch every Hider with the named Bang buttons.
 8. Confirm the result panel says `Taya wins!`.
 9. Click `Restart` or press `R`.
-10. Confirm Hiders reset and the timer starts again.
+10. Confirm Hiders reset, the timer starts again, and the round chip updates
+    to `ROUND 2`.
 11. As a Hider/Sak test setup, use SAK against Taya.
 12. Confirm the result panel says `Hiders win!`.
 13. Run EditMode tests and confirm:
