@@ -11,10 +11,10 @@ namespace Palengke.BangSak.UI
         private PrototypeRoundRulesController controller;
 
         [SerializeField]
-        private Vector2 statusPanelSize = new Vector2(560f, 76f);
+        private Vector2 statusPanelSize = new Vector2(352f, 48f);
 
         [SerializeField]
-        private Vector2 statusPanelOffset = new Vector2(0f, -18f);
+        private Vector2 statusPanelOffset = new Vector2(0f, -8f);
 
         [SerializeField]
         private Vector2 resultPanelSize = new Vector2(360f, 210f);
@@ -30,6 +30,7 @@ namespace Palengke.BangSak.UI
         private Text resultTitleLabel;
         private Text resultMessageLabel;
         private Button restartButton;
+        private static Sprite roundedHudSprite;
 
         public PrototypeRoundRulesController Controller => controller;
 
@@ -81,13 +82,13 @@ namespace Palengke.BangSak.UI
 
             if (hidersLabel != null)
             {
-                hidersLabel.text = $"HIDERS\n{controller.RemainingHiders} / {controller.TotalHiders}";
+                hidersLabel.text = $"HIDERS {controller.RemainingHiders}/{controller.TotalHiders}";
             }
 
             if (roundLabel != null)
             {
                 roundLabel.text = controller.IsFinished
-                    ? "FINISHED"
+                    ? "DONE"
                     : controller.IsRunning
                         ? $"ROUND {controller.RoundNumber}"
                         : "READY";
@@ -162,41 +163,42 @@ namespace Palengke.BangSak.UI
             rect.anchoredPosition = statusPanelOffset;
 
             var background = panel.AddComponent<Image>();
+            ApplyRoundedSprite(background);
             background.color = new Color(0.02f, 0.035f, 0.06f, 0.88f);
-            AddOutline(panel, new Color(0.16f, 0.22f, 0.32f, 0.82f), new Vector2(2f, -2f));
-            AddShadow(panel, new Color(0f, 0f, 0f, 0.48f), new Vector2(0f, -4f));
+            AddOutline(panel, new Color(0.16f, 0.22f, 0.32f, 0.82f), new Vector2(1f, -1f));
+            AddShadow(panel, new Color(0f, 0f, 0f, 0.42f), new Vector2(0f, -2f));
 
             var timerChip = CreateChip(
                 panel.transform,
                 "Timer Chip",
-                new Vector2(-192f, 0f),
-                new Vector2(144f, 52f),
+                new Vector2(-116f, 0f),
+                new Vector2(92f, 34f),
                 new Color(0.08f, 0.11f, 0.16f, 0.94f),
                 new Color(1f, 0.72f, 0.22f, 0.9f));
 
-            timerLabel = CreateText(timerChip, "02:30", Vector2.zero, new Vector2(138f, 48f), 31, FontStyle.Bold, Color.white);
+            timerLabel = CreateText(timerChip, "02:30", Vector2.zero, new Vector2(86f, 31f), 22, FontStyle.Bold, Color.white);
             timerLabel.lineSpacing = 0.88f;
 
             var hidersChip = CreateChip(
                 panel.transform,
                 "Hiders Chip",
                 Vector2.zero,
-                new Vector2(166f, 52f),
+                new Vector2(110f, 34f),
                 new Color(0.07f, 0.12f, 0.19f, 0.94f),
                 new Color(0.35f, 0.55f, 1f, 0.74f));
 
-            hidersLabel = CreateText(hidersChip, "HIDERS\n0 / 0", Vector2.zero, new Vector2(156f, 48f), 17, FontStyle.Bold, new Color(0.86f, 0.92f, 1f, 1f));
+            hidersLabel = CreateText(hidersChip, "HIDERS 0/0", Vector2.zero, new Vector2(104f, 31f), 13, FontStyle.Bold, new Color(0.86f, 0.92f, 1f, 1f));
             hidersLabel.lineSpacing = 0.82f;
 
             var roundChip = CreateChip(
                 panel.transform,
                 "Round Chip",
-                new Vector2(192f, 0f),
-                new Vector2(166f, 52f),
+                new Vector2(116f, 0f),
+                new Vector2(92f, 34f),
                 new Color(0.06f, 0.1f, 0.17f, 0.94f),
                 new Color(0.42f, 1f, 0.58f, 0.62f));
 
-            roundLabel = CreateText(roundChip, "ROUND 1", Vector2.zero, new Vector2(156f, 48f), 18, FontStyle.Bold, new Color(0.88f, 1f, 0.9f, 1f));
+            roundLabel = CreateText(roundChip, "ROUND 1", Vector2.zero, new Vector2(86f, 31f), 13, FontStyle.Bold, new Color(0.88f, 1f, 0.9f, 1f));
         }
 
         private Transform CreateChip(
@@ -218,9 +220,10 @@ namespace Palengke.BangSak.UI
             rect.anchoredPosition = position;
 
             var image = chip.AddComponent<Image>();
+            ApplyRoundedSprite(image);
             image.color = fillColor;
-            AddOutline(chip, outlineColor, new Vector2(2f, -2f));
-            AddShadow(chip, new Color(0f, 0f, 0f, 0.32f), new Vector2(0f, -2f));
+            AddOutline(chip, outlineColor, new Vector2(1f, -1f));
+            AddShadow(chip, new Color(0f, 0f, 0f, 0.28f), new Vector2(0f, -1f));
             return chip.transform;
         }
 
@@ -237,6 +240,7 @@ namespace Palengke.BangSak.UI
             rect.anchoredPosition = Vector2.zero;
 
             var background = resultPanel.AddComponent<Image>();
+            ApplyRoundedSprite(background);
             background.color = new Color(0.025f, 0.04f, 0.075f, 0.94f);
 
             resultTitleLabel = CreateText(resultPanel.transform, "Round over", new Vector2(0f, 62f), new Vector2(resultPanelSize.x - 32f, 44f), 27, FontStyle.Bold, Color.white);
@@ -253,6 +257,7 @@ namespace Palengke.BangSak.UI
             buttonRect.anchoredPosition = new Vector2(0f, 24f);
 
             var buttonImage = buttonObject.AddComponent<Image>();
+            ApplyRoundedSprite(buttonImage);
             buttonImage.color = new Color(0.22f, 0.4f, 0.95f, 1f);
 
             restartButton = buttonObject.AddComponent<Button>();
@@ -279,6 +284,65 @@ namespace Palengke.BangSak.UI
             shadow.effectColor = color;
             shadow.effectDistance = distance;
             shadow.useGraphicAlpha = true;
+        }
+
+        private static void ApplyRoundedSprite(Image image)
+        {
+            image.sprite = GetRoundedHudSprite();
+            image.type = Image.Type.Sliced;
+            image.pixelsPerUnitMultiplier = 1f;
+        }
+
+        private static Sprite GetRoundedHudSprite()
+        {
+            if (roundedHudSprite != null)
+            {
+                return roundedHudSprite;
+            }
+
+            const int size = 64;
+            const int radius = 24;
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                name = "Runtime Rounded HUD Sprite",
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp
+            };
+
+            var pixels = new Color32[size * size];
+            for (var y = 0; y < size; y += 1)
+            {
+                for (var x = 0; x < size; x += 1)
+                {
+                    var left = Mathf.Min(x + 0.5f, size - x - 0.5f);
+                    var bottom = Mathf.Min(y + 0.5f, size - y - 0.5f);
+                    var alpha = 1f;
+
+                    if (left < radius && bottom < radius)
+                    {
+                        var dx = radius - left;
+                        var dy = radius - bottom;
+                        var distance = Mathf.Sqrt(dx * dx + dy * dy);
+                        alpha = Mathf.Clamp01(radius + 0.75f - distance);
+                    }
+
+                    pixels[y * size + x] = new Color(1f, 1f, 1f, alpha);
+                }
+            }
+
+            texture.SetPixels32(pixels);
+            texture.Apply(false, false);
+
+            roundedHudSprite = Sprite.Create(
+                texture,
+                new Rect(0f, 0f, size, size),
+                new Vector2(0.5f, 0.5f),
+                100f,
+                0,
+                SpriteMeshType.FullRect,
+                new Vector4(radius, radius, radius, radius));
+            roundedHudSprite.name = "Runtime Rounded HUD Sprite";
+            return roundedHudSprite;
         }
 
         private Text CreateText(

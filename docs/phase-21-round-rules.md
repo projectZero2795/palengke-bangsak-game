@@ -14,8 +14,8 @@ counter, Phase 20 map layout, and a round command-bar HUD.
 - Added `Phase 21 Round Rules` to `PrototypeMap`.
 - The round starts automatically in Play mode.
 - Round duration is `150` seconds (`02:30`).
-- The HUD uses the approved Option E command-bar layout with three compact
-  chips:
+- The HUD uses the approved Option E command-bar layout with three small,
+  rounded chips:
   - timer;
   - hiders remaining;
   - round state/round number.
@@ -50,7 +50,7 @@ review.
 4. Press Play.
 5. Confirm the round command bar appears at the top:
    - timer starts at `02:30`;
-   - hiders count appears in the middle chip;
+   - hiders count appears in the middle chip as compact one-line text;
    - round state appears as `ROUND 1`.
 6. Confirm the actors start on Phase 20 spawn points.
 7. As Taya, catch every Hider with the named Bang buttons.
