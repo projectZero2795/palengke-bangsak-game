@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 16: Remove separate TAG mechanic**, ready for review before roles are added.
+This repository is currently in **Phase 17: Role system**, ready for review before the corrected `Bang + player name` rule is added.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -43,6 +43,8 @@ Phase 14 documents the corrected rule: Taya finds hiders and calls `Bang + playe
 Phase 15 removes only the incorrect base path from Phase 13: the base sprite, scene base object, base scripts, base HUD, base generator, and base-specific tests. Bang, movement, caught state, and the old separate TAG experiment are intentionally preserved so Phase 16 can remove TAG separately.
 
 Phase 16 removes only the old separate TAG path: TAG scripts, TAG HUD, TAG prefab components, and TAG-specific tests. Bang, movement, caught state, map objects, and hider target prefabs are preserved. The corrected safe hider SAK counter is still not implemented yet; that comes in a later phase after roles and named Bang behavior.
+
+Phase 17 adds the first local role system: `Taya` and `Hider`, role badges above players, role-aware hider counting, and Taya-only Bang availability. The default playable player is configured as Taya, and the color-variant practice players are configured as Hiders. This phase intentionally does not add `Bang + player name`, the corrected SAK counter, round rules, or multiplayer.
 
 ## Safety and branding rules
 
@@ -118,3 +120,4 @@ Do not skip ahead.
 - [Phase 14 rules documentation correction](docs/phase-14-rules-correction.md)
 - [Phase 15 SAK base removal](docs/phase-15-base-removal.md)
 - [Phase 16 TAG removal](docs/phase-16-tag-removal.md)
+- [Phase 17 role system](docs/phase-17-role-system.md)

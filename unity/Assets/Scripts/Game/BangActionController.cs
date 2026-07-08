@@ -128,6 +128,16 @@ namespace Palengke.BangSak.Game
             UpdateRangeIndicator();
         }
 
+        private void OnDisable()
+        {
+            HideBangEffect();
+
+            if (rangeIndicatorRenderer != null)
+            {
+                rangeIndicatorRenderer.enabled = false;
+            }
+        }
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -401,8 +411,11 @@ namespace Palengke.BangSak.Game
 
         private void HideBangEffect()
         {
-            bangMarkerRenderer.enabled = false;
-            bangMarkerRenderer.transform.localScale = Vector3.one;
+            if (bangMarkerRenderer != null)
+            {
+                bangMarkerRenderer.enabled = false;
+                bangMarkerRenderer.transform.localScale = Vector3.one;
+            }
 
             if (impactRenderer != null)
             {

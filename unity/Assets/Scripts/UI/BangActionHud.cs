@@ -29,11 +29,13 @@ namespace Palengke.BangSak.UI
         private Image buttonImage;
         private Image iconImage;
         private Text label;
+        private bool hudVisible = true;
 
         private void Start()
         {
             ResolveController();
             CreateHud();
+            ApplyHudVisibility();
             Refresh();
         }
 
@@ -45,6 +47,12 @@ namespace Palengke.BangSak.UI
         public void SetController(BangActionController bangController)
         {
             controller = bangController;
+        }
+
+        public void SetHudVisible(bool visible)
+        {
+            hudVisible = visible;
+            ApplyHudVisibility();
         }
 
         private void CreateHud()
@@ -122,6 +130,8 @@ namespace Palengke.BangSak.UI
             label.resizeTextMaxSize = 20;
             label.color = Color.white;
             label.raycastTarget = false;
+
+            ApplyHudVisibility();
         }
 
         private void OnDestroy()
@@ -134,7 +144,7 @@ namespace Palengke.BangSak.UI
 
         private void OnBangClicked()
         {
-            if (controller != null)
+            if (controller != null && controller.isActiveAndEnabled)
             {
                 controller.TryBangNow();
             }
@@ -142,7 +152,7 @@ namespace Palengke.BangSak.UI
 
         private void Refresh()
         {
-            if (controller == null || button == null)
+            if (!hudVisible || controller == null || button == null)
             {
                 return;
             }
@@ -172,6 +182,14 @@ namespace Palengke.BangSak.UI
             if (controller == null)
             {
                 controller = GetComponent<BangActionController>();
+            }
+        }
+
+        private void ApplyHudVisibility()
+        {
+            if (hudRoot != null)
+            {
+                hudRoot.SetActive(hudVisible);
             }
         }
     }
