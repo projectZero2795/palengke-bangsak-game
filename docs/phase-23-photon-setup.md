@@ -33,6 +33,8 @@ The official Photon Fusion docs distribute the SDK as a Unity package import flo
 
 Do not commit the Photon App ID.
 
+Photon's Fusion setup can store the App ID inside `PhotonAppSettings.asset`, so that local asset path is ignored until we add a safe committed template or adapter strategy.
+
 ## How to review in Unity
 
 1. Pull the latest repo.
