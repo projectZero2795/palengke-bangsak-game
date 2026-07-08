@@ -24,7 +24,7 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 17 | Role system | Taya/Hider roles, UI, markers, role component variants. | Done. |
 | 18 | Corrected Bang-name rule | Taya uses `Bang + player name` to catch hiders. | Ready for review; local named catch rule works. |
 | 19 | Safe SAK counter | Hiders use safe close-range SAK counter against Taya. | Local SAK counter works safely. |
-| 20 | Map layout v1 | Place objects into playable map with spawn points and map component defaults. | First playable map approved. |
+| 20 | Map layout v1 | Place objects into playable map with spawn points and map component defaults. | Ready for review; map layout component and playable boundary are configured. |
 | 21 | Round rules | Timer, hider count, stealth/reveal rules, Bang/SAK win conditions, restart, result screen. | Local prototype playable. |
 | 22 | UI polish | Main menu, how-to, HUD, result, settings placeholder. | Local prototype usable. |
 | 23 | Photon setup | Install/configure Photon Fusion, room lifecycle, and room component selection/vote placeholder. | Two clients join same room. |
