@@ -1,5 +1,6 @@
 using Palengke.BangSak.Game;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Palengke.BangSak.UI
@@ -22,6 +23,12 @@ namespace Palengke.BangSak.UI
         [SerializeField]
         private int sortingOrder = 24;
 
+        [SerializeField]
+        private string mainMenuSceneName = "MainMenu";
+
+        [SerializeField]
+        private bool showMainMenuButton = true;
+
         private GameObject hudRoot;
         private GameObject resultPanel;
         private Text timerLabel;
@@ -35,6 +42,10 @@ namespace Palengke.BangSak.UI
         public PrototypeRoundRulesController Controller => controller;
 
         public Vector2 StatusPanelSize => statusPanelSize;
+
+        public string MainMenuSceneName => mainMenuSceneName;
+
+        public bool ShowMainMenuButton => showMainMenuButton;
 
         public bool HasRuntimeHud => hudRoot != null;
 
@@ -246,28 +257,42 @@ namespace Palengke.BangSak.UI
             resultTitleLabel = CreateText(resultPanel.transform, "Round over", new Vector2(0f, 62f), new Vector2(resultPanelSize.x - 32f, 44f), 27, FontStyle.Bold, Color.white);
             resultMessageLabel = CreateText(resultPanel.transform, "Result message", new Vector2(0f, 14f), new Vector2(resultPanelSize.x - 42f, 58f), 16, FontStyle.Normal, new Color(0.86f, 0.9f, 1f, 1f));
 
-            var buttonObject = new GameObject("Restart Round Button");
+            if (showMainMenuButton)
+            {
+                restartButton = CreateResultButton("Restart", new Vector2(-88f, 24f), new Vector2(148f, 42f), new Color(0.22f, 0.4f, 0.95f, 1f), OnRestartClicked);
+                CreateResultButton("Menu", new Vector2(88f, 24f), new Vector2(148f, 42f), new Color(0.12f, 0.16f, 0.22f, 1f), OnMainMenuClicked);
+            }
+            else
+            {
+                restartButton = CreateResultButton("Restart", new Vector2(0f, 24f), new Vector2(178f, 46f), new Color(0.22f, 0.4f, 0.95f, 1f), OnRestartClicked);
+            }
+
+            resultPanel.SetActive(false);
+        }
+
+        private Button CreateResultButton(string label, Vector2 position, Vector2 size, Color color, UnityEngine.Events.UnityAction onClick)
+        {
+            var buttonObject = new GameObject($"{label} Round Result Button");
             buttonObject.transform.SetParent(resultPanel.transform, false);
 
             var buttonRect = buttonObject.AddComponent<RectTransform>();
             buttonRect.anchorMin = new Vector2(0.5f, 0f);
             buttonRect.anchorMax = new Vector2(0.5f, 0f);
             buttonRect.pivot = new Vector2(0.5f, 0f);
-            buttonRect.sizeDelta = new Vector2(178f, 46f);
-            buttonRect.anchoredPosition = new Vector2(0f, 24f);
+            buttonRect.sizeDelta = size;
+            buttonRect.anchoredPosition = position;
 
             var buttonImage = buttonObject.AddComponent<Image>();
             ApplyRoundedSprite(buttonImage);
-            buttonImage.color = new Color(0.22f, 0.4f, 0.95f, 1f);
+            buttonImage.color = color;
 
-            restartButton = buttonObject.AddComponent<Button>();
-            restartButton.targetGraphic = buttonImage;
-            restartButton.onClick.AddListener(OnRestartClicked);
+            var button = buttonObject.AddComponent<Button>();
+            button.targetGraphic = buttonImage;
+            button.onClick.AddListener(onClick);
 
-            var restartLabel = CreateText(buttonObject.transform, "Restart", Vector2.zero, buttonRect.sizeDelta, 18, FontStyle.Bold, Color.white);
-            restartLabel.alignment = TextAnchor.MiddleCenter;
-
-            resultPanel.SetActive(false);
+            var text = CreateText(buttonObject.transform, label, Vector2.zero, size, 17, FontStyle.Bold, Color.white);
+            text.alignment = TextAnchor.MiddleCenter;
+            return button;
         }
 
         private static void AddOutline(GameObject target, Color color, Vector2 distance)
@@ -384,6 +409,14 @@ namespace Palengke.BangSak.UI
             if (controller != null)
             {
                 controller.RestartRound();
+            }
+        }
+
+        private void OnMainMenuClicked()
+        {
+            if (!string.IsNullOrWhiteSpace(mainMenuSceneName))
+            {
+                SceneManager.LoadScene(mainMenuSceneName);
             }
         }
     }

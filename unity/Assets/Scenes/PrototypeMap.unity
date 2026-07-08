@@ -636,6 +636,8 @@ MonoBehaviour:
   statusPanelOffset: {x: 0, y: -8}
   resultPanelSize: {x: 360, y: 210}
   sortingOrder: 24
+  mainMenuSceneName: MainMenu
+  showMainMenuButton: 1
 --- !u!1 &220000
 GameObject:
   m_ObjectHideFlags: 0
