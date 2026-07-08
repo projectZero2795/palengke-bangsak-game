@@ -17,7 +17,7 @@ public sealed class PrototypeNetworkPlayerSpawnerTests
     {
         mapObject = new GameObject("Map Layout");
         mapLayout = mapObject.AddComponent<PrototypeMapLayoutController>();
-        mapLayout.TestConfigureLayout(
+        mapLayout.ConfigureForTests(
             new Vector2(30f, 20f),
             Vector2.zero,
             new Vector2(30f, 20f),
