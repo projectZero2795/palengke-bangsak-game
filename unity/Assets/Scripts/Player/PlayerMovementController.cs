@@ -25,6 +25,8 @@ namespace Palengke.BangSak.Player
 
         public Vector2 CurrentInput => currentInput;
 
+        public bool ReadsKeyboardInput => readKeyboardInput;
+
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
@@ -45,6 +47,15 @@ namespace Palengke.BangSak.Player
         public void SetExternalInput(Vector2 input)
         {
             externalInput = ClampInput(input);
+        }
+
+        public void SetKeyboardInputEnabled(bool enabled)
+        {
+            readKeyboardInput = enabled;
+            if (!enabled)
+            {
+                currentInput = Vector2.zero;
+            }
         }
 
         public Vector2 ResolveInput(Vector2 keyboardInput, Vector2 joystickInput)

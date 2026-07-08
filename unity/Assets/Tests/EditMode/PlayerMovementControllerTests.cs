@@ -56,4 +56,15 @@ public sealed class PlayerMovementControllerTests
         Assert.That(delta.x, Is.EqualTo(1f).Within(0.0001f));
         Assert.That(delta.y, Is.EqualTo(0f).Within(0.0001f));
     }
+
+    [Test]
+    public void SetKeyboardInputEnabled_TracksLocalOwnershipFlag()
+    {
+        Assert.That(controller.ReadsKeyboardInput, Is.True);
+
+        controller.SetKeyboardInputEnabled(false);
+
+        Assert.That(controller.ReadsKeyboardInput, Is.False);
+        Assert.That(controller.CurrentInput, Is.EqualTo(Vector2.zero));
+    }
 }

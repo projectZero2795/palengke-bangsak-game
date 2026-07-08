@@ -638,6 +638,69 @@ MonoBehaviour:
   sortingOrder: 24
   mainMenuSceneName: MainMenu
   showMainMenuButton: 1
+--- !u!1 &292400000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 292400001}
+  - component: {fileID: 292400002}
+  m_Layer: 0
+  m_Name: Phase 24 Network Player Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &292400001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292400000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &292400002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292400000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab2df8ae4dc94b6983eec04e2aa7f166, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  componentId: prototype_network_player_spawner
+  componentVersion: 1
+  componentVariant: phase24_local_network_spawn_preview
+  mapLayout: {fileID: 292000002}
+  cameraFollow: {fileID: 200004}
+  mobileJoystick: {fileID: 989006738}
+  playerPrefab: {fileID: 1664006932156598595, guid: 2e5e1b15824c74308908b1582058937b, type: 3}
+  spawnOnAwake: 1
+  clearExistingGeneratedPlayers: 1
+  disableLegacyPlayablePlayer: 1
+  legacyPlayablePlayerName: Playable Player (Phase 3)
+  previewPlayerCount: 4
+  localPlayerIndex: 0
+  previewPlayerNames:
+  - JuanP
+  - Maria
+  - Pedro
+  - Ana
 --- !u!1 &220000
 GameObject:
   m_ObjectHideFlags: 0
