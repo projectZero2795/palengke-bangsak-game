@@ -3,6 +3,8 @@ using NUnit.Framework;
 using Palengke.BangSak.UI;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 public sealed class Phase22UiPolishTests
 {
@@ -24,6 +26,7 @@ public sealed class Phase22UiPolishTests
         Assert.That(
             typeof(PrototypeMainMenuController).GetCustomAttributes(typeof(UnityEngine.ExecuteAlways), false),
             Is.Not.Empty);
+        Assert.That(Object.FindObjectOfType<EventSystem>(), Is.Not.Null);
     }
 
     [Test]

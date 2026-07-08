@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -31,6 +32,7 @@ namespace Palengke.BangSak.UI
         private int sortingOrder = 40;
 
         private GameObject menuRoot;
+        private GameObject ownedEventSystem;
         private GameObject howToPanel;
         private GameObject settingsPanel;
         private static Sprite roundedPanelSprite;
@@ -156,6 +158,7 @@ namespace Palengke.BangSak.UI
             scaler.referenceResolution = new Vector2(800f, 600f);
 
             canvasObject.AddComponent<GraphicRaycaster>();
+            EnsureEventSystem();
 
             CreateBackdrop(canvasObject.transform);
             CreateMainCard(canvasObject.transform);
@@ -170,9 +173,29 @@ namespace Palengke.BangSak.UI
             {
                 DestroyObject(menuRoot);
                 menuRoot = null;
+                DestroyObject(ownedEventSystem);
+                ownedEventSystem = null;
                 howToPanel = null;
                 settingsPanel = null;
             }
+        }
+
+        private void EnsureEventSystem()
+        {
+            if (FindObjectOfType<EventSystem>() != null)
+            {
+                return;
+            }
+
+            ownedEventSystem = new GameObject("Phase 22 Menu EventSystem");
+            ownedEventSystem.transform.SetParent(transform, false);
+            if (!Application.isPlaying)
+            {
+                ownedEventSystem.hideFlags = HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild;
+            }
+
+            ownedEventSystem.AddComponent<EventSystem>();
+            ownedEventSystem.AddComponent<StandaloneInputModule>();
         }
 
         private static void DestroyObject(GameObject target)

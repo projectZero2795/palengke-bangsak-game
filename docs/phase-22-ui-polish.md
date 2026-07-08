@@ -14,6 +14,8 @@ rules.
 - Added runtime-generated main menu UI to `MainMenu`.
 - The menu UI now previews in the editor when `MainMenu.unity` is opened; the
   preview is temporary and not saved into the scene.
+- The menu creates its own Unity `EventSystem` when needed so buttons can
+  receive clicks/taps in Play mode.
 - Main menu now includes:
   - `PLAY LOCAL`;
   - `HOW TO PLAY`;
@@ -44,7 +46,7 @@ rules.
 3. Open `Assets/Scenes/MainMenu.unity`.
 4. Before pressing Play, confirm the menu preview appears in the Game view or
    as `Phase 22 Main Menu UI` under `Bang-Sak Main Menu Root`.
-5. Press Play.
+5. Press Play. Buttons are expected to be clickable in Play mode.
 6. Confirm the menu works with:
    - `PLAY LOCAL`;
    - `HOW TO PLAY`;
