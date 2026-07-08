@@ -2,6 +2,7 @@ using NUnit.Framework;
 using Palengke.BangSak.Game;
 using Palengke.BangSak.Network;
 using Palengke.BangSak.Player;
+using Palengke.BangSak.UI;
 using UnityEngine;
 
 public sealed class PrototypeNetworkPlayerSpawnerTests
@@ -93,6 +94,29 @@ public sealed class PrototypeNetworkPlayerSpawnerTests
         Assert.That(remoteIdentity.IsLocalPlayer, Is.False);
         Assert.That(remoteIdentity.Role, Is.EqualTo(PlayerRole.Hider));
         Assert.That(remoteMovement.ReadsKeyboardInput, Is.False);
+        Assert.That(remote.GetComponent<BangActionHud>().enabled, Is.False);
+        Assert.That(remote.GetComponent<BangNameCallHud>().enabled, Is.False);
+        Assert.That(remote.GetComponent<SakCounterHud>().enabled, Is.False);
+    }
+
+    [Test]
+    public void DisableLegacyPreviewActors_DisablesOldPreviewRootsBeforeRoundCounts()
+    {
+        const string legacyPlayableName = "Test Legacy Playable Player";
+        const string legacyPreviewRootName = "Test Legacy Preview Root";
+        spawner.ConfigureLegacyPreviewNames(legacyPlayableName, new[] { legacyPreviewRootName });
+
+        var legacyPlayable = new GameObject(legacyPlayableName);
+        var legacyPreviewRoot = new GameObject(legacyPreviewRootName);
+
+        var disabledCount = spawner.DisableLegacyPreviewActors();
+
+        Assert.That(disabledCount, Is.EqualTo(2));
+        Assert.That(legacyPlayable.activeSelf, Is.False);
+        Assert.That(legacyPreviewRoot.activeSelf, Is.False);
+
+        Object.DestroyImmediate(legacyPlayable);
+        Object.DestroyImmediate(legacyPreviewRoot);
     }
 
     private static GameObject CreatePlayerPrefab()
@@ -104,6 +128,9 @@ public sealed class PrototypeNetworkPlayerSpawnerTests
         prefab.AddComponent<PlayerMovementController>();
         prefab.AddComponent<PlayerAnimationController>();
         prefab.AddComponent<PlayerNameIdentity>();
+        prefab.AddComponent<BangActionHud>();
+        prefab.AddComponent<BangNameCallHud>();
+        prefab.AddComponent<SakCounterHud>();
         prefab.AddComponent<PlayerRoleController>();
         return prefab;
     }

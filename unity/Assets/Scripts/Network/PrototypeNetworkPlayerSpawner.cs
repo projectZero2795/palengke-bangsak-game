@@ -52,6 +52,12 @@ namespace Palengke.BangSak.Network
         private string legacyPlayablePlayerName = "Playable Player (Phase 3)";
 
         [SerializeField]
+        private string[] legacyPreviewRootNames =
+        {
+            "Phase 2 Player Design Preview"
+        };
+
+        [SerializeField]
         [Min(2)]
         private int previewPlayerCount = DefaultPreviewPlayerCount;
 
@@ -93,6 +99,8 @@ namespace Palengke.BangSak.Network
 
         public IReadOnlyList<GameObject> SpawnedPlayers => spawnedPlayers;
 
+        public string[] LegacyPreviewRootNames => legacyPreviewRootNames;
+
         public GameObject LastSpawnedLocalPlayer { get; private set; }
 
         private void Awake()
@@ -106,7 +114,7 @@ namespace Palengke.BangSak.Network
 
             if (disableLegacyPlayablePlayer)
             {
-                DisableLegacyPlayablePlayer();
+                DisableLegacyPreviewActors();
             }
 
             SpawnPreviewPlayers();
@@ -129,6 +137,12 @@ namespace Palengke.BangSak.Network
             previewPlayerNames = playerNames ?? previewPlayerNames;
             previewPlayerCount = Mathf.Max(2, playerCount);
             localPlayerIndex = Mathf.Clamp(localIndex, 0, previewPlayerCount - 1);
+        }
+
+        public void ConfigureLegacyPreviewNames(string playableName, string[] rootNames)
+        {
+            legacyPlayablePlayerName = playableName;
+            legacyPreviewRootNames = rootNames ?? new string[0];
         }
 
         public PrototypeNetworkPlayerDescriptor[] BuildPreviewRoster()
@@ -250,12 +264,35 @@ namespace Palengke.BangSak.Network
             }
 
             EnsureRuntimeMovement(spawned, descriptor.IsLocalPlayer);
+            ApplyLocalOwnershipUi(spawned, descriptor.IsLocalPlayer);
             ApplyFacingDirection(spawned, descriptor.FacingDirection);
 
             if (descriptor.IsLocalPlayer)
             {
                 LastSpawnedLocalPlayer = spawned;
             }
+        }
+
+        public int DisableLegacyPreviewActors()
+        {
+            if (!disableLegacyPlayablePlayer)
+            {
+                return 0;
+            }
+
+            var disabledCount = DisableNamedLegacyObject(legacyPlayablePlayerName);
+
+            if (legacyPreviewRootNames == null)
+            {
+                return disabledCount;
+            }
+
+            for (var index = 0; index < legacyPreviewRootNames.Length; index += 1)
+            {
+                disabledCount += DisableNamedLegacyObject(legacyPreviewRootNames[index]);
+            }
+
+            return disabledCount;
         }
 
         private static void EnsureRuntimeMovement(GameObject spawned, bool isLocalPlayer)
@@ -275,6 +312,34 @@ namespace Palengke.BangSak.Network
             if (!isLocalPlayer)
             {
                 movement.SetExternalInput(Vector2.zero);
+            }
+        }
+
+        private static void ApplyLocalOwnershipUi(GameObject spawned, bool isLocalPlayer)
+        {
+            if (isLocalPlayer)
+            {
+                return;
+            }
+
+            var bangHud = spawned.GetComponent<BangActionHud>();
+            if (bangHud != null)
+            {
+                bangHud.SetHudVisible(false);
+                bangHud.enabled = false;
+            }
+
+            var nameHud = spawned.GetComponent<BangNameCallHud>();
+            if (nameHud != null)
+            {
+                nameHud.enabled = false;
+            }
+
+            var sakHud = spawned.GetComponent<SakCounterHud>();
+            if (sakHud != null)
+            {
+                sakHud.SetHudVisible(false);
+                sakHud.enabled = false;
             }
         }
 
@@ -336,25 +401,26 @@ namespace Palengke.BangSak.Network
             generatedRoot = root.transform;
         }
 
-        private void DisableLegacyPlayablePlayer()
+        private int DisableNamedLegacyObject(string legacyObjectName)
         {
-            if (string.IsNullOrWhiteSpace(legacyPlayablePlayerName))
+            if (string.IsNullOrWhiteSpace(legacyObjectName))
             {
-                return;
+                return 0;
             }
 
-            var legacy = GameObject.Find(legacyPlayablePlayerName);
+            var legacy = GameObject.Find(legacyObjectName);
             if (legacy == null)
             {
-                return;
+                return 0;
             }
 
             if (generatedRoot != null && legacy.transform.IsChildOf(generatedRoot))
             {
-                return;
+                return 0;
             }
 
             legacy.SetActive(false);
+            return 1;
         }
 
         private string ResolvePlayerName(int index, PlayerRole role)

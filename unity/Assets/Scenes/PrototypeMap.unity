@@ -694,6 +694,8 @@ MonoBehaviour:
   clearExistingGeneratedPlayers: 1
   disableLegacyPlayablePlayer: 1
   legacyPlayablePlayerName: Playable Player (Phase 3)
+  legacyPreviewRootNames:
+  - Phase 2 Player Design Preview
   previewPlayerCount: 4
   localPlayerIndex: 0
   previewPlayerNames:
