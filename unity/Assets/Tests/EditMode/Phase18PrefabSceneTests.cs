@@ -22,6 +22,10 @@ public sealed class Phase18PrefabSceneTests
         Assert.That(nameHud, Is.Not.Null);
         Assert.That(genericBangHud, Is.Not.Null);
         Assert.That(genericBangHud.enabled, Is.False);
+
+        var serializedHud = new SerializedObject(nameHud);
+        var iconProperty = serializedHud.FindProperty("buttonIconSprite");
+        Assert.That(iconProperty.objectReferenceValue, Is.Not.Null);
     }
 
     [TestCase("Assets/Prefabs/Players/PlayerPlaceholder_Blue.prefab", "Maria")]

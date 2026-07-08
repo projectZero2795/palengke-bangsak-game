@@ -22,6 +22,9 @@ namespace Palengke.BangSak.UI
         [Range(1, 8)]
         private int maxVisibleTargets = 4;
 
+        [SerializeField]
+        private Sprite buttonIconSprite = null;
+
         private GameObject hudRoot;
         private Transform buttonRoot;
         private Text feedbackLabel;
@@ -91,7 +94,7 @@ namespace Palengke.BangSak.UI
 
             feedbackLabel = CreateText(
                 panelObject.transform,
-                "Tap who you see",
+                "Tap the hider you see",
                 new Vector2(10f, -90f),
                 new Vector2(218f, 22f),
                 12,
@@ -122,16 +125,41 @@ namespace Palengke.BangSak.UI
             button.targetGraphic = image;
             button.onClick.AddListener(() => OnBangTargetClicked(targetName));
 
+            CreateIcon(buttonObject.transform, buttonIconSprite);
+
             var label = CreateText(
                 buttonObject.transform,
-                $"Bang\n{targetName}",
-                Vector2.zero,
-                new Vector2(106f, 34f),
-                13,
+                targetName,
+                new Vector2(buttonIconSprite == null ? 10f : 36f, -2f),
+                new Vector2(buttonIconSprite == null ? 86f : 62f, 30f),
+                15,
                 FontStyle.Bold,
                 Color.white);
             label.alignment = TextAnchor.MiddleCenter;
             return button;
+        }
+
+        private void CreateIcon(Transform parent, Sprite iconSprite)
+        {
+            if (iconSprite == null)
+            {
+                return;
+            }
+
+            var iconObject = new GameObject("Tsinelas Icon");
+            iconObject.transform.SetParent(parent, false);
+
+            var rect = iconObject.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0f, 1f);
+            rect.anchorMax = new Vector2(0f, 1f);
+            rect.pivot = new Vector2(0f, 1f);
+            rect.sizeDelta = new Vector2(24f, 24f);
+            rect.anchoredPosition = new Vector2(8f, -5f);
+
+            var icon = iconObject.AddComponent<Image>();
+            icon.sprite = iconSprite;
+            icon.preserveAspect = true;
+            icon.raycastTarget = false;
         }
 
         private Text CreateText(

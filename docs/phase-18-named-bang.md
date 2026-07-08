@@ -18,7 +18,8 @@ win/loss rules, multiplayer, or voice recognition.
   - validates the name when Bang hits a target.
 - Added `BangNameCallHud`:
   - compact Taya-only person-specific Bang buttons;
-  - one button per hider, for example `Bang Maria`;
+  - each button shows a tsinelas icon plus the hider name;
+  - one button per hider, for example `Maria`;
   - clicking a person button calls that name and throws immediately;
   - feedback text for correct or wrong names.
 - Disabled the old generic Bang HUD on the Taya prefab so the UI does not show
@@ -40,7 +41,8 @@ win/loss rules, multiplayer, or voice recognition.
 3. Open `Assets/Scenes/PrototypeMap.unity`.
 4. Press Play.
 5. Confirm:
-   - the Taya player has compact per-person buttons like `Bang Maria`;
+   - the Taya player has compact per-person buttons with a tsinelas icon and
+     name, like `Maria`;
    - there are no arrow buttons for cycling names;
    - aim at the hider you see and click that hider's Bang button;
    - if the clicked name matches the hider you hit, the hider is caught;
