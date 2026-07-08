@@ -81,19 +81,25 @@ public sealed class PrototypeNetworkPlayerSpawnerTests
 
         var localIdentity = spawner.LastSpawnedLocalPlayer.GetComponent<PrototypeNetworkPlayerIdentity>();
         var localMovement = spawner.LastSpawnedLocalPlayer.GetComponent<PlayerMovementController>();
+        var localMovementSync = spawner.LastSpawnedLocalPlayer.GetComponent<PrototypeNetworkMovementSyncController>();
 
         Assert.That(localIdentity, Is.Not.Null);
         Assert.That(localIdentity.IsLocalPlayer, Is.True);
         Assert.That(localIdentity.Role, Is.EqualTo(PlayerRole.Taya));
         Assert.That(localMovement.ReadsKeyboardInput, Is.True);
+        Assert.That(localMovementSync, Is.Not.Null);
+        Assert.That(localMovementSync.Authority, Is.EqualTo(PrototypeNetworkMovementAuthority.LocalAuthority));
 
         var remote = spawner.SpawnedPlayers[1];
         var remoteIdentity = remote.GetComponent<PrototypeNetworkPlayerIdentity>();
         var remoteMovement = remote.GetComponent<PlayerMovementController>();
+        var remoteMovementSync = remote.GetComponent<PrototypeNetworkMovementSyncController>();
 
         Assert.That(remoteIdentity.IsLocalPlayer, Is.False);
         Assert.That(remoteIdentity.Role, Is.EqualTo(PlayerRole.Hider));
         Assert.That(remoteMovement.ReadsKeyboardInput, Is.False);
+        Assert.That(remoteMovement.enabled, Is.False);
+        Assert.That(remoteMovementSync.Authority, Is.EqualTo(PrototypeNetworkMovementAuthority.RemoteReplica));
         Assert.That(remote.GetComponent<BangActionHud>().enabled, Is.False);
         Assert.That(remote.GetComponent<BangNameCallHud>().enabled, Is.False);
         Assert.That(remote.GetComponent<SakCounterHud>().enabled, Is.False);
