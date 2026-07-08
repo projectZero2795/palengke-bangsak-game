@@ -265,6 +265,7 @@ namespace Palengke.BangSak.Network
 
             EnsureRuntimeMovement(spawned, descriptor.IsLocalPlayer);
             ConfigureMovementSync(spawned, identity);
+            ConfigureActionSync(spawned, identity);
             ApplyLocalOwnershipUi(spawned, descriptor.IsLocalPlayer);
             ApplyFacingDirection(spawned, descriptor.FacingDirection);
 
@@ -353,6 +354,17 @@ namespace Palengke.BangSak.Network
             }
 
             movementSync.Configure(identity);
+        }
+
+        private static void ConfigureActionSync(GameObject spawned, PrototypeNetworkPlayerIdentity identity)
+        {
+            var actionSync = spawned.GetComponent<PrototypeNetworkActionSyncController>();
+            if (actionSync == null)
+            {
+                actionSync = spawned.AddComponent<PrototypeNetworkActionSyncController>();
+            }
+
+            actionSync.Configure(identity);
         }
 
         private static void ApplyFacingDirection(GameObject spawned, PlayerFacingDirection facingDirection)

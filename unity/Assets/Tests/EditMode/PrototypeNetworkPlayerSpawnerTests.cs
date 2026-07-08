@@ -82,6 +82,7 @@ public sealed class PrototypeNetworkPlayerSpawnerTests
         var localIdentity = spawner.LastSpawnedLocalPlayer.GetComponent<PrototypeNetworkPlayerIdentity>();
         var localMovement = spawner.LastSpawnedLocalPlayer.GetComponent<PlayerMovementController>();
         var localMovementSync = spawner.LastSpawnedLocalPlayer.GetComponent<PrototypeNetworkMovementSyncController>();
+        var localActionSync = spawner.LastSpawnedLocalPlayer.GetComponent<PrototypeNetworkActionSyncController>();
 
         Assert.That(localIdentity, Is.Not.Null);
         Assert.That(localIdentity.IsLocalPlayer, Is.True);
@@ -89,17 +90,21 @@ public sealed class PrototypeNetworkPlayerSpawnerTests
         Assert.That(localMovement.ReadsKeyboardInput, Is.True);
         Assert.That(localMovementSync, Is.Not.Null);
         Assert.That(localMovementSync.Authority, Is.EqualTo(PrototypeNetworkMovementAuthority.LocalAuthority));
+        Assert.That(localActionSync, Is.Not.Null);
+        Assert.That(localActionSync.IsLocalAuthority, Is.True);
 
         var remote = spawner.SpawnedPlayers[1];
         var remoteIdentity = remote.GetComponent<PrototypeNetworkPlayerIdentity>();
         var remoteMovement = remote.GetComponent<PlayerMovementController>();
         var remoteMovementSync = remote.GetComponent<PrototypeNetworkMovementSyncController>();
+        var remoteActionSync = remote.GetComponent<PrototypeNetworkActionSyncController>();
 
         Assert.That(remoteIdentity.IsLocalPlayer, Is.False);
         Assert.That(remoteIdentity.Role, Is.EqualTo(PlayerRole.Hider));
         Assert.That(remoteMovement.ReadsKeyboardInput, Is.False);
         Assert.That(remoteMovement.enabled, Is.False);
         Assert.That(remoteMovementSync.Authority, Is.EqualTo(PrototypeNetworkMovementAuthority.RemoteReplica));
+        Assert.That(remoteActionSync.IsLocalAuthority, Is.False);
         Assert.That(remote.GetComponent<BangActionHud>().enabled, Is.False);
         Assert.That(remote.GetComponent<BangNameCallHud>().enabled, Is.False);
         Assert.That(remote.GetComponent<SakCounterHud>().enabled, Is.False);

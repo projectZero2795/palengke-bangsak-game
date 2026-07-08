@@ -30,7 +30,7 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 23 | Photon setup | Add Photon-ready room lifecycle scaffold, room menu, and document SDK import path without committing the App ID. | Scaffold ready for review; real two-client Photon join remains pending until Fusion SDK import/adapter. |
 | 24 | Multiplayer player spawning | Add local network-style roster spawning, ownership markers, spawn slots, and camera/joystick local-owner targeting. | Ready for review; local network-spawn preview works, real Photon spawning remains pending SDK adapter. |
 | 25 | Multiplayer movement sync | Add compile-safe snapshot/smoothing layer before Photon transport is wired. | Ready for review; local authority and remote replica movement sync scaffold works without Fusion SDK. |
-| 26 | Multiplayer Bang/SAK sync | Networked named catch, SAK counter, stealth/reveal sync, and validation. | Online catching/countering works. |
+| 26 | Multiplayer Bang/SAK sync | Add compile-safe action event layer for named Bang catches and SAK counters before Photon transport is wired. | Ready for review; local/remote Bang/SAK events can be captured/applied without Fusion SDK. |
 | 27 | WebGL build | Unity WebGL build and browser test. | WebGL works locally. |
 | 28 | Docker static hosting | Nginx Docker image for WebGL files. | Container serves game. |
 | 29 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Public game reachable. |
