@@ -15,6 +15,7 @@ Included:
   - visual on-screen joystick placeholder;
   - drag input forwarded to the player controller;
   - centered compact handle, with the handle anchored to the joystick base center;
+  - smooth high-resolution woven/rattan-style base and handle art;
   - no new Input System package required.
 - Default playable prefab updates:
   - `Rigidbody2D`;
@@ -34,6 +35,7 @@ Included:
   - wall collider presence;
   - mobile joystick presence.
   - compact centered joystick handle.
+  - high-resolution joystick art so the control does not look pixelated when scaled.
 - Reproducible helper asset generator:
   - `tools/generate_phase3_placeholder_assets.py`
 
@@ -88,7 +90,8 @@ pull the latest repo and restart Unity so it reloads `ProjectSettings/ProjectSet
 8. In Game view, drag the lower-left joystick placeholder and confirm the player moves.
 9. Confirm the joystick handle starts centered inside the base and returns to center after release.
 10. Confirm the joystick is compact and no longer dominates the lower-left corner.
-11. Confirm Console has no red errors.
+11. Confirm the joystick has warm woven/rattan accents, smooth circular edges, and no obvious pixelated border.
+12. Confirm Console has no red errors.
 
 ## Exit criteria status
 

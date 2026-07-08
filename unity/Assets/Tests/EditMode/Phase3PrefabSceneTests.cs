@@ -66,6 +66,22 @@ public sealed class Phase3PrefabSceneTests
         Assert.That(handleTransform.anchoredPosition, Is.EqualTo(Vector2.zero));
     }
 
+    [Test]
+    public void MobileJoystickArt_UsesSmoothHighResolutionSprites()
+    {
+        var baseTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(
+            "Assets/Art/Placeholders/Controls/joystick_base_placeholder.png");
+        var handleTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(
+            "Assets/Art/Placeholders/Controls/joystick_handle_placeholder.png");
+
+        Assert.That(baseTexture, Is.Not.Null);
+        Assert.That(handleTexture, Is.Not.Null);
+        Assert.That(baseTexture.width, Is.GreaterThanOrEqualTo(192));
+        Assert.That(baseTexture.height, Is.GreaterThanOrEqualTo(192));
+        Assert.That(handleTexture.width, Is.GreaterThanOrEqualTo(128));
+        Assert.That(handleTexture.height, Is.GreaterThanOrEqualTo(128));
+    }
+
     private static RectTransform GetPrivateRectTransform(MobileJoystickPlaceholder joystick, string fieldName)
     {
         var field = typeof(MobileJoystickPlaceholder).GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
