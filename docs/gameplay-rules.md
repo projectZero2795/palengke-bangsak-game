@@ -38,6 +38,14 @@ Phase plan for this correction:
 - Phase 18: add the local `Bang + player name` catch rule.
 - Phase 19: add the safe hider SAK counter.
 
+Current Phase 19 implementation:
+
+- SAK is a hider-only local action.
+- SAK has short range, cooldown, and wall blocking.
+- SAK can counter Taya only; it does not affect hiders.
+- Taya receives a temporary playful countered/stunned feedback state.
+- SAK is not a round-ending rule yet; win/loss rules remain for a later phase.
+
 ## Stealth and reveal rule
 
 Bang-Sak is a nighttime barangay/palengke game. Hiding should be useful, but

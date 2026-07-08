@@ -23,6 +23,9 @@ GameObject:
   - component: {fileID: 2918000000000000001}
   - component: {fileID: 2918010000000000001}
   - component: {fileID: 2918020000000000001}
+  - component: {fileID: 2918030000000000001}
+  - component: {fileID: 2918040000000000001}
+  - component: {fileID: 2918050000000000001}
   m_Layer: 0
   m_Name: PlayerPlaceholder
   m_TagString: Untagged
@@ -190,6 +193,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 8786889567334867629}
   movementController: {fileID: 3034037593118062986}
   bangActionController: {fileID: 5390065306357427573}
+  sakCounterController: {fileID: 2918040000000000001}
   countAsHider: 0
   disableMovementWhenCaught: 1
   disableActionsWhenCaught: 1
@@ -218,6 +222,8 @@ MonoBehaviour:
   role: 0
   bangActionController: {fileID: 5390065306357427573}
   bangActionHud: {fileID: 8313899227323467395}
+  sakCounterController: {fileID: 2918040000000000001}
+  sakCounterHud: {fileID: 2918050000000000001}
   caughtStateController: {fileID: 2801120000000000001}
 --- !u!114 &2918000000000000001
 MonoBehaviour:
@@ -265,6 +271,71 @@ MonoBehaviour:
   panelOffset: {x: -18, y: 18}
   maxVisibleTargets: 4
   buttonIconSprite: {fileID: 21300000, guid: 5431fe616a2b573ea524c0f356db2e1a, type: 3}
+--- !u!114 &2918030000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664006932156598595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a0e20411ab42378a30ab1aa9f5e4d7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 8786889567334867629}
+  movementController: {fileID: 3034037593118062986}
+  bangActionController: {fileID: 5390065306357427573}
+  roleController: {fileID: 2917000000000000001}
+  counteredSeconds: 1.15
+  counteredTint: {r: 0.72, g: 1, b: 0.68, a: 1}
+  counteredPulseTint: {r: 1, g: 0.95, b: 0.45, a: 1}
+  indicatorOffset: {x: 0, y: 0.62, z: 0}
+  indicatorSize: 0.28
+  indicatorSpinSpeed: 4.5
+--- !u!114 &2918040000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664006932156598595}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c38bc8e557944a89c73ecb0e128e2ae, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  animationController: {fileID: 6493258612035774221}
+  roleController: {fileID: 2917000000000000001}
+  cooldownSeconds: 1.25
+  range: 0.78
+  hitRadius: 0.26
+  hitStartOffset: 0.12
+  blockSakWithSolidColliders: 1
+  hitDetectionLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  enableKeyboardShortcut: 0
+  effectSeconds: 0.38
+  counterColor: {r: 0.46, g: 1, b: 0.42, a: 1}
+  missColor: {r: 1, g: 0.8, b: 0.36, a: 1}
+  blockedColor: {r: 0.75, g: 0.85, b: 1, a: 1}
+--- !u!114 &2918050000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664006932156598595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3fc1e7edc6d49d0b0b94900edc973c5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  controller: {fileID: 2918040000000000001}
+  buttonSize: {x: 66, y: 66}
+  buttonOffset: {x: -24, y: 104}
+  hudEnabledForThisObject: 1
 --- !u!114 &3034037593118062986
 MonoBehaviour:
   m_ObjectHideFlags: 0

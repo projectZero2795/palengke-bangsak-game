@@ -8,6 +8,7 @@ public sealed class PlayerRoleControllerTests
 {
     private GameObject player;
     private BangActionController bang;
+    private SakCounterController sak;
     private CaughtStateController caughtState;
     private PlayerRoleController roleController;
 
@@ -24,6 +25,8 @@ public sealed class PlayerRoleControllerTests
         player.AddComponent<BangActionHud>();
         caughtState = player.AddComponent<CaughtStateController>();
         roleController = player.AddComponent<PlayerRoleController>();
+        sak = player.AddComponent<SakCounterController>();
+        player.AddComponent<SakCounterHud>();
     }
 
     [TearDown]
@@ -39,7 +42,9 @@ public sealed class PlayerRoleControllerTests
 
         Assert.That(roleController.Role, Is.EqualTo(PlayerRole.Taya));
         Assert.That(roleController.CanUseBang, Is.True);
+        Assert.That(roleController.CanUseSak, Is.False);
         Assert.That(bang.enabled, Is.True);
+        Assert.That(sak.enabled, Is.False);
         Assert.That(caughtState.CountAsHider, Is.False);
     }
 
@@ -50,7 +55,9 @@ public sealed class PlayerRoleControllerTests
 
         Assert.That(roleController.Role, Is.EqualTo(PlayerRole.Hider));
         Assert.That(roleController.CanUseBang, Is.False);
+        Assert.That(roleController.CanUseSak, Is.True);
         Assert.That(bang.enabled, Is.False);
+        Assert.That(sak.enabled, Is.True);
         Assert.That(caughtState.CountAsHider, Is.True);
     }
 

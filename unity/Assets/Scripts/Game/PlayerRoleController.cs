@@ -18,6 +18,12 @@ namespace Palengke.BangSak.Game
         private BangActionHud bangActionHud;
 
         [SerializeField]
+        private SakCounterController sakCounterController;
+
+        [SerializeField]
+        private SakCounterHud sakCounterHud;
+
+        [SerializeField]
         private CaughtStateController caughtStateController;
 
         public PlayerRole Role => role;
@@ -27,6 +33,8 @@ namespace Palengke.BangSak.Game
         public bool IsHider => role == PlayerRole.Hider;
 
         public bool CanUseBang => IsTaya;
+
+        public bool CanUseSak => IsHider;
 
         private void Awake()
         {
@@ -48,6 +56,7 @@ namespace Palengke.BangSak.Game
         {
             ResolveReferences();
             ApplyBangAvailability();
+            ApplySakAvailability();
             ApplyCaughtCounting();
         }
 
@@ -61,6 +70,19 @@ namespace Palengke.BangSak.Game
             if (bangActionHud != null)
             {
                 bangActionHud.SetHudVisible(CanUseBang);
+            }
+        }
+
+        private void ApplySakAvailability()
+        {
+            if (sakCounterController != null)
+            {
+                sakCounterController.enabled = CanUseSak;
+            }
+
+            if (sakCounterHud != null)
+            {
+                sakCounterHud.SetHudVisible(CanUseSak);
             }
         }
 
@@ -82,6 +104,16 @@ namespace Palengke.BangSak.Game
             if (bangActionHud == null)
             {
                 bangActionHud = GetComponent<BangActionHud>();
+            }
+
+            if (sakCounterController == null)
+            {
+                sakCounterController = GetComponent<SakCounterController>();
+            }
+
+            if (sakCounterHud == null)
+            {
+                sakCounterHud = GetComponent<SakCounterHud>();
             }
 
             if (caughtStateController == null)

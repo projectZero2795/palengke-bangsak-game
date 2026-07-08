@@ -22,6 +22,9 @@ namespace Palengke.BangSak.Game
         [SerializeField]
         private BangActionController bangActionController;
 
+        [SerializeField]
+        private SakCounterController sakCounterController;
+
         [Header("Gameplay")]
         [SerializeField]
         private bool countAsHider = true;
@@ -77,6 +80,7 @@ namespace Palengke.BangSak.Game
         private readonly SpriteRenderer[] starRenderers = new SpriteRenderer[StarCount];
         private bool movementWasEnabled = true;
         private bool bangWasEnabled = true;
+        private bool sakWasEnabled = true;
         private bool capturedControlState;
 
         public bool IsCaught { get; private set; }
@@ -169,6 +173,10 @@ namespace Palengke.BangSak.Game
                 bangActionController.enabled = false;
             }
 
+            if (sakCounterController != null)
+            {
+                sakCounterController.enabled = false;
+            }
         }
 
         private void RestoreControls()
@@ -181,6 +189,11 @@ namespace Palengke.BangSak.Game
             if (capturedControlState && bangActionController != null)
             {
                 bangActionController.enabled = bangWasEnabled;
+            }
+
+            if (capturedControlState && sakCounterController != null)
+            {
+                sakCounterController.enabled = sakWasEnabled;
             }
 
             capturedControlState = false;
@@ -219,6 +232,7 @@ namespace Palengke.BangSak.Game
 
             movementWasEnabled = movementController == null || movementController.enabled;
             bangWasEnabled = bangActionController == null || bangActionController.enabled;
+            sakWasEnabled = sakCounterController == null || sakCounterController.enabled;
             capturedControlState = true;
         }
 
@@ -385,6 +399,10 @@ namespace Palengke.BangSak.Game
                 bangActionController = GetComponent<BangActionController>();
             }
 
+            if (sakCounterController == null)
+            {
+                sakCounterController = GetComponent<SakCounterController>();
+            }
         }
     }
 }
