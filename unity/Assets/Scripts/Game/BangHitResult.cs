@@ -12,7 +12,8 @@ namespace Palengke.BangSak.Game
             Vector2 point,
             Vector2 direction,
             float distance,
-            int sequenceId)
+            int sequenceId,
+            string feedbackMessage = "")
         {
             Outcome = outcome;
             Target = target;
@@ -22,6 +23,7 @@ namespace Palengke.BangSak.Game
             Direction = direction;
             Distance = distance;
             SequenceId = sequenceId;
+            FeedbackMessage = feedbackMessage ?? string.Empty;
         }
 
         public BangHitOutcome Outcome { get; }
@@ -40,9 +42,14 @@ namespace Palengke.BangSak.Game
 
         public int SequenceId { get; }
 
-        public bool DidHitTarget => Outcome == BangHitOutcome.HitTarget && Target != null;
+        public string FeedbackMessage { get; }
+
+        public bool DidHitTarget =>
+            (Outcome == BangHitOutcome.HitTarget || Outcome == BangHitOutcome.NameMismatch) && Target != null;
 
         public bool WasBlocked => Outcome == BangHitOutcome.Blocked;
+
+        public bool WasNameMismatch => Outcome == BangHitOutcome.NameMismatch;
 
         public bool DidMiss => Outcome == BangHitOutcome.Miss;
 
@@ -61,6 +68,28 @@ namespace Palengke.BangSak.Game
             int sequenceId)
         {
             return new BangHitResult(BangHitOutcome.HitTarget, target, collider, origin, point, direction, distance, sequenceId);
+        }
+
+        public static BangHitResult NameMismatch(
+            BangHitTarget target,
+            Collider2D collider,
+            Vector2 origin,
+            Vector2 point,
+            Vector2 direction,
+            float distance,
+            int sequenceId,
+            string feedbackMessage)
+        {
+            return new BangHitResult(
+                BangHitOutcome.NameMismatch,
+                target,
+                collider,
+                origin,
+                point,
+                direction,
+                distance,
+                sequenceId,
+                feedbackMessage);
         }
 
         public static BangHitResult Blocked(

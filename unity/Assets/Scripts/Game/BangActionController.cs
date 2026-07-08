@@ -72,6 +72,9 @@ namespace Palengke.BangSak.Game
         [SerializeField]
         private Color blockedFeedbackColor = new Color(0.85f, 0.9f, 1f, 1f);
 
+        [SerializeField]
+        private Color nameMismatchFeedbackColor = new Color(1f, 0.72f, 0.35f, 1f);
+
         [Header("Tsinelas Animation")]
         [SerializeField]
         [Min(0f)]
@@ -99,6 +102,7 @@ namespace Palengke.BangSak.Game
         private Color effectFeedbackColor = Color.white;
         private int bangSequenceId;
         private BangHitResult lastHitResult;
+        private BangNameCallController nameCallController;
 
         public BangActionVisualStyle VisualStyle => visualStyle;
 
@@ -246,6 +250,8 @@ namespace Palengke.BangSak.Game
 
         public BangHitResult ResolveBangHit(Vector3 origin, PlayerFacingDirection direction, int sequenceId)
         {
+            ResolveReferences();
+
             var directionVector = GetDirectionVector(direction).normalized;
             if (directionVector.sqrMagnitude <= 0f)
             {
@@ -295,8 +301,7 @@ namespace Palengke.BangSak.Game
                         directionVector,
                         distance,
                         sequenceId);
-                    target.RegisterBangHit(this, sequenceId, result);
-                    return result;
+                    return RegisterValidatedBangHit(target, sequenceId, result);
                 }
 
                 if (blockBangWithSolidColliders && !hit.collider.isTrigger)
@@ -462,6 +467,36 @@ namespace Palengke.BangSak.Game
             {
                 animationController = GetComponent<PlayerAnimationController>();
             }
+
+            if (nameCallController == null)
+            {
+                nameCallController = GetComponent<BangNameCallController>();
+            }
+        }
+
+        private BangHitResult RegisterValidatedBangHit(BangHitTarget target, int sequenceId, BangHitResult result)
+        {
+            if (nameCallController != null && nameCallController.isActiveAndEnabled)
+            {
+                var validation = nameCallController.ValidateBangTarget(target);
+                if (!validation.IsValid)
+                {
+                    var mismatchResult = BangHitResult.NameMismatch(
+                        target,
+                        result.Collider,
+                        result.Origin,
+                        result.Point,
+                        result.Direction,
+                        result.Distance,
+                        sequenceId,
+                        validation.Message);
+                    target.RegisterBangNameMismatch(this, sequenceId, mismatchResult);
+                    return mismatchResult;
+                }
+            }
+
+            target.RegisterBangHit(this, sequenceId, result);
+            return result;
         }
 
         private bool ShouldIgnoreCollider(Collider2D hitCollider)
@@ -508,6 +543,8 @@ namespace Palengke.BangSak.Game
                     return hitFeedbackColor;
                 case BangHitOutcome.Blocked:
                     return blockedFeedbackColor;
+                case BangHitOutcome.NameMismatch:
+                    return nameMismatchFeedbackColor;
                 default:
                     return missFeedbackColor;
             }

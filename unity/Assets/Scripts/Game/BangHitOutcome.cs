@@ -5,5 +5,6 @@ namespace Palengke.BangSak.Game
         Miss = 0,
         HitTarget = 1,
         Blocked = 2,
+        NameMismatch = 3,
     }
 }

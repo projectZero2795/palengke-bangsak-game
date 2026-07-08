@@ -12,6 +12,9 @@ namespace Palengke.BangSak.Game
         private Color hitFlashColor = new Color(0.65f, 1f, 0.55f, 1f);
 
         [SerializeField]
+        private Color nameMismatchFlashColor = new Color(1f, 0.72f, 0.35f, 1f);
+
+        [SerializeField]
         [Min(0.05f)]
         private float hitFlashSeconds = 0.18f;
 
@@ -23,6 +26,8 @@ namespace Palengke.BangSak.Game
         private int lastRegisteredSequenceId = -1;
 
         public int HitCount { get; private set; }
+
+        public int NameMismatchCount { get; private set; }
 
         public BangActionController LastHitSource { get; private set; }
 
@@ -58,8 +63,24 @@ namespace Palengke.BangSak.Game
             HitCount += 1;
             LastHitSource = source;
             LastHitResult = result;
-            FlashHitFeedback();
+            FlashFeedback(hitFlashColor);
             MarkCaught(source, sequenceId);
+            return true;
+        }
+
+        public bool RegisterBangNameMismatch(BangActionController source, int sequenceId, BangHitResult result)
+        {
+            if (sequenceId == lastRegisteredSequenceId)
+            {
+                return false;
+            }
+
+            ResolveReferences();
+            lastRegisteredSequenceId = sequenceId;
+            NameMismatchCount += 1;
+            LastHitSource = source;
+            LastHitResult = result;
+            FlashFeedback(nameMismatchFlashColor);
             return true;
         }
 
@@ -71,7 +92,7 @@ namespace Palengke.BangSak.Game
             }
         }
 
-        private void FlashHitFeedback()
+        private void FlashFeedback(Color flashColor)
         {
             if (spriteRenderer == null)
             {
@@ -83,7 +104,7 @@ namespace Palengke.BangSak.Game
                 originalColor = spriteRenderer.color;
             }
 
-            spriteRenderer.color = hitFlashColor;
+            spriteRenderer.color = flashColor;
             flashUntil = Time.time + hitFlashSeconds;
         }
 

@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 17: Role system**, ready for review before the corrected `Bang + player name` rule is added.
+This repository is currently in **Phase 18: Corrected Bang-name rule**, ready for review before the safe hider SAK counter is added.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -45,6 +45,8 @@ Phase 15 removes only the incorrect base path from Phase 13: the base sprite, sc
 Phase 16 removes only the old separate TAG path: TAG scripts, TAG HUD, TAG prefab components, and TAG-specific tests. Bang, movement, caught state, map objects, and hider target prefabs are preserved. The corrected safe hider SAK counter is still not implemented yet; that comes in a later phase after roles and named Bang behavior.
 
 Phase 17 adds the first local role system: `Taya` and `Hider`, role-aware hider counting, and Taya-only Bang availability. Roles are gameplay-only for now, without floating text labels above players: Taya can throw tsinelas, and Hiders will get SAK later. The default playable player is configured as Taya, and the color-variant practice players are configured as Hiders. This phase intentionally does not add `Bang + player name`, the corrected SAK counter, round rules, or multiplayer.
+
+Phase 18 adds the corrected local `Bang + player name` rule. The Taya player now has a compact `Call: name` selector for prototype hider names. A Bang only catches when the selected/called name matches the hider that was hit; hitting the wrong named hider gives wrong-name feedback and does not mark the hider caught. This phase intentionally does not add the hider SAK counter, round win/loss rules, or multiplayer.
 
 ## Safety and branding rules
 
@@ -121,3 +123,4 @@ Do not skip ahead.
 - [Phase 15 SAK base removal](docs/phase-15-base-removal.md)
 - [Phase 16 TAG removal](docs/phase-16-tag-removal.md)
 - [Phase 17 role system](docs/phase-17-role-system.md)
+- [Phase 18 corrected Bang-name rule](docs/phase-18-named-bang.md)

@@ -21,8 +21,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 14 | Rules documentation correction | Document the corrected rule and adapt the phase plan without changing Unity code. | Done. |
 | 15 | Remove incorrect SAK base | Remove only base object/scripts/HUD/sprite/tests. | Done. |
 | 16 | Remove separate TAG mechanic | Remove only old TAG action/button/components/tests. | Done. |
-| 17 | Role system | Taya/Hider roles, UI, markers, role component variants. | Ready for review; roles work locally. |
-| 18 | Corrected Bang-name rule | Taya uses `Bang + player name` to catch hiders. | Local named catch rule works. |
+| 17 | Role system | Taya/Hider roles, UI, markers, role component variants. | Done. |
+| 18 | Corrected Bang-name rule | Taya uses `Bang + player name` to catch hiders. | Ready for review; local named catch rule works. |
 | 19 | Safe SAK counter | Hiders use safe close-range SAK counter against Taya. | Local SAK counter works safely. |
 | 20 | Map layout v1 | Place objects into playable map with spawn points and map component defaults. | First playable map approved. |
 | 21 | Round rules | Timer, hider count, stealth/reveal rules, Bang/SAK win conditions, restart, result screen. | Local prototype playable. |
