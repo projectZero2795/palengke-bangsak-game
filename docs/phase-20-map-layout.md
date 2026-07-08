@@ -18,11 +18,19 @@ interpreted by future round-rule, reveal, and multiplayer phases.
   - fit inside camera bounds;
   - keep Hiders separated from Taya;
   - provide at least four Hider spawn slots.
+- Expanded the prototype map from `36 x 26` to `52 x 36` so the change is
+  actually noticeable during play.
 - Added `MapSpawnRole` and `PrototypeMapSpawnPoint` so future systems can ask
   the map for role-aware spawn data.
 - Added the `Phase 20 Map Layout` root object to `PrototypeMap`.
-- Widened the old Phase 3 wall boundary to match the current larger map:
-  `34 x 24` playable boundary inside the `36 x 26` map.
+- Added visible review spawn markers in Play mode:
+  - warm red/orange marker for Taya;
+  - cyan/blue markers for Hiders;
+  - small `TAYA` / `H1..H6` labels for quick review.
+- Added bounded camera follow to the main camera so the bigger map is playable
+  instead of feeling like a fixed-screen arena.
+- Widened the old Phase 3 wall boundary to match the larger map:
+  `50 x 34` playable boundary inside the `52 x 36` map.
 
 ## Deliberately not included
 
@@ -47,12 +55,16 @@ Those belong to later phases after this map layout is approved.
    - variant is `night_barangay_palengke_v1`;
    - Taya spawn is around the lower center of the map;
    - Hider spawns are distributed around the map edges/routes;
-   - map size is `36 x 26`;
-   - camera bounds are `34 x 24`.
+   - map size is `52 x 36`;
+   - camera bounds are `50 x 34`;
+   - spawn marker review visuals are enabled.
 6. Press Play.
-7. Move the player around the map and confirm the playable wall boundary feels
-   wider than before.
-8. Run EditMode tests and confirm:
+7. Confirm you can see the colored review spawn markers.
+8. Move the player around the map and confirm:
+   - the camera follows the player;
+   - the wall boundary feels much wider than before;
+   - the player remains visible while exploring the larger map.
+9. Run EditMode tests and confirm:
    - `PrototypeMapLayoutControllerTests`
    - `Phase20PrefabSceneTests`
 
@@ -60,6 +72,8 @@ Those belong to later phases after this map layout is approved.
 
 - `PrototypeMap` has a configured versioned map layout component.
 - Taya and Hider spawn points are available through code.
+- Spawn points are visible during review.
 - Spawn validation passes.
 - The playable boundary matches the larger map.
+- Camera follow keeps the larger map usable.
 - The game still runs locally without adding round rules.

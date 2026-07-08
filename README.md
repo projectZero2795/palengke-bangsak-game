@@ -50,7 +50,7 @@ Phase 18 adds the corrected local `Bang + player name` rule. The Taya player now
 
 Phase 19 adds the first local safe hider `SAK` counter. Hiders get a close-range, cooldown-limited SAK action that can counter Taya only when Taya is nearby and not behind a wall. The feedback is a playful cartoon burst/stun tint, not a weapon, blood, gore, or lethal combat. Round win/loss rules, scoring, multiplayer, and final UI polish remain out of scope.
 
-Phase 20 adds the first reviewable playable map layout contract. `PrototypeMap` now has a versioned `Phase 20 Map Layout` component with Taya and Hider spawn points, map/camera bounds, validation helpers, and a widened `34 x 24` wall boundary inside the `36 x 26` nighttime barangay/palengke map. This phase intentionally does not add round rules, win/loss screens, scoring, reveal behavior, or multiplayer.
+Phase 20 adds the first reviewable playable map layout contract. `PrototypeMap` now has a versioned `Phase 20 Map Layout` component with Taya and Hider spawn points, visible review spawn markers, bounded camera follow, map/camera bounds, validation helpers, and a widened `50 x 34` wall boundary inside a noticeably larger `52 x 36` nighttime barangay/palengke map. This phase intentionally does not add round rules, win/loss screens, scoring, reveal behavior, or multiplayer.
 
 ## Safety and branding rules
 

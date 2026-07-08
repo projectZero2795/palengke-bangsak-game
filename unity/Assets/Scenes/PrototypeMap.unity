@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 200001}
   - component: {fileID: 200002}
   - component: {fileID: 200003}
+  - component: {fileID: 200004}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -214,6 +215,26 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 200000}
   m_Enabled: 1
+--- !u!114 &200004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d87da717b574c6eb8a61d4beb603e02, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  componentId: prototype_camera_follow
+  componentVersion: 1
+  componentVariant: phase20_bounded_follow
+  target: {fileID: 1192470067}
+  mapLayout: {fileID: 292000002}
+  followSmoothing: 10
+  cameraZ: -10
+  snapOnAwake: 1
 --- !u!1 &210000
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,7 +314,7 @@ MonoBehaviour:
   roadTileSprite: {fileID: 21300000, guid: ba7ed25275f55d979cc3faffc0a6d227, type: 3}
   grassTileSprite: {fileID: 21300000, guid: 2502f752414257fc91879f298a0ad133, type: 3}
   concreteTileSprite: {fileID: 21300000, guid: 9e132586b0335dc79cf001f56423e9f9, type: 3}
-  mapSize: {x: 36, y: 26}
+  mapSize: {x: 52, y: 36}
   mapSeed: 2795
   tilemapSortingOrder: -20
   buildOnAwake: 1
@@ -349,7 +370,7 @@ MonoBehaviour:
   bushSprite: {fileID: 21300000, guid: 1733ee8745eb59d4b1e497dacb2dbfe7, type: 3}
   plantPotSprite: {fileID: 21300000, guid: 7baeabf07fc853058922fe47b9bcb2fd, type: 3}
   plantClusterSprite: {fileID: 21300000, guid: 2dd0abdc69c155e892bdd1a41af6e77d, type: 3}
-  maxObjects: 18
+  maxObjects: 30
   minSpacing: 4
   edgePadding: 3
   objectSortingOrder: 12
@@ -512,18 +533,18 @@ MonoBehaviour:
   componentVersion: 1
   componentVariant: night_barangay_palengke_v1
   groundTilemap: {fileID: 290900002}
-  mapWorldSize: {x: 36, y: 26}
+  mapWorldSize: {x: 52, y: 36}
   cameraBoundsCenter: {x: 0, y: 0}
-  cameraBoundsSize: {x: 34, y: 24}
-  tayaSpawnPosition: {x: 0, y: -4}
+  cameraBoundsSize: {x: 50, y: 34}
+  tayaSpawnPosition: {x: 0, y: -6}
   tayaFacingDirection: 4
   hiderSpawnPositions:
-  - {x: -12, y: -8}
-  - {x: 12, y: -7}
-  - {x: -13, y: 7}
-  - {x: 13, y: 8}
-  - {x: -5, y: 10}
-  - {x: 6, y: -10}
+  - {x: -20, y: -12}
+  - {x: 20, y: -11}
+  - {x: -21, y: 11}
+  - {x: 21, y: 12}
+  - {x: -8, y: 14}
+  - {x: 10, y: -14}
   hiderFacingDirections:
   - 3
   - 5
@@ -532,8 +553,16 @@ MonoBehaviour:
   - 0
   - 4
   minimumHiderSpawnCount: 4
-  minimumSpawnSeparation: 4
+  minimumSpawnSeparation: 6
   useNightPalengkeDefaultLayout: 1
+  showSpawnMarkers: 1
+  spawnMarkerSprite: {fileID: 21300000, guid: 744e0edc9a89a4f499b317964a18f23d, type: 3}
+  spawnMarkerSortingOrder: 85
+  tayaSpawnMarkerScale: 0.95
+  hiderSpawnMarkerScale: 0.78
+  tayaSpawnMarkerColor: {r: 1, g: 0.32, b: 0.18, a: 0.82}
+  hiderSpawnMarkerColor: {r: 0.28, g: 0.72, b: 1, a: 0.72}
+  spawnMarkerLabelColor: {r: 1, g: 1, b: 1, a: 0.92}
 --- !u!1 &220000
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,7 +589,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 34, y: 24, z: 1}
+  m_LocalScale: {x: 50, y: 34, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1142,8 +1171,8 @@ Transform:
   m_GameObject: {fileID: 1200724331}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 12, z: 0}
-  m_LocalScale: {x: 34, y: 0.35, z: 1}
+  m_LocalPosition: {x: 0, y: 17, z: 0}
+  m_LocalScale: {x: 50, y: 0.35, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2146545645}
@@ -1347,8 +1376,8 @@ Transform:
   m_GameObject: {fileID: 1704768898}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 17, y: 0, z: 0}
-  m_LocalScale: {x: 0.35, y: 24, z: 1}
+  m_LocalPosition: {x: 25, y: 0, z: 0}
+  m_LocalScale: {x: 0.35, y: 34, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2146545645}
@@ -1677,8 +1706,8 @@ Transform:
   m_GameObject: {fileID: 1909599765}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -17, y: 0, z: 0}
-  m_LocalScale: {x: 0.35, y: 24, z: 1}
+  m_LocalPosition: {x: -25, y: 0, z: 0}
+  m_LocalScale: {x: 0.35, y: 34, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2146545645}
@@ -1844,8 +1873,8 @@ Transform:
   m_GameObject: {fileID: 2147367537}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -12, z: 0}
-  m_LocalScale: {x: 34, y: 0.35, z: 1}
+  m_LocalPosition: {x: 0, y: -17, z: 0}
+  m_LocalScale: {x: 50, y: 0.35, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2146545645}

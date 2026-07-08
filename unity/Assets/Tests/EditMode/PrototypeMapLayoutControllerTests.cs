@@ -32,12 +32,36 @@ public sealed class PrototypeMapLayoutControllerTests
         var gameObject = new GameObject("Map Layout Bounds Test");
         var layout = gameObject.AddComponent<PrototypeMapLayoutController>();
 
+        Assert.That(layout.MapWorldSize, Is.EqualTo(new Vector2(52f, 36f)));
+        Assert.That(layout.CameraBoundsSize, Is.EqualTo(new Vector2(50f, 34f)));
+
         foreach (var spawnPoint in layout.GetAllSpawnPoints())
         {
             Assert.That(layout.IsInsideMapBounds(spawnPoint.Position), Is.True, $"{spawnPoint.Role} spawn {spawnPoint.SlotIndex} should be inside map bounds.");
             Assert.That(layout.IsInsideCameraBounds(spawnPoint.Position), Is.True, $"{spawnPoint.Role} spawn {spawnPoint.SlotIndex} should be inside camera bounds.");
         }
 
+        Object.DestroyImmediate(gameObject);
+    }
+
+    [Test]
+    public void SpawnMarkers_AreGeneratedWhenReviewSpriteIsConfigured()
+    {
+        var gameObject = new GameObject("Map Layout Spawn Marker Test");
+        var layout = gameObject.AddComponent<PrototypeMapLayoutController>();
+        var texture = new Texture2D(4, 4);
+        var sprite = Sprite.Create(texture, new Rect(0f, 0f, 4f, 4f), new Vector2(0.5f, 0.5f), 4f);
+
+        layout.SetSpawnMarkerSprite(sprite);
+
+        var generatedCount = layout.BuildSpawnMarkers();
+
+        Assert.That(layout.HasSpawnMarkerReviewVisuals, Is.True);
+        Assert.That(generatedCount, Is.EqualTo(layout.GetAllSpawnPoints().Length));
+        Assert.That(layout.CountGeneratedSpawnMarkers(), Is.EqualTo(generatedCount));
+
+        Object.DestroyImmediate(sprite);
+        Object.DestroyImmediate(texture);
         Object.DestroyImmediate(gameObject);
     }
 

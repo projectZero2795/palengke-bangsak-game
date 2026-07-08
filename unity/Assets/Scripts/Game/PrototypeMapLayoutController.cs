@@ -27,17 +27,17 @@ namespace Palengke.BangSak.Game
 
         [Header("Bounds")]
         [SerializeField]
-        private Vector2 mapWorldSize = new Vector2(36f, 26f);
+        private Vector2 mapWorldSize = new Vector2(52f, 36f);
 
         [SerializeField]
         private Vector2 cameraBoundsCenter = Vector2.zero;
 
         [SerializeField]
-        private Vector2 cameraBoundsSize = new Vector2(34f, 24f);
+        private Vector2 cameraBoundsSize = new Vector2(50f, 34f);
 
         [Header("Taya Spawn")]
         [SerializeField]
-        private Vector2 tayaSpawnPosition = new Vector2(0f, -4f);
+        private Vector2 tayaSpawnPosition = new Vector2(0f, -6f);
 
         [SerializeField]
         private PlayerFacingDirection tayaFacingDirection = PlayerFacingDirection.Up;
@@ -46,12 +46,12 @@ namespace Palengke.BangSak.Game
         [SerializeField]
         private Vector2[] hiderSpawnPositions =
         {
-            new Vector2(-12f, -8f),
-            new Vector2(12f, -7f),
-            new Vector2(-13f, 7f),
-            new Vector2(13f, 8f),
-            new Vector2(-5f, 10f),
-            new Vector2(6f, -10f)
+            new Vector2(-20f, -12f),
+            new Vector2(20f, -11f),
+            new Vector2(-21f, 11f),
+            new Vector2(21f, 12f),
+            new Vector2(-8f, 14f),
+            new Vector2(10f, -14f)
         };
 
         [SerializeField]
@@ -72,10 +72,39 @@ namespace Palengke.BangSak.Game
 
         [SerializeField]
         [Min(0f)]
-        private float minimumSpawnSeparation = 4f;
+        private float minimumSpawnSeparation = 6f;
 
         [SerializeField]
         private bool useNightPalengkeDefaultLayout = true;
+
+        [Header("Review Spawn Markers")]
+        [SerializeField]
+        private bool showSpawnMarkers = true;
+
+        [SerializeField]
+        private Sprite spawnMarkerSprite;
+
+        [SerializeField]
+        private int spawnMarkerSortingOrder = 85;
+
+        [SerializeField]
+        [Min(0.1f)]
+        private float tayaSpawnMarkerScale = 0.95f;
+
+        [SerializeField]
+        [Min(0.1f)]
+        private float hiderSpawnMarkerScale = 0.78f;
+
+        [SerializeField]
+        private Color tayaSpawnMarkerColor = new Color(1f, 0.32f, 0.18f, 0.82f);
+
+        [SerializeField]
+        private Color hiderSpawnMarkerColor = new Color(0.28f, 0.72f, 1f, 0.72f);
+
+        [SerializeField]
+        private Color spawnMarkerLabelColor = new Color(1f, 1f, 1f, 0.92f);
+
+        private Transform generatedSpawnMarkerRoot;
 
         public string ComponentIdValue => componentId;
 
@@ -99,7 +128,19 @@ namespace Palengke.BangSak.Game
 
         public bool UseNightPalengkeDefaultLayout => useNightPalengkeDefaultLayout;
 
+        public bool ShowSpawnMarkers => showSpawnMarkers;
+
+        public bool HasSpawnMarkerReviewVisuals => showSpawnMarkers && spawnMarkerSprite != null;
+
         public bool HasPlayableSpawnLayout => string.IsNullOrEmpty(GetFirstValidationIssue());
+
+        private void Awake()
+        {
+            if (showSpawnMarkers)
+            {
+                BuildSpawnMarkers();
+            }
+        }
 
         public void SetGroundTilemap(PrototypeGroundTilemap ground)
         {
@@ -141,6 +182,38 @@ namespace Palengke.BangSak.Game
 
         public int GetSpawnPointCount(MapSpawnRole role) =>
             role == MapSpawnRole.Taya ? 1 : GetHiderSpawnPoints().Length;
+
+        public void SetSpawnMarkerSprite(Sprite markerSprite)
+        {
+            spawnMarkerSprite = markerSprite;
+        }
+
+        public int BuildSpawnMarkers()
+        {
+            EnsureGeneratedSpawnMarkerRoot();
+            ClearGeneratedSpawnMarkerRoot();
+
+            if (!HasSpawnMarkerReviewVisuals)
+            {
+                return 0;
+            }
+
+            var count = 0;
+            CreateSpawnMarker(GetTayaSpawnPoint());
+            count += 1;
+
+            var hiders = GetHiderSpawnPoints();
+            for (var i = 0; i < hiders.Length; i += 1)
+            {
+                CreateSpawnMarker(hiders[i]);
+                count += 1;
+            }
+
+            return count;
+        }
+
+        public int CountGeneratedSpawnMarkers() =>
+            generatedSpawnMarkerRoot == null ? 0 : generatedSpawnMarkerRoot.childCount;
 
         public bool IsInsideMapBounds(Vector2 position) =>
             IsInsideBounds2D(position, MapBounds);
@@ -235,6 +308,87 @@ namespace Palengke.BangSak.Game
 
             return PlayerFacingDirection.Down;
         }
+
+        private void EnsureGeneratedSpawnMarkerRoot()
+        {
+            if (generatedSpawnMarkerRoot != null)
+            {
+                return;
+            }
+
+            var existing = transform.Find("Generated Spawn Markers");
+            if (existing != null)
+            {
+                generatedSpawnMarkerRoot = existing;
+                return;
+            }
+
+            var root = new GameObject("Generated Spawn Markers");
+            root.transform.SetParent(transform, false);
+            generatedSpawnMarkerRoot = root.transform;
+        }
+
+        private void ClearGeneratedSpawnMarkerRoot()
+        {
+            if (generatedSpawnMarkerRoot == null)
+            {
+                return;
+            }
+
+            for (var i = generatedSpawnMarkerRoot.childCount - 1; i >= 0; i -= 1)
+            {
+                var child = generatedSpawnMarkerRoot.GetChild(i);
+                if (Application.isPlaying)
+                {
+                    Destroy(child.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(child.gameObject);
+                }
+            }
+        }
+
+        private void CreateSpawnMarker(PrototypeMapSpawnPoint spawnPoint)
+        {
+            var marker = new GameObject(GetSpawnMarkerName(spawnPoint));
+            marker.transform.SetParent(generatedSpawnMarkerRoot, false);
+            marker.transform.position = new Vector3(spawnPoint.Position.x, spawnPoint.Position.y, 0f);
+
+            var markerScale = spawnPoint.Role == MapSpawnRole.Taya ? tayaSpawnMarkerScale : hiderSpawnMarkerScale;
+            marker.transform.localScale = new Vector3(markerScale, markerScale, 1f);
+
+            var renderer = marker.AddComponent<SpriteRenderer>();
+            renderer.sprite = spawnMarkerSprite;
+            renderer.color = spawnPoint.Role == MapSpawnRole.Taya ? tayaSpawnMarkerColor : hiderSpawnMarkerColor;
+            renderer.sortingOrder = spawnMarkerSortingOrder;
+
+            CreateSpawnMarkerLabel(marker.transform, spawnPoint);
+        }
+
+        private void CreateSpawnMarkerLabel(Transform marker, PrototypeMapSpawnPoint spawnPoint)
+        {
+            var label = new GameObject("Review Label");
+            label.transform.SetParent(marker, false);
+            label.transform.localPosition = new Vector3(0f, 0.55f, 0f);
+            label.transform.localScale = Vector3.one;
+
+            var text = label.AddComponent<TextMesh>();
+            text.text = spawnPoint.Role == MapSpawnRole.Taya ? "TAYA" : $"H{spawnPoint.SlotIndex + 1}";
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.characterSize = 0.14f;
+            text.fontSize = 24;
+            text.color = spawnMarkerLabelColor;
+
+            var labelRenderer = label.GetComponent<MeshRenderer>();
+            labelRenderer.sortingOrder = spawnMarkerSortingOrder + 1;
+        }
+
+        private static string GetSpawnMarkerName(PrototypeMapSpawnPoint spawnPoint) =>
+            spawnPoint.Role == MapSpawnRole.Taya
+                ? "Taya Spawn Marker"
+                : $"Hider Spawn Marker {spawnPoint.SlotIndex + 1:00}";
 
         private static bool IsInsideBounds2D(Vector2 position, Bounds bounds) =>
             position.x >= bounds.min.x
