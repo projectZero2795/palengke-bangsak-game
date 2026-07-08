@@ -4,12 +4,14 @@ using UnityEngine.UI;
 
 namespace Palengke.BangSak.UI
 {
+    [ExecuteAlways]
     [DisallowMultipleComponent]
     public sealed class PrototypeMainMenuController : MonoBehaviour
     {
         public const string ComponentId = "prototype_main_menu";
         public const int ComponentVersion = 1;
         public const string ComponentVariant = "phase22_local_menu";
+        private const string MenuRootName = "Phase 22 Main Menu UI";
 
         [Header("Component Contract")]
         [SerializeField]
@@ -43,6 +45,11 @@ namespace Palengke.BangSak.UI
 
         public bool HasRuntimeMenu => menuRoot != null;
 
+        private void OnEnable()
+        {
+            CreateMenu();
+        }
+
         private void Start()
         {
             CreateMenu();
@@ -50,6 +57,11 @@ namespace Palengke.BangSak.UI
 
         private void Update()
         {
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
             if (Input.GetKeyDown(KeyCode.P))
             {
                 PlayLocal();
@@ -70,10 +82,12 @@ namespace Palengke.BangSak.UI
 
         private void OnDestroy()
         {
-            if (menuRoot != null)
-            {
-                Destroy(menuRoot);
-            }
+            DestroyMenu();
+        }
+
+        private void OnDisable()
+        {
+            DestroyMenu();
         }
 
         public void PlayLocal()
@@ -118,8 +132,19 @@ namespace Palengke.BangSak.UI
                 return;
             }
 
-            var canvasObject = new GameObject("Phase 22 Main Menu UI");
-            canvasObject.transform.SetParent(null, false);
+            var existingPreview = transform.Find(MenuRootName);
+            if (existingPreview != null)
+            {
+                DestroyObject(existingPreview.gameObject);
+            }
+
+            var canvasObject = new GameObject(MenuRootName);
+            canvasObject.transform.SetParent(transform, false);
+            if (!Application.isPlaying)
+            {
+                canvasObject.hideFlags = HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild;
+            }
+
             menuRoot = canvasObject;
 
             var canvas = canvasObject.AddComponent<Canvas>();
@@ -137,6 +162,34 @@ namespace Palengke.BangSak.UI
             CreateHowToPanel(canvasObject.transform);
             CreateSettingsPanel(canvasObject.transform);
             HidePanels();
+        }
+
+        private void DestroyMenu()
+        {
+            if (menuRoot != null)
+            {
+                DestroyObject(menuRoot);
+                menuRoot = null;
+                howToPanel = null;
+                settingsPanel = null;
+            }
+        }
+
+        private static void DestroyObject(GameObject target)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            if (Application.isPlaying)
+            {
+                Destroy(target);
+            }
+            else
+            {
+                DestroyImmediate(target);
+            }
         }
 
         private void CreateBackdrop(Transform parent)

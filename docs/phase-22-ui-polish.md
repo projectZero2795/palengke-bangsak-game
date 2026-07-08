@@ -12,6 +12,8 @@ rules.
 
 - Added `PrototypeMainMenuController`.
 - Added runtime-generated main menu UI to `MainMenu`.
+- The menu UI now previews in the editor when `MainMenu.unity` is opened; the
+  preview is temporary and not saved into the scene.
 - Main menu now includes:
   - `PLAY LOCAL`;
   - `HOW TO PLAY`;
@@ -40,31 +42,34 @@ rules.
 1. Pull the latest `main`.
 2. Open the project in Unity Hub using the `/unity` folder.
 3. Open `Assets/Scenes/MainMenu.unity`.
-4. Press Play.
-5. Confirm the menu appears with:
+4. Before pressing Play, confirm the menu preview appears in the Game view or
+   as `Phase 22 Main Menu UI` under `Bang-Sak Main Menu Root`.
+5. Press Play.
+6. Confirm the menu works with:
    - `PLAY LOCAL`;
    - `HOW TO PLAY`;
    - `SETTINGS`.
-6. Click `HOW TO PLAY`.
-7. Confirm the corrected rules are readable.
-8. Click `BACK`.
-9. Click `SETTINGS`.
-10. Confirm the placeholder panel appears and closes.
-11. Click `PLAY LOCAL`.
-12. Confirm `PrototypeMap` loads.
-13. Finish a round by catching all hiders or using SAK.
-14. Confirm the result panel shows both:
+7. Click `HOW TO PLAY`.
+8. Confirm the corrected rules are readable.
+9. Click `BACK`.
+10. Click `SETTINGS`.
+11. Confirm the placeholder panel appears and closes.
+12. Click `PLAY LOCAL`.
+13. Confirm `PrototypeMap` loads.
+14. Finish a round by catching all hiders or using SAK.
+15. Confirm the result panel shows both:
     - `Restart`;
     - `Menu`.
-15. Click `Menu`.
-16. Confirm `MainMenu` loads again.
-17. Run EditMode tests and confirm:
+16. Click `Menu`.
+17. Confirm `MainMenu` loads again.
+18. Run EditMode tests and confirm:
     - `Phase22UiPolishTests`
     - `Phase21PrefabSceneTests`
 
 ## Exit criteria
 
 - Main menu is usable.
+- Main menu is visible for editor review before Play.
 - How-to overlay explains the corrected rules.
 - Settings placeholder exists.
 - Prototype scene can be launched from the menu.

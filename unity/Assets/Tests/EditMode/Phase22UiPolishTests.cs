@@ -21,6 +21,9 @@ public sealed class Phase22UiPolishTests
         Assert.That(menu.ComponentVersionValue, Is.EqualTo(PrototypeMainMenuController.ComponentVersion));
         Assert.That(menu.ComponentVariantValue, Is.EqualTo(PrototypeMainMenuController.ComponentVariant));
         Assert.That(menu.PrototypeSceneName, Is.EqualTo("PrototypeMap"));
+        Assert.That(
+            typeof(PrototypeMainMenuController).GetCustomAttributes(typeof(UnityEngine.ExecuteAlways), false),
+            Is.Not.Empty);
     }
 
     [Test]
