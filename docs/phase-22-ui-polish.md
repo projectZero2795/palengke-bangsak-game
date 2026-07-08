@@ -17,9 +17,9 @@ rules.
 - The menu creates its own Unity `EventSystem` when needed so buttons can
   receive clicks/taps in Play mode.
 - Main menu now includes:
-  - `PLAY LOCAL`;
-  - `HOW TO PLAY`;
-  - `SETTINGS`;
+  - selected Option D dashboard layout;
+  - modular dashboard tiles for `PLAY`, `HOW`, and `SET`;
+  - local player/status footer;
   - keyboard shortcuts: `P` play, `H` help, `Esc` close overlay.
 - Added a How to Play overlay explaining the corrected Bang-Sak rule:
   - Taya catches by `Bang + player name`;
@@ -47,10 +47,10 @@ rules.
 4. Before pressing Play, confirm the menu preview appears in the Game view or
    as `Phase 22 Main Menu UI` under `Bang-Sak Main Menu Root`.
 5. Press Play. Buttons are expected to be clickable in Play mode.
-6. Confirm the menu works with:
-   - `PLAY LOCAL`;
-   - `HOW TO PLAY`;
-   - `SETTINGS`.
+6. Confirm the dashboard menu works with:
+   - `PLAY`;
+   - `HOW`;
+   - `SET`.
 7. Click `HOW TO PLAY`.
 8. Confirm the corrected rules are readable.
 9. Click `BACK`.
@@ -72,6 +72,7 @@ rules.
 
 - Main menu is usable.
 - Main menu is visible for editor review before Play.
+- Main menu uses the selected dashboard/tile style.
 - How-to overlay explains the corrected rules.
 - Settings placeholder exists.
 - Prototype scene can be launched from the menu.

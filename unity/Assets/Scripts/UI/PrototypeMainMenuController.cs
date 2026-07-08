@@ -235,17 +235,101 @@ namespace Palengke.BangSak.UI
 
         private void CreateMainCard(Transform parent)
         {
-            var card = CreatePanel(parent, "Main Menu Card", Vector2.zero, new Vector2(520f, 420f), new Color(0.025f, 0.04f, 0.075f, 0.92f));
+            var card = CreatePanel(parent, "Main Menu Dashboard", Vector2.zero, new Vector2(660f, 430f), new Color(0.022f, 0.038f, 0.07f, 0.94f));
 
-            CreateText(card, "BANG-SAK", new Vector2(0f, 145f), new Vector2(470f, 70f), 54, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
-            CreateText(card, "Bang. Run. Hide. Sak!", new Vector2(0f, 94f), new Vector2(430f, 34f), 22, FontStyle.Bold, new Color(0.86f, 0.93f, 1f, 1f));
-            CreateText(card, "A safe Filipino night palengke prototype.\nTaya catches by saying Bang + name. Hiders can counter with SAK.", new Vector2(0f, 42f), new Vector2(440f, 58f), 16, FontStyle.Normal, new Color(0.76f, 0.84f, 0.95f, 1f));
+            CreateStatusBadge(card, "LOCAL MVP", new Vector2(-246f, 160f), new Vector2(112f, 30f), new Color(1f, 0.78f, 0.22f, 0.16f), new Color(1f, 0.78f, 0.22f, 1f));
+            CreateStatusBadge(card, "SAFE PLAY", new Vector2(246f, 160f), new Vector2(112f, 30f), new Color(0.22f, 1f, 0.48f, 0.14f), new Color(0.55f, 1f, 0.68f, 1f));
 
-            CreateButton(card, "PLAY LOCAL", new Vector2(0f, -38f), new Vector2(260f, 48f), new Color(0.94f, 0.3f, 0.12f, 1f), PlayLocal);
-            CreateButton(card, "HOW TO PLAY", new Vector2(0f, -98f), new Vector2(260f, 44f), new Color(0.12f, 0.42f, 0.9f, 1f), ShowHowTo);
-            CreateButton(card, "SETTINGS", new Vector2(0f, -154f), new Vector2(260f, 40f), new Color(0.12f, 0.16f, 0.22f, 1f), ShowSettings);
+            CreateText(card, "BANG-SAK", new Vector2(0f, 136f), new Vector2(500f, 56f), 46, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
+            CreateText(card, "Bang. Run. Hide. Sak!", new Vector2(0f, 94f), new Vector2(420f, 28f), 20, FontStyle.Bold, new Color(0.86f, 0.93f, 1f, 1f));
+            CreateText(card, "Choose your local prototype mode", new Vector2(0f, 61f), new Vector2(420f, 22f), 13, FontStyle.Bold, new Color(0.55f, 0.67f, 0.86f, 1f));
 
-            CreateText(card, "Keyboard: P play · H help · Esc close", new Vector2(0f, -198f), new Vector2(430f, 24f), 12, FontStyle.Bold, new Color(0.55f, 0.66f, 0.82f, 1f));
+            CreateDashboardTile(
+                card,
+                "PLAY",
+                "Local test",
+                "Start a round",
+                new Vector2(-210f, -38f),
+                new Vector2(160f, 122f),
+                new Color(0.1f, 0.2f, 0.34f, 1f),
+                new Color(0.36f, 0.58f, 1f, 1f),
+                PlayLocal);
+
+            CreateDashboardTile(
+                card,
+                "HOW",
+                "Rules",
+                "Learn Bang + SAK",
+                new Vector2(0f, -38f),
+                new Vector2(160f, 122f),
+                new Color(0.32f, 0.16f, 0.08f, 1f),
+                new Color(1f, 0.58f, 0.28f, 1f),
+                ShowHowTo);
+
+            CreateDashboardTile(
+                card,
+                "SET",
+                "Options",
+                "Prototype settings",
+                new Vector2(210f, -38f),
+                new Vector2(160f, 122f),
+                new Color(0.08f, 0.2f, 0.12f, 1f),
+                new Color(0.35f, 0.92f, 0.52f, 1f),
+                ShowSettings);
+
+            var footer = CreatePanel(card, "Dashboard Footer", new Vector2(0f, -163f), new Vector2(560f, 48f), new Color(0.015f, 0.026f, 0.048f, 0.96f));
+            CreateText(footer, "Guest Player", new Vector2(-205f, 0f), new Vector2(130f, 24f), 14, FontStyle.Bold, new Color(0.9f, 0.96f, 1f, 1f));
+            CreateText(footer, "P Play   ·   H Help   ·   Esc Close", new Vector2(80f, 0f), new Vector2(330f, 24f), 12, FontStyle.Bold, new Color(0.55f, 0.66f, 0.82f, 1f));
+        }
+
+        private void CreateStatusBadge(Transform parent, string text, Vector2 position, Vector2 size, Color fillColor, Color textColor)
+        {
+            var badge = CreatePanel(parent, $"{text} Badge", position, size, fillColor);
+            CreateText(badge, text, Vector2.zero, size, 11, FontStyle.Bold, textColor);
+        }
+
+        private Button CreateDashboardTile(
+            Transform parent,
+            string title,
+            string subtitle,
+            string description,
+            Vector2 position,
+            Vector2 size,
+            Color fillColor,
+            Color accentColor,
+            UnityEngine.Events.UnityAction onClick)
+        {
+            var tileObject = new GameObject($"{title} Dashboard Tile");
+            tileObject.transform.SetParent(parent, false);
+
+            var rect = tileObject.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+
+            var image = tileObject.AddComponent<Image>();
+            ApplyRoundedSprite(image);
+            image.color = fillColor;
+            AddOutline(tileObject, accentColor, new Vector2(1.4f, -1.4f));
+            AddShadow(tileObject, new Color(0f, 0f, 0f, 0.38f), new Vector2(0f, -4f));
+
+            var button = tileObject.AddComponent<Button>();
+            button.targetGraphic = image;
+            button.onClick.AddListener(onClick);
+
+            var colors = button.colors;
+            colors.highlightedColor = Color.Lerp(fillColor, accentColor, 0.28f);
+            colors.pressedColor = Color.Lerp(fillColor, Color.black, 0.22f);
+            colors.selectedColor = colors.highlightedColor;
+            button.colors = colors;
+
+            CreatePanel(tileObject.transform, $"{title} Icon Plate", new Vector2(0f, 30f), new Vector2(72f, 34f), new Color(accentColor.r, accentColor.g, accentColor.b, 0.16f));
+            CreateText(tileObject.transform, title, new Vector2(0f, 31f), new Vector2(90f, 30f), 22, FontStyle.Bold, Color.white);
+            CreateText(tileObject.transform, subtitle, new Vector2(0f, -7f), new Vector2(128f, 24f), 15, FontStyle.Bold, accentColor);
+            CreateText(tileObject.transform, description, new Vector2(0f, -37f), new Vector2(132f, 28f), 11, FontStyle.Bold, new Color(0.72f, 0.8f, 0.94f, 1f));
+            return button;
         }
 
         private void CreateHowToPanel(Transform parent)
