@@ -46,7 +46,7 @@ Phase 16 removes only the old separate TAG path: TAG scripts, TAG HUD, TAG prefa
 
 Phase 17 adds the first local role system: `Taya` and `Hider`, role-aware hider counting, and Taya-only Bang availability. Roles are gameplay-only for now, without floating text labels above players: Taya can throw tsinelas, and Hiders will get SAK later. The default playable player is configured as Taya, and the color-variant practice players are configured as Hiders. This phase intentionally does not add `Bang + player name`, the corrected SAK counter, round rules, or multiplayer.
 
-Phase 18 adds the corrected local `Bang + player name` rule. The Taya player now has a compact `Call: name` selector for prototype hider names. A Bang only catches when the selected/called name matches the hider that was hit; hitting the wrong named hider gives wrong-name feedback and does not mark the hider caught. This phase intentionally does not add the hider SAK counter, round win/loss rules, or multiplayer.
+Phase 18 adds the corrected local `Bang + player name` rule. The Taya player now has compact per-person Bang buttons for prototype hider names, such as `Bang Maria`. Clicking a person button calls that name and throws immediately. A Bang only catches when the clicked/called name matches the hider that was hit; hitting the wrong named hider gives wrong-name feedback and does not mark the hider caught. This phase intentionally does not add the hider SAK counter, round win/loss rules, or multiplayer.
 
 ## Safety and branding rules
 

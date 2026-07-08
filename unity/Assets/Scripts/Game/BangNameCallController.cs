@@ -16,13 +16,6 @@ namespace Palengke.BangSak.Game
         [SerializeField]
         private bool skipCaughtHiders = true;
 
-        [Header("Keyboard Prototype Controls")]
-        [SerializeField]
-        private KeyCode previousTargetKey = KeyCode.Q;
-
-        [SerializeField]
-        private KeyCode nextTargetKey = KeyCode.E;
-
         private readonly List<PlayerNameIdentity> selectableTargets = new List<PlayerNameIdentity>();
         private int selectedIndex = -1;
 
@@ -52,54 +45,10 @@ namespace Palengke.BangSak.Game
             RefreshTargets();
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(previousTargetKey))
-            {
-                SelectPreviousTarget();
-            }
-            else if (Input.GetKeyDown(nextTargetKey))
-            {
-                SelectNextTarget();
-            }
-        }
-
         public void SetSelectedTargetName(string targetName)
         {
             selectedTargetName = PlayerNameIdentity.NormalizeName(targetName);
             RefreshTargets();
-        }
-
-        public void SelectNextTarget()
-        {
-            RefreshTargets();
-            if (selectableTargets.Count <= 0)
-            {
-                selectedIndex = -1;
-                selectedTargetName = string.Empty;
-                return;
-            }
-
-            selectedIndex = selectedIndex < 0
-                ? 0
-                : (selectedIndex + 1) % selectableTargets.Count;
-            selectedTargetName = selectableTargets[selectedIndex].DisplayName;
-        }
-
-        public void SelectPreviousTarget()
-        {
-            RefreshTargets();
-            if (selectableTargets.Count <= 0)
-            {
-                selectedIndex = -1;
-                selectedTargetName = string.Empty;
-                return;
-            }
-
-            selectedIndex = selectedIndex < 0
-                ? selectableTargets.Count - 1
-                : (selectedIndex - 1 + selectableTargets.Count) % selectableTargets.Count;
-            selectedTargetName = selectableTargets[selectedIndex].DisplayName;
         }
 
         public BangNameValidationResult ValidateBangTarget(BangHitTarget hitTarget)

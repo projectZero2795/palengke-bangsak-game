@@ -13,12 +13,15 @@ public sealed class Phase18PrefabSceneTests
         var identity = prefab.GetComponent<PlayerNameIdentity>();
         var nameCall = prefab.GetComponent<BangNameCallController>();
         var nameHud = prefab.GetComponent<BangNameCallHud>();
+        var genericBangHud = prefab.GetComponent<BangActionHud>();
 
         Assert.That(identity, Is.Not.Null);
         Assert.That(identity.DisplayName, Is.EqualTo("JuanP"));
         Assert.That(nameCall, Is.Not.Null);
         Assert.That(nameCall.SelectedTargetName, Is.EqualTo("Maria"));
         Assert.That(nameHud, Is.Not.Null);
+        Assert.That(genericBangHud, Is.Not.Null);
+        Assert.That(genericBangHud.enabled, Is.False);
     }
 
     [TestCase("Assets/Prefabs/Players/PlayerPlaceholder_Blue.prefab", "Maria")]

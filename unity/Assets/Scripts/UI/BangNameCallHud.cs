@@ -10,14 +10,22 @@ namespace Palengke.BangSak.UI
         private BangNameCallController controller;
 
         [SerializeField]
-        private Vector2 panelSize = new Vector2(260f, 86f);
+        private BangActionController bangActionController;
 
         [SerializeField]
-        private Vector2 panelOffset = new Vector2(18f, -18f);
+        private Vector2 panelSize = new Vector2(238f, 118f);
+
+        [SerializeField]
+        private Vector2 panelOffset = new Vector2(-18f, 18f);
+
+        [SerializeField]
+        [Range(1, 8)]
+        private int maxVisibleTargets = 4;
 
         private GameObject hudRoot;
-        private Text selectedNameLabel;
+        private Transform buttonRoot;
         private Text feedbackLabel;
+        private string renderedTargetSignature = string.Empty;
 
         private void Start()
         {
@@ -63,62 +71,63 @@ namespace Palengke.BangSak.UI
             var panelObject = new GameObject("Bang Name Panel");
             panelObject.transform.SetParent(canvasObject.transform, false);
             var panelRect = panelObject.AddComponent<RectTransform>();
-            panelRect.anchorMin = new Vector2(0f, 1f);
-            panelRect.anchorMax = new Vector2(0f, 1f);
-            panelRect.pivot = new Vector2(0f, 1f);
+            panelRect.anchorMin = new Vector2(1f, 0f);
+            panelRect.anchorMax = new Vector2(1f, 0f);
+            panelRect.pivot = new Vector2(1f, 0f);
             panelRect.sizeDelta = panelSize;
             panelRect.anchoredPosition = panelOffset;
 
             var panelImage = panelObject.AddComponent<Image>();
             panelImage.color = new Color(0.04f, 0.07f, 0.12f, 0.86f);
 
-            CreateButton(panelObject.transform, "<", new Vector2(8f, -12f), OnPreviousClicked);
-            CreateButton(panelObject.transform, ">", new Vector2(214f, -12f), OnNextClicked);
-
-            selectedNameLabel = CreateText(
-                panelObject.transform,
-                "Call: —",
-                new Vector2(48f, -10f),
-                new Vector2(166f, 34f),
-                18,
-                FontStyle.Bold,
-                Color.white);
+            var buttonRootObject = new GameObject("Bang Person Buttons");
+            buttonRootObject.transform.SetParent(panelObject.transform, false);
+            var buttonRootRect = buttonRootObject.AddComponent<RectTransform>();
+            buttonRootRect.anchorMin = Vector2.zero;
+            buttonRootRect.anchorMax = Vector2.one;
+            buttonRootRect.offsetMin = Vector2.zero;
+            buttonRootRect.offsetMax = Vector2.zero;
+            buttonRoot = buttonRootObject.transform;
 
             feedbackLabel = CreateText(
                 panelObject.transform,
-                "Choose a hider name",
-                new Vector2(12f, -48f),
-                new Vector2(236f, 28f),
+                "Tap who you see",
+                new Vector2(10f, -90f),
+                new Vector2(218f, 22f),
                 12,
                 FontStyle.Normal,
                 new Color(0.84f, 0.9f, 1f, 1f));
         }
 
-        private Button CreateButton(Transform parent, string text, Vector2 position, UnityEngine.Events.UnityAction onClick)
+        private Button CreateTargetButton(Transform parent, string targetName, int index)
         {
-            var buttonObject = new GameObject($"{text} Target Button");
+            var buttonObject = new GameObject($"Bang {targetName} Button");
             buttonObject.transform.SetParent(parent, false);
 
+            var column = index % 2;
+            var row = index / 2;
+            var position = new Vector2(10f + column * 112f, 76f - row * 40f);
+
             var rect = buttonObject.AddComponent<RectTransform>();
-            rect.anchorMin = new Vector2(0f, 1f);
-            rect.anchorMax = new Vector2(0f, 1f);
-            rect.pivot = new Vector2(0f, 1f);
-            rect.sizeDelta = new Vector2(38f, 32f);
+            rect.anchorMin = new Vector2(0f, 0f);
+            rect.anchorMax = new Vector2(0f, 0f);
+            rect.pivot = new Vector2(0f, 0f);
+            rect.sizeDelta = new Vector2(106f, 34f);
             rect.anchoredPosition = position;
 
             var image = buttonObject.AddComponent<Image>();
-            image.color = new Color(0.16f, 0.23f, 0.36f, 0.96f);
+            image.color = new Color(0.64f, 0.16f, 0.14f, 0.96f);
 
             var button = buttonObject.AddComponent<Button>();
             button.targetGraphic = image;
-            button.onClick.AddListener(onClick);
+            button.onClick.AddListener(() => OnBangTargetClicked(targetName));
 
             var label = CreateText(
                 buttonObject.transform,
-                text,
+                $"Bang\n{targetName}",
                 Vector2.zero,
-                new Vector2(38f, 32f),
-                18,
+                new Vector2(106f, 34f),
+                13,
                 FontStyle.Bold,
                 Color.white);
             label.alignment = TextAnchor.MiddleCenter;
@@ -172,13 +181,7 @@ namespace Palengke.BangSak.UI
                 return;
             }
 
-            if (selectedNameLabel != null)
-            {
-                var selectedName = controller.SelectedTargetName;
-                selectedNameLabel.text = string.IsNullOrEmpty(selectedName)
-                    ? "Call: —"
-                    : $"Call: {selectedName}";
-            }
+            RebuildButtonsIfNeeded();
 
             if (feedbackLabel != null)
             {
@@ -186,19 +189,49 @@ namespace Palengke.BangSak.UI
             }
         }
 
-        private void OnPreviousClicked()
+        private void RebuildButtonsIfNeeded()
         {
-            if (controller != null)
+            if (buttonRoot == null || controller == null)
             {
-                controller.SelectPreviousTarget();
+                return;
+            }
+
+            var targets = controller.GetSelectableTargets();
+            var targetCount = Mathf.Min(targets.Count, maxVisibleTargets);
+            var signature = string.Empty;
+            for (var index = 0; index < targetCount; index += 1)
+            {
+                signature += targets[index].DisplayName + "|";
+            }
+
+            if (signature == renderedTargetSignature)
+            {
+                return;
+            }
+
+            renderedTargetSignature = signature;
+            for (var index = buttonRoot.childCount - 1; index >= 0; index -= 1)
+            {
+                Destroy(buttonRoot.GetChild(index).gameObject);
+            }
+
+            for (var index = 0; index < targetCount; index += 1)
+            {
+                CreateTargetButton(buttonRoot, targets[index].DisplayName, index);
             }
         }
 
-        private void OnNextClicked()
+        private void OnBangTargetClicked(string targetName)
         {
-            if (controller != null)
+            if (controller == null)
             {
-                controller.SelectNextTarget();
+                return;
+            }
+
+            controller.SetSelectedTargetName(targetName);
+            if (bangActionController != null && bangActionController.isActiveAndEnabled)
+            {
+                bangActionController.TryBangNow();
             }
         }
 
@@ -207,6 +240,11 @@ namespace Palengke.BangSak.UI
             if (controller == null)
             {
                 controller = GetComponent<BangNameCallController>();
+            }
+
+            if (bangActionController == null)
+            {
+                bangActionController = GetComponent<BangActionController>();
             }
         }
     }
