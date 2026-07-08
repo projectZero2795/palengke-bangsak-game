@@ -1,19 +1,17 @@
 using NUnit.Framework;
 using Palengke.BangSak.Game;
-using Palengke.BangSak.UI;
 using UnityEditor;
 using UnityEngine;
 
 public sealed class Phase8PrefabSceneTests
 {
     [Test]
-    public void DefaultPlayerPrefab_HasCaughtStateAndCounterHud()
+    public void DefaultPlayerPrefab_HasCaughtState()
     {
         var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PlayerPlaceholder.prefab");
         var caughtState = prefab.GetComponent<CaughtStateController>();
 
         Assert.That(caughtState, Is.Not.Null);
-        Assert.That(prefab.GetComponent<CaughtStateCounterHud>(), Is.Not.Null);
         Assert.That(caughtState.CountAsHider, Is.False);
     }
 

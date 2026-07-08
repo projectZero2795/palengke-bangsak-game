@@ -563,6 +563,79 @@ MonoBehaviour:
   tayaSpawnMarkerColor: {r: 1, g: 0.32, b: 0.18, a: 0.82}
   hiderSpawnMarkerColor: {r: 0.28, g: 0.72, b: 1, a: 0.72}
   spawnMarkerLabelColor: {r: 1, g: 1, b: 1, a: 0.92}
+--- !u!1 &292100000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 292100001}
+  - component: {fileID: 292100002}
+  - component: {fileID: 292100003}
+  m_Layer: 0
+  m_Name: Phase 21 Round Rules
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &292100001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292100000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &292100002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dbb5e0e3a6044a8a68cfc8afdb1a821, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  componentId: prototype_round_rules
+  componentVersion: 1
+  componentVariant: phase21_local_round_rules
+  roundDurationSeconds: 150
+  timerExpiredResult: 2
+  autoStartOnStart: 1
+  freezeActorsWhenRoundEnds: 1
+  allowKeyboardRestart: 1
+  restartKey: 114
+  mapLayout: {fileID: 292000002}
+  placeActorsAtMapSpawnsOnRoundStart: 1
+--- !u!114 &292100003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e9d375e0fd44ad6afa81e0f8fd24743, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  controller: {fileID: 292100002}
+  statusPanelSize: {x: 230, y: 58}
+  statusPanelOffset: {x: 0, y: -18}
+  resultPanelSize: {x: 360, y: 210}
+  sortingOrder: 24
 --- !u!1 &220000
 GameObject:
   m_ObjectHideFlags: 0
@@ -1987,6 +2060,7 @@ SceneRoots:
   - {fileID: 291100001}
   - {fileID: 291200001}
   - {fileID: 292000001}
+  - {fileID: 292100001}
   - {fileID: 220001}
   - {fileID: 1707730741}
   - {fileID: 2146545645}

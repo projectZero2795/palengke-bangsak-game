@@ -38,13 +38,15 @@ Phase plan for this correction:
 - Phase 18: add the local `Bang + player name` catch rule.
 - Phase 19: add the safe hider SAK counter.
 
-Current Phase 19 implementation:
+Current Phase 21 implementation:
 
 - SAK is a hider-only local action.
 - SAK has short range, cooldown, and wall blocking.
 - SAK can counter Taya only; it does not affect hiders.
 - Taya receives a temporary playful countered/stunned feedback state.
-- SAK is not a round-ending rule yet; win/loss rules remain for a later phase.
+- SAK ends the local round with a Hiders win.
+- Taya wins the local round by catching all Hiders.
+- Hiders win by default if the local timer expires.
 
 ## Stealth and reveal rule
 
@@ -73,8 +75,9 @@ Implementation phase:
 
 - Phase 10/11 can add visual/audio reveal-source objects such as streetlights,
   house lights, or dog markers.
-- Phase 16 should implement the actual round-rule timer and reveal state.
-- Phase 21 should synchronize this reveal state online.
+- A future stealth/reveal subphase should implement the actual hide/run timer
+  and reveal state.
+- A later multiplayer phase should synchronize this reveal state online.
 
 ### Walk vs run reveal
 

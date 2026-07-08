@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 20: Map layout v1**, ready for review before round win/loss rules are added.
+This repository is currently in **Phase 21: Round rules**, ready for review before UI polish is added.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -51,6 +51,8 @@ Phase 18 adds the corrected local `Bang + player name` rule. The Taya player now
 Phase 19 adds the first local safe hider `SAK` counter. Hiders get a close-range, cooldown-limited SAK action that can counter Taya only when Taya is nearby and not behind a wall. The feedback is a playful cartoon burst/stun tint, not a weapon, blood, gore, or lethal combat. Round win/loss rules, scoring, multiplayer, and final UI polish remain out of scope.
 
 Phase 20 adds the first reviewable playable map layout contract. `PrototypeMap` now has a versioned `Phase 20 Map Layout` component with Taya and Hider spawn points, visible review spawn markers, bounded camera follow, map/camera bounds, validation helpers, and a widened `50 x 34` wall boundary inside a noticeably larger `52 x 36` nighttime barangay/palengke map. This phase intentionally does not add round rules, win/loss screens, scoring, reveal behavior, or multiplayer.
+
+Phase 21 adds the first local round loop: `02:30` timer, Hiders-left status, Taya win when all Hiders are caught, Hiders win when Taya is countered by SAK, default Hiders win on timer expiry, restart by `R` or button, and actor placement on Phase 20 spawn points. The old default-player hiders counter HUD is removed because the Phase 21 round HUD owns that display. Multiplayer, scoring, Palengke API, and stealth/reveal dog/light rules remain out of scope.
 
 ## Safety and branding rules
 
@@ -130,3 +132,4 @@ Do not skip ahead.
 - [Phase 18 corrected Bang-name rule](docs/phase-18-named-bang.md)
 - [Phase 19 safe SAK counter](docs/phase-19-sak-counter.md)
 - [Phase 20 map layout v1](docs/phase-20-map-layout.md)
+- [Phase 21 round rules](docs/phase-21-round-rules.md)
