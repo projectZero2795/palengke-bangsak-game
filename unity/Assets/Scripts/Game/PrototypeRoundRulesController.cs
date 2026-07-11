@@ -1,3 +1,4 @@
+using Palengke.BangSak.Api;
 using Palengke.BangSak.Player;
 using UnityEngine;
 
@@ -103,6 +104,7 @@ namespace Palengke.BangSak.Game
 
         private void Start()
         {
+            PalengkeRoundScoreSubmitter.EnsureAttached(gameObject);
             RefreshTrackedActors();
             if (autoStartOnStart)
             {

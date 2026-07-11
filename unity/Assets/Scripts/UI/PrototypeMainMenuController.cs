@@ -41,6 +41,8 @@ namespace Palengke.BangSak.UI
         private GameObject leaderboardPanel;
         private Text networkStatusLabel;
         private Text playerSummaryLabel;
+        private Text apiStatusLabel;
+        private Transform leaderboardRows;
         private PrototypeNetworkRoomController roomController;
         private PalengkeApiClient apiClient;
         private static Sprite roundedPanelSprite;
@@ -227,6 +229,8 @@ namespace Palengke.BangSak.UI
                 leaderboardPanel = null;
                 networkStatusLabel = null;
                 playerSummaryLabel = null;
+                apiStatusLabel = null;
+                leaderboardRows = null;
             }
         }
 
@@ -493,26 +497,17 @@ namespace Palengke.BangSak.UI
 
         private void CreateLeaderboardPanel(Transform parent)
         {
-            leaderboardPanel = CreatePanel(parent, "Mock Leaderboard Panel", Vector2.zero, new Vector2(520f, 450f), new Color(0.025f, 0.04f, 0.075f, 0.98f)).gameObject;
+            leaderboardPanel = CreatePanel(parent, "Palengke Leaderboard Panel", Vector2.zero, new Vector2(520f, 450f), new Color(0.025f, 0.04f, 0.075f, 0.98f)).gameObject;
             var panel = leaderboardPanel.transform;
 
             CreateText(panel, "PALENGKE LEADERBOARD", new Vector2(0f, 174f), new Vector2(460f, 42f), 28, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
-            CreateText(panel, "OFFLINE MOCK PREVIEW", new Vector2(0f, 139f), new Vector2(300f, 24f), 12, FontStyle.Bold, new Color(0.6f, 0.78f, 1f, 1f));
+            CreateText(panel, "LIVE PALENGKE SCORES", new Vector2(0f, 139f), new Vector2(300f, 24f), 12, FontStyle.Bold, new Color(0.6f, 0.78f, 1f, 1f));
 
-            var rows = CreatePanel(panel, "Leaderboard Rows", new Vector2(0f, 15f), new Vector2(430f, 220f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
+            leaderboardRows = CreatePanel(panel, "Leaderboard Rows", new Vector2(0f, 15f), new Vector2(430f, 220f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
             ResolveApiClient();
-            var entries = apiClient.GetLeaderboard();
-            for (var index = 0; index < entries.Length; index += 1)
-            {
-                var entry = entries[index];
-                var color = entry.displayName == apiClient.GetCurrentUser().displayName
-                    ? new Color(1f, 0.82f, 0.23f, 1f)
-                    : new Color(0.86f, 0.93f, 1f, 1f);
-                CreateText(rows, $"#{entry.rank}   {entry.displayName}", new Vector2(-95f, 78f - index * 39f), new Vector2(190f, 30f), 17, FontStyle.Bold, color);
-                CreateText(rows, entry.score.ToString(), new Vector2(130f, 78f - index * 39f), new Vector2(110f, 30f), 17, FontStyle.Bold, color);
-            }
+            PopulateLeaderboardRows();
 
-            CreateText(panel, apiClient.StatusMessage, new Vector2(0f, -122f), new Vector2(430f, 34f), 13, FontStyle.Bold, new Color(0.62f, 0.76f, 0.94f, 1f));
+            apiStatusLabel = CreateText(panel, apiClient.StatusMessage, new Vector2(0f, -122f), new Vector2(430f, 34f), 13, FontStyle.Bold, new Color(0.62f, 0.76f, 0.94f, 1f));
             CreateButton(panel, "BACK", new Vector2(0f, -177f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
         }
 
@@ -523,6 +518,71 @@ namespace Palengke.BangSak.UI
             if (playerSummaryLabel != null)
             {
                 playerSummaryLabel.text = $"{user.displayName}  ·  {user.coins} coins";
+            }
+            if (apiStatusLabel != null)
+            {
+                apiStatusLabel.text = apiClient.StatusMessage;
+            }
+
+            if (!Application.isPlaying)
+            {
+                PopulateLeaderboardRows();
+                return;
+            }
+
+            apiClient.BeginSessionRefresh(_ => RefreshApiLabels());
+            apiClient.BeginLeaderboardRefresh(_ =>
+            {
+                PopulateLeaderboardRows();
+                RefreshApiLabels();
+            });
+        }
+
+        private void RefreshApiLabels()
+        {
+            if (apiClient == null)
+            {
+                return;
+            }
+            var user = apiClient.GetCurrentUser();
+            if (playerSummaryLabel != null)
+            {
+                playerSummaryLabel.text = $"{user.displayName}  ·  {user.coins} coins";
+            }
+            if (apiStatusLabel != null)
+            {
+                apiStatusLabel.text = apiClient.StatusMessage;
+            }
+        }
+
+        private void PopulateLeaderboardRows()
+        {
+            if (leaderboardRows == null || apiClient == null)
+            {
+                return;
+            }
+            for (var index = leaderboardRows.childCount - 1; index >= 0; index -= 1)
+            {
+                DestroyObject(leaderboardRows.GetChild(index).gameObject);
+            }
+
+            var entries = apiClient.GetLeaderboard();
+            if (entries.Length == 0)
+            {
+                CreateText(leaderboardRows, "No scores yet", Vector2.zero, new Vector2(360f, 40f), 17, FontStyle.Bold, new Color(0.7f, 0.8f, 0.94f, 1f));
+                return;
+            }
+
+            var visibleCount = Mathf.Min(entries.Length, 5);
+            var currentUser = apiClient.GetCurrentUser();
+            for (var index = 0; index < visibleCount; index += 1)
+            {
+                var entry = entries[index];
+                var color = entry.userId == currentUser.userId
+                    ? new Color(1f, 0.82f, 0.23f, 1f)
+                    : new Color(0.86f, 0.93f, 1f, 1f);
+                CreateText(leaderboardRows, $"#{entry.rank}   {entry.displayName}", new Vector2(-95f, 78f - index * 39f), new Vector2(190f, 30f), 17, FontStyle.Bold, color);
+                CreateText(leaderboardRows, entry.score.ToString(), new Vector2(130f, 78f - index * 39f), new Vector2(110f, 30f), 17, FontStyle.Bold, color);
             }
         }
 

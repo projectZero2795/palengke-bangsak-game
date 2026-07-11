@@ -2,7 +2,8 @@
   "name": "BangSak.Runtime",
   "rootNamespace": "",
   "references": [
-    "UnityEngine.UI"
+    "UnityEngine.UI",
+    "UnityEngine.UnityWebRequestModule"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

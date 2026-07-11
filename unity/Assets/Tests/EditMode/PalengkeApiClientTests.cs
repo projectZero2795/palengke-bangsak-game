@@ -22,18 +22,19 @@ public sealed class PalengkeApiClientTests
     }
 
     [Test]
-    public void ComponentContract_IdentifiesPhase27MockAdapter()
+    public void ComponentContract_IdentifiesPhase28RealAdapter()
     {
         Assert.That(client.ComponentIdValue, Is.EqualTo(PalengkeApiClient.ComponentId));
         Assert.That(client.ComponentVersionValue, Is.EqualTo(PalengkeApiClient.ComponentVersion));
         Assert.That(client.ComponentVariantValue, Is.EqualTo(PalengkeApiClient.ComponentVariant));
-        Assert.That(client.UseMockData, Is.True);
-        Assert.That(client.IsProductionApiEnabled, Is.False);
+        Assert.That(client.UseMockData, Is.False);
+        Assert.That(client.IsProductionApiEnabled, Is.True);
     }
 
     [Test]
     public void MockUser_ContainsDisplayNameAndCoins()
     {
+        client.Configure(PalengkeApiClient.DefaultApiBaseUrl, true);
         var user = client.GetCurrentUser();
 
         Assert.That(user.displayName, Is.EqualTo("JuanP"));
@@ -43,6 +44,7 @@ public sealed class PalengkeApiClientTests
     [Test]
     public void MockLeaderboard_IsRankedAndContainsCurrentUser()
     {
+        client.Configure(PalengkeApiClient.DefaultApiBaseUrl, true);
         var entries = client.GetLeaderboard();
 
         Assert.That(entries, Has.Length.EqualTo(5));
@@ -57,5 +59,25 @@ public sealed class PalengkeApiClientTests
         client.Configure(" https://preview.palengke.test/v1/ ");
 
         Assert.That(client.ApiBaseUrl, Is.EqualTo("https://preview.palengke.test/v1"));
+    }
+
+    [Test]
+    public void ProductionRoutes_AreBuiltFromNormalizedBaseUrl()
+    {
+        client.Configure("https://palengke.es/api/backend/");
+
+        Assert.That(client.BuildUrl(PalengkeApiClient.SessionPath), Is.EqualTo("https://palengke.es/api/backend/games/bang-sak/session"));
+        Assert.That(client.BuildUrl(PalengkeApiClient.LeaderboardPath), Is.EqualTo("https://palengke.es/api/backend/games/bang-sak/leaderboard"));
+        Assert.That(client.BuildUrl(PalengkeApiClient.ScoresPath), Is.EqualTo("https://palengke.es/api/backend/games/bang-sak/scores"));
+    }
+
+    [Test]
+    public void ProductionClient_DefaultsToSafeGuestWithoutToken()
+    {
+        var user = client.GetCurrentUser();
+
+        Assert.That(user.guest, Is.True);
+        Assert.That(client.HasAuthenticatedSession, Is.False);
+        Assert.That(client.StatusMessage, Does.Contain("Guest mode"));
     }
 }
