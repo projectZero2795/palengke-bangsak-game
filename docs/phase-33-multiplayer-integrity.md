@@ -108,6 +108,25 @@ Build production WebGL:
 
 Expected `build-info.json`: phase `33`, version `0.33.0`.
 
+## Verified evidence
+
+Verified on 2026-07-11:
+
+- `211` Unity EditMode tests passed with `0` failures;
+- the Unity `2022.3.50f1` WebGL build completed at `37,436,788` bytes;
+- two clean local WebGL clients created/joined room `1234`, activated the
+  authority credential, loaded the same scene, kept timer/Hider state aligned,
+  and produced no integrity rejection during normal movement or Bang;
+- production source is commit `da6d2e2` and image
+  `registry.renzlab.com/palengke/bang-sak:da6d2e2`;
+- production image digest is
+  `sha256:13dc6b3ac86c09b0eca8ff47788c6400f4280a7d148c3f7f02d513bc16fc46de`;
+- GitOps commit `e466c5c` reconciled `Synced` and `Healthy`;
+- both production replicas became Ready with zero restarts;
+- `tools/verify-production.sh` passed against `https://games.palengke.es` and
+  confirmed build `0.33.0`, security headers, WebGL assets, and the live
+  leaderboard API.
+
 ## Owner review in production
 
 1. Open `https://games.palengke.es` in two separate browser tabs.
