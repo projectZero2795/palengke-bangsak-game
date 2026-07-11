@@ -8,8 +8,9 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 32: Photon Fusion Shared multiplayer
-vertical slice**, ready for project-owner review.
+This repository is currently in **Phase 33: multiplayer integrity and
+anti-cheat baseline**, ready for project-owner review after direct production
+verification.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -84,6 +85,15 @@ slice. Photon Shared Mode now provides EU room create/join/leave, synchronized
 scene loading, dense roster roles, movement and Bang/SAK streams, room-creator
 round state, results, restart, and manual room-code rejoin. Shared Mode remains
 distributed authority; Phase 33 owns integrity and anti-cheat hardening.
+
+Phase 33 replaces direct peer-authored state with credential-bound requests to
+the room creator. The authority validates sender, sequence, role, round state,
+movement rate/speed/bounds, named-Bang eligibility, SAK role, cooldown, and
+restart state; it recalculates action geometry and broadcasts only confirmed
+movement, action, caught-state, timer, result, and restart state. Multiplayer
+score submission is restricted to the room authority and a stable per-round
+idempotency ID. Shared Mode still trusts the player-hosted room creator, so this
+is a practical baseline rather than dedicated-server competitive security.
 
 ## Safety and branding rules
 
@@ -178,6 +188,7 @@ Do not skip ahead.
 - [Phase 30 monitoring and maintenance](docs/phase-30-monitoring-maintenance.md)
 - [Phase 31 polish and content expansion plan](docs/phase-31-polish-content-expansion.md)
 - [Phase 32 Photon Fusion Shared multiplayer](docs/phase-32-authoritative-photon.md)
+- [Phase 33 multiplayer integrity baseline](docs/phase-33-multiplayer-integrity.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)
 - [Release 0.28.2](docs/releases/0.28.2.md)

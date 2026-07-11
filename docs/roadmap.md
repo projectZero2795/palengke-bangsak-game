@@ -39,11 +39,11 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 29 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Done. |
 | 30 | Monitoring and maintenance | Structured logs, request correlation, production verification, release/version records, operations, rollback, backup/config, and known issues. | Done. |
 | 31 | Polish and content expansion | Plan maps, art, skins, badges, events, sound, mobile, anti-cheat, tournaments, power-ups, and selectable components after production foundations. | Ready for review; implementation order, dependencies, gates, and owner decisions are documented. |
-| 32 | Photon Fusion Shared multiplayer vertical slice | Replace the room/movement/action scaffolds with a real two-client WebGL Photon path. | Ready for review; two WebGL clients create/join, load the same scene, receive Taya/Hider roles, exchange movement/action/round streams, agree on timeout result/restart, and support manual rejoin. |
-| 33 | Multiplayer integrity and anti-cheat | Validate authority, rate limits, action outcomes, result/reward submission, and abuse cases. | Planned; do not start before Phase 32 approval. |
+| 32 | Photon Fusion Shared multiplayer vertical slice | Replace the room/movement/action scaffolds with a real two-client WebGL Photon path. | Done; owner approved the two-client Photon vertical slice. |
+| 33 | Multiplayer integrity and anti-cheat | Validate authority, rate limits, action outcomes, result/reward submission, and abuse cases. | Ready for review; credential-bound authority requests, replay/rate/role/state/geometry validation, confirmed-state reconciliation, and authority-only idempotent score submission are implemented. |
 
 Phases 32–41 are ordered in the
-[Phase 31 expansion plan](phase-31-polish-content-expansion.md). Phase 32 is the
+[Phase 31 expansion plan](phase-31-polish-content-expansion.md). Phase 33 is the
 current implemented review checkpoint; later phases remain blocked by the
 mandatory stop rule.
 

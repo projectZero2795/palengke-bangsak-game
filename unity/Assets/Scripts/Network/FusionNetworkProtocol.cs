@@ -6,10 +6,13 @@ namespace Palengke.BangSak.Network
 {
     public enum FusionNetworkMessageKind
     {
-        Movement = 3,
-        Action = 4,
+        AuthorityGrant = 1,
+        MovementRequest = 3,
+        ActionRequest = 4,
         RoundState = 5,
-        RestartRequest = 6
+        RestartRequest = 6,
+        MovementState = 7,
+        ActionState = 8
     }
 
     [Serializable]
@@ -19,7 +22,16 @@ namespace Palengke.BangSak.Network
         public int kind;
         public int senderIndex;
         public int sequence;
+        public string authorityToken;
         public string payload;
+    }
+
+    [Serializable]
+    public sealed class FusionAuthorityGrantPayload
+    {
+        public int playerIndex;
+        public int authorityEpoch;
+        public string authorityToken;
     }
 
     [Serializable]
@@ -72,18 +84,23 @@ namespace Palengke.BangSak.Network
         public int remainingHiders;
         public float remainingSeconds;
         public int roundNumber;
+        public int caughtPlayerMask;
+        public bool tayaCountered;
+        public string authorityRoundId;
     }
 
     public static class FusionNetworkProtocol
     {
-        public const int Version = 1;
+        public const int Version = 2;
         public const int MaximumPayloadBytes = 16 * 1024;
+        public const int MaximumAuthorityTokenLength = 64;
 
         public static byte[] Encode<T>(
             FusionNetworkMessageKind kind,
             int senderIndex,
             int sequence,
-            T payload)
+            T payload,
+            string authorityToken = "")
         {
             var envelope = new FusionNetworkEnvelope
             {
@@ -91,6 +108,7 @@ namespace Palengke.BangSak.Network
                 kind = (int)kind,
                 senderIndex = senderIndex,
                 sequence = sequence,
+                authorityToken = authorityToken ?? string.Empty,
                 payload = payload == null ? string.Empty : JsonUtility.ToJson(payload)
             };
 
@@ -119,6 +137,8 @@ namespace Palengke.BangSak.Network
                 || !Enum.IsDefined(typeof(FusionNetworkMessageKind), envelope.kind)
                 || envelope.senderIndex < 0
                 || envelope.sequence <= 0
+                || envelope.authorityToken == null
+                || envelope.authorityToken.Length > MaximumAuthorityTokenLength
                 || envelope.payload == null)
             {
                 envelope = null;

@@ -135,6 +135,84 @@ namespace Palengke.BangSak.Network
             return true;
         }
 
+        public bool TryResolveAuthoritativeAction(
+            FusionActionPayload request,
+            float now,
+            out PrototypeNetworkActionEvent actionEvent)
+        {
+            ResolveReferences();
+            actionEvent = default(PrototypeNetworkActionEvent);
+            if (request == null
+                || identity == null
+                || request.actorNetworkPlayerId != identity.NetworkPlayerId
+                || !System.Enum.IsDefined(typeof(PrototypeNetworkActionKind), request.kind)
+                || !System.Enum.IsDefined(typeof(PlayerFacingDirection), request.facingDirection))
+            {
+                return false;
+            }
+
+            var facing = (PlayerFacingDirection)request.facingDirection;
+            var kind = (PrototypeNetworkActionKind)request.kind;
+            if (kind == PrototypeNetworkActionKind.BangNameCall && bangActionController != null)
+            {
+                if (bangNameCallController != null)
+                {
+                    bangNameCallController.SetSelectedTargetName(request.calledName);
+                }
+
+                bangActionController.SetFallbackFacingDirection(facing);
+                var result = bangActionController.ResolveBangHit(transform.position, facing, request.sequence);
+                var targetIdentity = result.Target != null
+                    ? result.Target.GetComponentInParent<PrototypeNetworkPlayerIdentity>()
+                    : null;
+                var targetName = result.Target != null
+                    ? result.Target.GetComponentInParent<PlayerNameIdentity>()
+                    : null;
+                actionEvent = new PrototypeNetworkActionEvent(
+                    kind,
+                    MapBangOutcome(result.Outcome),
+                    identity.NetworkPlayerId,
+                    targetIdentity != null ? targetIdentity.NetworkPlayerId : string.Empty,
+                    request.calledName,
+                    targetName != null ? targetName.DisplayName : string.Empty,
+                    result.Origin,
+                    result.Point,
+                    result.Direction,
+                    facing,
+                    request.sequence,
+                    now);
+                return true;
+            }
+
+            if (kind == PrototypeNetworkActionKind.SakCounter && sakCounterController != null)
+            {
+                sakCounterController.SetFallbackFacingDirection(facing);
+                var result = sakCounterController.ResolveSakHit(transform.position, facing, request.sequence);
+                var targetIdentity = result.Target != null
+                    ? result.Target.GetComponentInParent<PrototypeNetworkPlayerIdentity>()
+                    : null;
+                var targetName = result.Target != null
+                    ? result.Target.GetComponentInParent<PlayerNameIdentity>()
+                    : null;
+                actionEvent = new PrototypeNetworkActionEvent(
+                    kind,
+                    MapSakOutcome(result.Outcome),
+                    identity.NetworkPlayerId,
+                    targetIdentity != null ? targetIdentity.NetworkPlayerId : string.Empty,
+                    string.Empty,
+                    targetName != null ? targetName.DisplayName : string.Empty,
+                    result.Origin,
+                    result.Point,
+                    result.Direction,
+                    facing,
+                    request.sequence,
+                    now);
+                return true;
+            }
+
+            return false;
+        }
+
         private bool TryCaptureBangEvent(float now, out PrototypeNetworkActionEvent actionEvent)
         {
             actionEvent = default(PrototypeNetworkActionEvent);

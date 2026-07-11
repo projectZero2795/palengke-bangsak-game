@@ -66,3 +66,4 @@ Each release should include:
 - [0.28.2 Public Release](releases/0.28.2.md)
 - [Phase 30 Monitoring and Maintenance](phase-30-monitoring-maintenance.md)
 - [Phase 31 Polish and Content Expansion Plan](phase-31-polish-content-expansion.md)
+- [Phase 33 Multiplayer Integrity Baseline](phase-33-multiplayer-integrity.md)

@@ -15,15 +15,17 @@ public sealed class FusionNetworkProtocolTests
         };
 
         var data = FusionNetworkProtocol.Encode(
-            FusionNetworkMessageKind.Movement,
+            FusionNetworkMessageKind.MovementRequest,
             1,
             12,
-            payload);
+            payload,
+            "authority-token");
 
         Assert.That(FusionNetworkProtocol.TryDecode(data, out var envelope), Is.True);
-        Assert.That(envelope.kind, Is.EqualTo((int)FusionNetworkMessageKind.Movement));
+        Assert.That(envelope.kind, Is.EqualTo((int)FusionNetworkMessageKind.MovementRequest));
         Assert.That(envelope.senderIndex, Is.EqualTo(1));
         Assert.That(envelope.sequence, Is.EqualTo(12));
+        Assert.That(envelope.authorityToken, Is.EqualTo("authority-token"));
         Assert.That(FusionNetworkProtocol.TryDecodePayload(envelope, out FusionMovementPayload decoded), Is.True);
         Assert.That(decoded.networkPlayerId, Is.EqualTo("preview-01"));
         Assert.That(decoded.x, Is.EqualTo(4.5f));
@@ -46,7 +48,7 @@ public sealed class FusionNetworkProtocolTests
     public void TryDecode_RejectsUnknownProtocolVersion()
     {
         var data = System.Text.Encoding.UTF8.GetBytes(
-            "{\"protocolVersion\":99,\"kind\":3,\"senderIndex\":0,\"sequence\":1,\"payload\":\"{}\"}");
+            "{\"protocolVersion\":99,\"kind\":3,\"senderIndex\":0,\"sequence\":1,\"authorityToken\":\"\",\"payload\":\"{}\"}");
 
         Assert.That(FusionNetworkProtocol.TryDecode(data, out _), Is.False);
     }

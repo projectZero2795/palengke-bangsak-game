@@ -2,10 +2,22 @@
 
 ## Active limitations
 
-- Photon Fusion Shared Mode now supports the Phase 32 two-client WebGL vertical
-  slice. It is distributed client authority rather than a dedicated server;
-  Phase 33 must harden sender validation, rate limits, action outcomes, and
-  result/reward integrity before competitive use.
+- Phase 33 authenticates state-changing requests to the player-hosted room
+  creator and makes that authority recalculate action outcomes. Photon Fusion
+  Shared Mode still has no dedicated trusted game server: a modified room
+  creator can lie about its own state, disrupt a room, or attempt a capped API
+  score. Do not treat this baseline as competitive/tournament security.
+- Shared reliable callbacks do not expose a trustworthy peer sender for the
+  server-proxied client-to-client path. Per-player credentials protect movement,
+  action, round, and restart messages; grants are refreshed every five seconds
+  to recover from stale or forged grant traffic, but a hostile peer can still
+  attempt room-level denial of service.
+- Authority movement validation rejects non-finite, out-of-bounds, over-speed,
+  replayed, and flood-rate snapshots. It does not yet server-simulate the exact
+  collision path between accepted snapshots.
+- Local/offline rounds remain playable but no longer submit authenticated
+  production scores. Persistent score and coin submission requires the Photon
+  room authority and a per-round authority ID.
 - Photon room rejoin is manual. Reloaded/disconnected clients must select
   `ROOM` and re-enter the same room code.
 - Fusion reports a harmless warning when connecting from the main menu before

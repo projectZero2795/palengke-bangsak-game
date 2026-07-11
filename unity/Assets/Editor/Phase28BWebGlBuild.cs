@@ -12,7 +12,8 @@ namespace Palengke.BangSak.Editor
     {
         public const string MenuPath = "Bang-Sak/Build/Phase 28B WebGL";
         public const string RelativeOutputPath = "Build/WebGL";
-        public const string PhaseVersion = "0.28.2";
+        public const string PhaseVersion = "0.33.0";
+        public const string CurrentPhase = "33";
 
         [MenuItem(MenuPath)]
         public static void BuildFromMenu()
@@ -86,7 +87,7 @@ namespace Palengke.BangSak.Editor
         {
             var metadata = new Phase28BBuildMetadata
             {
-                phase = "28B",
+                phase = CurrentPhase,
                 version = PhaseVersion,
                 unityVersion = Application.unityVersion,
                 buildTarget = report.summary.platform.ToString(),

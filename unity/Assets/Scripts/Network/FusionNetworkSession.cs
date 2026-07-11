@@ -19,7 +19,10 @@ namespace Palengke.BangSak.Network
         public const string GameplaySceneName = "PrototypeMap";
         private const float MovementSendIntervalSeconds = 0.1f;
         private const float RoundSendIntervalSeconds = 0.25f;
+        private const float CredentialRefreshIntervalSeconds = 5f;
+        private const float MovementSpawnGraceSeconds = 0.75f;
         private const int ReliableMagic = 0x4253414B;
+        private const int MaximumIntegrityDiagnostics = 12;
 
         private static FusionNetworkSession instance;
 
@@ -27,11 +30,22 @@ namespace Palengke.BangSak.Network
         private GameObject runnerObject;
         private bool intentionalShutdown;
         private int outgoingSequence;
+        private int localRequestSequence;
         private float nextMovementSendAt;
         private float nextRoundSendAt;
+        private float nextCredentialRefreshAt;
+        private float movementValidationStartsAt;
         private PrototypeNetworkMovementSyncController localMovement;
         private PrototypeNetworkActionSyncController localAction;
         private PrototypeRoundRulesController roundRules;
+        private readonly FusionIntegrityGuard integrityGuard = new FusionIntegrityGuard();
+        private readonly Dictionary<int, string> authorityCredentials = new Dictionary<int, string>();
+        private string localAuthorityToken = string.Empty;
+        private string credentialsRosterFingerprint = string.Empty;
+        private string authorityRoundId = string.Empty;
+        private int authorityEpoch;
+        private int lastAuthoritySequence;
+        private int integrityDiagnostics;
         private int reliableSendDiagnostics;
         private int reliableReceiveDiagnostics;
 
@@ -72,6 +86,12 @@ namespace Palengke.BangSak.Network
 
         public int ActivePlayerCount => IsConnected ? GetRosterSize() : 0;
 
+        public bool CanSubmitAuthoritativeScore => IsConnected && IsMasterClient;
+
+        public string AuthorityRoundId => authorityRoundId;
+
+        public int RejectedIntegrityMessageCount => integrityGuard.RejectedCount;
+
         private void Awake()
         {
             if (instance != null && instance != this)
@@ -104,6 +124,11 @@ namespace Palengke.BangSak.Network
             if (localMovement == null || localAction == null || roundRules == null)
             {
                 BindGameplayScene();
+            }
+
+            if (IsMasterClient && Time.unscaledTime >= nextCredentialRefreshAt)
+            {
+                SendCurrentAuthorityGrants();
             }
 
             if (localMovement != null && Time.unscaledTime >= nextMovementSendAt)
@@ -182,19 +207,31 @@ namespace Palengke.BangSak.Network
 
             if (IsMasterClient)
             {
+                if (!integrityGuard.ValidateRestart(
+                        LocalPlayerIndex,
+                        Time.unscaledTime,
+                        roundRules.IsFinished,
+                        out var rejection))
+                {
+                    LogIntegrityRejection(FusionNetworkMessageKind.RestartRequest, LocalPlayerIndex, rejection);
+                    return false;
+                }
+
                 roundRules.RestartRound();
+                ResetMovementBaselineForSpawn();
+                authorityRoundId = BuildAuthorityRoundId(roundRules.RoundNumber);
                 SendRoundState(roundRules.CaptureNetworkSnapshot());
                 return true;
             }
 
-            return SendToPlayer(
-                runner.GetMasterClient(),
+            return SendRequestToAuthority(
                 FusionNetworkMessageKind.RestartRequest,
                 new FusionCommandPayload { command = "restart" });
         }
 
         private async Task ConnectAsync(string roomCode, bool allowCreate)
         {
+            ResetIntegrityState();
             ActiveRoomCode = roomCode;
             State = PrototypeNetworkRoomState.Connecting;
             StatusMessage = allowCreate
@@ -281,6 +318,7 @@ namespace Palengke.BangSak.Network
             State = PrototypeNetworkRoomState.Disconnected;
             StatusMessage = message;
             intentionalShutdown = false;
+            ResetIntegrityState();
         }
 
         private void CleanupRunnerObject()
@@ -315,6 +353,9 @@ namespace Palengke.BangSak.Network
                 return;
             }
 
+
+            EnsureAuthorityCredentials();
+
             var spawner = FindObjectOfType<PrototypeNetworkPlayerSpawner>();
             if (spawner != null)
             {
@@ -333,6 +374,10 @@ namespace Palengke.BangSak.Network
             if (roundRules != null)
             {
                 roundRules.SetNetworkStateMode(true, IsMasterClient);
+                if (IsMasterClient && string.IsNullOrWhiteSpace(authorityRoundId))
+                {
+                    authorityRoundId = BuildAuthorityRoundId(roundRules.RoundNumber);
+                }
                 StartCoroutine(RefreshRoundActorsAfterSpawn(roundRules));
             }
 
@@ -352,6 +397,7 @@ namespace Palengke.BangSak.Network
             controller.RefreshNetworkActors();
             if (IsMasterClient)
             {
+                ResetMovementBaselineForSpawn();
                 SendRoundState(controller.CaptureNetworkSnapshot());
             }
         }
@@ -361,6 +407,20 @@ namespace Palengke.BangSak.Network
             localMovement = null;
             localAction = null;
             roundRules = null;
+        }
+
+        private void ResetIntegrityState()
+        {
+            authorityCredentials.Clear();
+            integrityGuard.Reset();
+            localAuthorityToken = string.Empty;
+            credentialsRosterFingerprint = string.Empty;
+            authorityRoundId = string.Empty;
+            authorityEpoch = 0;
+            lastAuthoritySequence = 0;
+            localRequestSequence = 0;
+            nextCredentialRefreshAt = 0f;
+            integrityDiagnostics = 0;
         }
 
         private string[] BuildRosterNames()
@@ -394,10 +454,17 @@ namespace Palengke.BangSak.Network
                 inputX = snapshot.MovementInput.x,
                 inputY = snapshot.MovementInput.y,
                 facingDirection = (int)snapshot.FacingDirection,
-                sequence = snapshot.Sequence,
+                sequence = NextLocalRequestSequence(),
                 sentAt = snapshot.SentAt
             };
-            Broadcast(FusionNetworkMessageKind.Movement, payload);
+            if (IsMasterClient)
+            {
+                ProcessMovementRequest(LocalPlayerIndex, payload);
+            }
+            else
+            {
+                SendRequestToAuthority(FusionNetworkMessageKind.MovementRequest, payload);
+            }
         }
 
         private void SendAction(PrototypeNetworkActionEvent actionEvent)
@@ -417,10 +484,17 @@ namespace Palengke.BangSak.Network
                 directionX = actionEvent.Direction.x,
                 directionY = actionEvent.Direction.y,
                 facingDirection = (int)actionEvent.FacingDirection,
-                sequence = actionEvent.Sequence,
+                sequence = NextLocalRequestSequence(),
                 sentAt = actionEvent.SentAt
             };
-            Broadcast(FusionNetworkMessageKind.Action, payload);
+            if (IsMasterClient)
+            {
+                ProcessActionRequest(LocalPlayerIndex, payload, true);
+            }
+            else
+            {
+                SendRequestToAuthority(FusionNetworkMessageKind.ActionRequest, payload);
+            }
         }
 
         private void SendRoundState(PrototypeRoundNetworkSnapshot snapshot)
@@ -434,17 +508,22 @@ namespace Palengke.BangSak.Network
                 totalHiders = snapshot.TotalHiders,
                 remainingHiders = snapshot.RemainingHiders,
                 remainingSeconds = snapshot.RemainingSeconds,
-                roundNumber = snapshot.RoundNumber
+                roundNumber = snapshot.RoundNumber,
+                caughtPlayerMask = BuildCaughtPlayerMask(),
+                tayaCountered = IsTayaCountered(),
+                authorityRoundId = authorityRoundId
             };
-            Broadcast(FusionNetworkMessageKind.RoundState, payload);
+            BroadcastAuthoritative(FusionNetworkMessageKind.RoundState, payload);
         }
 
-        private bool Broadcast<T>(FusionNetworkMessageKind kind, T payload)
+        private bool BroadcastAuthoritative<T>(FusionNetworkMessageKind kind, T payload)
         {
-            if (!IsConnected)
+            if (!IsConnected || !IsMasterClient)
             {
                 return false;
             }
+
+            EnsureAuthorityCredentials();
 
             var sent = false;
             foreach (var player in runner.ActivePlayers)
@@ -454,13 +533,37 @@ namespace Palengke.BangSak.Network
                     continue;
                 }
 
-                sent |= SendToPlayer(player, kind, payload);
+                var playerSlot = PlayerSlotFor(player);
+                if (authorityCredentials.TryGetValue(playerSlot, out var token))
+                {
+                    sent |= SendToPlayer(player, kind, payload, token);
+                }
+                else
+                {
+                    LogIntegrityRejection(kind, playerSlot, FusionIntegrityRejection.InvalidCredential);
+                }
             }
 
             return sent;
         }
 
-        private bool SendToPlayer<T>(PlayerRef player, FusionNetworkMessageKind kind, T payload)
+        private bool SendRequestToAuthority<T>(FusionNetworkMessageKind kind, T payload)
+        {
+            if (!IsConnected
+                || IsMasterClient
+                || string.IsNullOrWhiteSpace(localAuthorityToken))
+            {
+                return false;
+            }
+
+            return SendToPlayer(runner.GetMasterClient(), kind, payload, localAuthorityToken);
+        }
+
+        private bool SendToPlayer<T>(
+            PlayerRef player,
+            FusionNetworkMessageKind kind,
+            T payload,
+            string authorityToken = "")
         {
             if (!IsConnected || !player.IsRealPlayer || player == runner.LocalPlayer)
             {
@@ -468,7 +571,12 @@ namespace Palengke.BangSak.Network
             }
 
             outgoingSequence += 1;
-            var data = FusionNetworkProtocol.Encode(kind, LocalPlayerIndex, outgoingSequence, payload);
+            var data = FusionNetworkProtocol.Encode(
+                kind,
+                LocalPlayerIndex,
+                outgoingSequence,
+                payload,
+                authorityToken);
             var key = ReliableKey.FromInts(ReliableMagic, (int)kind, LocalPlayerIndex, outgoingSequence);
             runner.SendReliableDataToPlayer(player, key, data);
             if (reliableSendDiagnostics < 8)
@@ -482,57 +590,542 @@ namespace Palengke.BangSak.Network
 
         private void HandleEnvelope(PlayerRef source, FusionNetworkEnvelope envelope)
         {
-            // Shared Mode routes peer-to-peer reliable data through the Photon server.
-            // Its callback PlayerRef identifies the local target, so the envelope owns
-            // sender identification until Phase 33 adds stronger integrity validation.
-            var callbackSourceSlot = runner.GameMode == GameMode.Shared
-                ? -1
-                : PlayerSlotFor(source);
-            var senderSlot = ResolveEnvelopeSenderSlot(
-                callbackSourceSlot,
-                envelope.senderIndex,
-                GetRosterSize());
+            var senderSlot = ResolveEnvelopeSenderSlot(-1, envelope.senderIndex, GetRosterSize());
             if (senderSlot < 0)
             {
                 return;
             }
 
             var kind = (FusionNetworkMessageKind)envelope.kind;
+            if (kind == FusionNetworkMessageKind.AuthorityGrant)
+            {
+                ApplyAuthorityGrant(senderSlot, envelope);
+                return;
+            }
+
+            if (IsMasterClient)
+            {
+                if (!integrityGuard.ValidateEnvelope(
+                        envelope,
+                        GetRosterSize(),
+                        out var requestRejection))
+                {
+                    LogIntegrityRejection(kind, senderSlot, requestRejection);
+                    return;
+                }
+
+                switch (kind)
+                {
+                    case FusionNetworkMessageKind.MovementRequest:
+                        if (FusionNetworkProtocol.TryDecodePayload(envelope, out FusionMovementPayload movementRequest))
+                        {
+                            ProcessMovementRequest(senderSlot, movementRequest);
+                        }
+                        return;
+                    case FusionNetworkMessageKind.ActionRequest:
+                        if (FusionNetworkProtocol.TryDecodePayload(envelope, out FusionActionPayload actionRequest))
+                        {
+                            ProcessActionRequest(senderSlot, actionRequest, false);
+                        }
+                        return;
+                    case FusionNetworkMessageKind.RestartRequest:
+                        ProcessRestartRequest(senderSlot, envelope);
+                        return;
+                    default:
+                        LogIntegrityRejection(kind, senderSlot, FusionIntegrityRejection.InvalidRole);
+                        return;
+                }
+            }
+
+            var masterSlot = PlayerSlotFor(runner.GetMasterClient());
+            if (senderSlot != masterSlot
+                || string.IsNullOrWhiteSpace(localAuthorityToken)
+                || !ConstantTimeEquals(localAuthorityToken, envelope.authorityToken)
+                || envelope.sequence <= lastAuthoritySequence)
+            {
+                LogIntegrityRejection(kind, senderSlot, FusionIntegrityRejection.InvalidCredential);
+                return;
+            }
+
+            lastAuthoritySequence = envelope.sequence;
+
             switch (kind)
             {
-                case FusionNetworkMessageKind.Movement:
+                case FusionNetworkMessageKind.MovementState:
                     if (FusionNetworkProtocol.TryDecodePayload(envelope, out FusionMovementPayload movement))
                     {
-                        ApplyMovement(senderSlot, movement);
+                        ApplyMovement(movement);
                     }
                     break;
-                case FusionNetworkMessageKind.Action:
+                case FusionNetworkMessageKind.ActionState:
                     if (FusionNetworkProtocol.TryDecodePayload(envelope, out FusionActionPayload action))
                     {
-                        ApplyAction(senderSlot, action);
+                        ApplyAction(action);
                     }
                     break;
                 case FusionNetworkMessageKind.RoundState:
-                    if (!IsMasterClient
-                        && senderSlot == PlayerSlotFor(runner.GetMasterClient())
-                        && FusionNetworkProtocol.TryDecodePayload(envelope, out FusionRoundPayload round))
+                    if (FusionNetworkProtocol.TryDecodePayload(envelope, out FusionRoundPayload round))
                     {
                         ApplyRoundState(round);
                     }
                     break;
-                case FusionNetworkMessageKind.RestartRequest:
-                    if (IsMasterClient && roundRules != null)
-                    {
-                        roundRules.RestartRound();
-                        SendRoundState(roundRules.CaptureNetworkSnapshot());
-                    }
+                default:
+                    LogIntegrityRejection(kind, senderSlot, FusionIntegrityRejection.InvalidRole);
                     break;
             }
         }
 
-        private void ApplyMovement(int senderSlot, FusionMovementPayload payload)
+        private void ApplyAuthorityGrant(int senderSlot, FusionNetworkEnvelope envelope)
         {
-            if (payload == null || payload.networkPlayerId != NetworkPlayerIdFor(senderSlot))
+            if (IsMasterClient
+                || senderSlot != PlayerSlotFor(runner.GetMasterClient())
+                || !FusionNetworkProtocol.TryDecodePayload(
+                    envelope,
+                    out FusionAuthorityGrantPayload grant)
+                || grant.playerIndex != LocalPlayerIndex
+                || grant.authorityEpoch <= 0
+                || string.IsNullOrWhiteSpace(grant.authorityToken)
+                || grant.authorityToken.Length != 32)
+            {
+                LogIntegrityRejection(
+                    FusionNetworkMessageKind.AuthorityGrant,
+                    senderSlot,
+                    FusionIntegrityRejection.InvalidCredential);
+                return;
+            }
+
+            authorityEpoch = grant.authorityEpoch;
+            localAuthorityToken = grant.authorityToken;
+            lastAuthoritySequence = envelope.sequence;
+            StatusMessage = $"Playing room {ActiveRoomCode} · authority credential active.";
+        }
+
+        private void ProcessMovementRequest(int senderSlot, FusionMovementPayload payload)
+        {
+            if (Time.unscaledTime < movementValidationStartsAt)
+            {
+                integrityGuard.ResetMovementState();
+            }
+
+            var mapLayout = roundRules != null ? roundRules.MapLayout : FindObjectOfType<PrototypeMapLayoutController>();
+            var mapBounds = mapLayout != null
+                ? mapLayout.MapBounds
+                : new Bounds(Vector3.zero, new Vector3(52f, 36f, 0f));
+            if (!integrityGuard.ValidateMovement(
+                    senderSlot,
+                    payload,
+                    mapBounds,
+                    Time.unscaledTime,
+                    roundRules != null && roundRules.IsRunning,
+                    out var rejection))
+            {
+                LogIntegrityRejection(FusionNetworkMessageKind.MovementRequest, senderSlot, rejection);
+                return;
+            }
+
+            ApplyMovement(payload);
+            BroadcastAuthoritative(FusionNetworkMessageKind.MovementState, payload);
+        }
+
+        private void ProcessActionRequest(
+            int senderSlot,
+            FusionActionPayload payload,
+            bool authorityLocalAction)
+        {
+            if (!integrityGuard.ValidateAction(
+                    senderSlot,
+                    payload,
+                    Time.unscaledTime,
+                    roundRules != null && roundRules.IsRunning,
+                    out var rejection))
+            {
+                LogIntegrityRejection(FusionNetworkMessageKind.ActionRequest, senderSlot, rejection);
+                return;
+            }
+
+            if ((PrototypeNetworkActionKind)payload.kind == PrototypeNetworkActionKind.BangNameCall
+                && !IsEligibleHiderName(payload.calledName))
+            {
+                LogIntegrityRejection(
+                    FusionNetworkMessageKind.ActionRequest,
+                    senderSlot,
+                    FusionIntegrityRejection.InvalidPayload);
+                return;
+            }
+
+            PrototypeNetworkActionEvent authoritativeEvent;
+            if (authorityLocalAction)
+            {
+                authoritativeEvent = ToActionEvent(payload);
+            }
+            else
+            {
+                var actionSync = FindActionSync(FusionIntegrityGuard.NetworkPlayerIdFor(senderSlot));
+                if (actionSync == null
+                    || !actionSync.TryResolveAuthoritativeAction(
+                        payload,
+                        Time.time,
+                        out authoritativeEvent))
+                {
+                    LogIntegrityRejection(
+                        FusionNetworkMessageKind.ActionRequest,
+                        senderSlot,
+                        FusionIntegrityRejection.InvalidPayload);
+                    return;
+                }
+            }
+
+            var authoritativePayload = ToActionPayload(authoritativeEvent);
+            BroadcastAuthoritative(FusionNetworkMessageKind.ActionState, authoritativePayload);
+            if (roundRules != null)
+            {
+                roundRules.RefreshNetworkActors();
+                roundRules.Tick(Time.time);
+                SendRoundState(roundRules.CaptureNetworkSnapshot());
+            }
+        }
+
+        private void ProcessRestartRequest(int senderSlot, FusionNetworkEnvelope envelope)
+        {
+            if (roundRules == null
+                || !FusionNetworkProtocol.TryDecodePayload(envelope, out FusionCommandPayload command)
+                || command.command != "restart")
+            {
+                LogIntegrityRejection(
+                    FusionNetworkMessageKind.RestartRequest,
+                    senderSlot,
+                    FusionIntegrityRejection.InvalidPayload);
+                return;
+            }
+
+            if (!integrityGuard.ValidateRestart(
+                    senderSlot,
+                    Time.unscaledTime,
+                    roundRules.IsFinished,
+                    out var rejection))
+            {
+                LogIntegrityRejection(FusionNetworkMessageKind.RestartRequest, senderSlot, rejection);
+                return;
+            }
+
+            roundRules.RestartRound();
+            ResetMovementBaselineForSpawn();
+            authorityRoundId = BuildAuthorityRoundId(roundRules.RoundNumber);
+            SendRoundState(roundRules.CaptureNetworkSnapshot());
+        }
+
+        private void EnsureAuthorityCredentials()
+        {
+            if (!IsConnected || !IsMasterClient)
+            {
+                return;
+            }
+
+            var fingerprint = BuildRosterFingerprint();
+            if (fingerprint == credentialsRosterFingerprint && HasCredentialsForActiveRoster())
+            {
+                return;
+            }
+
+            credentialsRosterFingerprint = fingerprint;
+            authorityEpoch += 1;
+            authorityCredentials.Clear();
+            integrityGuard.Reset();
+            foreach (var player in runner.ActivePlayers)
+            {
+                var playerSlot = PlayerSlotFor(player);
+                if (playerSlot < 0)
+                {
+                    continue;
+                }
+
+                var token = Guid.NewGuid().ToString("N");
+                authorityCredentials[playerSlot] = token;
+                integrityGuard.SetCredential(playerSlot, token);
+                if (player == runner.LocalPlayer)
+                {
+                    localAuthorityToken = token;
+                    continue;
+                }
+
+                SendToPlayer(
+                    player,
+                    FusionNetworkMessageKind.AuthorityGrant,
+                    new FusionAuthorityGrantPayload
+                    {
+                        playerIndex = playerSlot,
+                        authorityEpoch = authorityEpoch,
+                        authorityToken = token
+                    });
+            }
+
+
+            nextCredentialRefreshAt = Time.unscaledTime + CredentialRefreshIntervalSeconds;
+        }
+
+        private void SendCurrentAuthorityGrants()
+        {
+            if (!IsConnected || !IsMasterClient)
+            {
+                return;
+            }
+
+            EnsureAuthorityCredentials();
+            foreach (var player in runner.ActivePlayers)
+            {
+                if (player == runner.LocalPlayer)
+                {
+                    continue;
+                }
+
+                var playerSlot = PlayerSlotFor(player);
+                if (!authorityCredentials.TryGetValue(playerSlot, out var token))
+                {
+                    continue;
+                }
+
+                SendToPlayer(
+                    player,
+                    FusionNetworkMessageKind.AuthorityGrant,
+                    new FusionAuthorityGrantPayload
+                    {
+                        playerIndex = playerSlot,
+                        authorityEpoch = authorityEpoch,
+                        authorityToken = token
+                    });
+            }
+
+            nextCredentialRefreshAt = Time.unscaledTime + CredentialRefreshIntervalSeconds;
+        }
+
+        private bool HasCredentialsForActiveRoster()
+        {
+            var playerCount = 0;
+            foreach (var player in runner.ActivePlayers)
+            {
+                playerCount += 1;
+                var playerSlot = PlayerSlotFor(player);
+                if (playerSlot < 0 || !authorityCredentials.ContainsKey(playerSlot))
+                {
+                    return false;
+                }
+            }
+
+            return playerCount > 0 && authorityCredentials.Count == playerCount;
+        }
+
+        private string BuildRosterFingerprint()
+        {
+            var indices = new List<int>();
+            foreach (var player in runner.ActivePlayers)
+            {
+                indices.Add(player.AsIndex);
+            }
+
+            indices.Sort();
+            return string.Join(",", indices);
+        }
+
+        private static FusionActionPayload ToActionPayload(PrototypeNetworkActionEvent actionEvent)
+        {
+            return new FusionActionPayload
+            {
+                kind = (int)actionEvent.Kind,
+                outcome = (int)actionEvent.Outcome,
+                actorNetworkPlayerId = actionEvent.ActorNetworkPlayerId,
+                targetNetworkPlayerId = actionEvent.TargetNetworkPlayerId,
+                calledName = actionEvent.CalledName,
+                targetDisplayName = actionEvent.TargetDisplayName,
+                originX = actionEvent.Origin.x,
+                originY = actionEvent.Origin.y,
+                pointX = actionEvent.Point.x,
+                pointY = actionEvent.Point.y,
+                directionX = actionEvent.Direction.x,
+                directionY = actionEvent.Direction.y,
+                facingDirection = (int)actionEvent.FacingDirection,
+                sequence = actionEvent.Sequence,
+                sentAt = actionEvent.SentAt
+            };
+        }
+
+        private static PrototypeNetworkActionEvent ToActionEvent(FusionActionPayload payload)
+        {
+            return new PrototypeNetworkActionEvent(
+                (PrototypeNetworkActionKind)payload.kind,
+                (PrototypeNetworkActionOutcome)payload.outcome,
+                payload.actorNetworkPlayerId,
+                payload.targetNetworkPlayerId,
+                payload.calledName,
+                payload.targetDisplayName,
+                new Vector2(payload.originX, payload.originY),
+                new Vector2(payload.pointX, payload.pointY),
+                new Vector2(payload.directionX, payload.directionY),
+                (PlayerFacingDirection)payload.facingDirection,
+                payload.sequence,
+                payload.sentAt);
+        }
+
+        private int BuildCaughtPlayerMask()
+        {
+            var mask = 0;
+            var identities = FindObjectsOfType<PrototypeNetworkPlayerIdentity>();
+            for (var index = 0; index < identities.Length; index += 1)
+            {
+                var identity = identities[index];
+                var caught = identity != null ? identity.GetComponent<CaughtStateController>() : null;
+                if (caught != null
+                    && caught.IsCaught
+                    && TryParseNetworkPlayerId(identity.NetworkPlayerId, out var playerSlot)
+                    && playerSlot >= 0
+                    && playerSlot < MaximumPlayers)
+                {
+                    mask |= 1 << playerSlot;
+                }
+            }
+
+            return mask;
+        }
+
+        private static bool IsEligibleHiderName(string calledName)
+        {
+            var normalizedName = PlayerNameIdentity.NormalizeName(calledName);
+            if (string.IsNullOrWhiteSpace(normalizedName))
+            {
+                return false;
+            }
+
+            var identities = FindObjectsOfType<PrototypeNetworkPlayerIdentity>();
+            for (var index = 0; index < identities.Length; index += 1)
+            {
+                var identity = identities[index];
+                if (identity == null || identity.Role != PlayerRole.Hider)
+                {
+                    continue;
+                }
+
+                var caught = identity.GetComponent<CaughtStateController>();
+                if ((caught == null || !caught.IsCaught)
+                    && PlayerNameIdentity.NormalizeName(identity.DisplayName) == normalizedName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool IsTayaCountered()
+        {
+            var taya = FindActionSync(FusionIntegrityGuard.NetworkPlayerIdFor(0));
+            var countered = taya != null ? taya.GetComponent<TayaCounteredStateController>() : null;
+            return countered != null && countered.IsCountered;
+        }
+
+        private void ApplyAuthoritativeActorState(int caughtMask, bool tayaCountered, int roundNumber)
+        {
+            var identities = FindObjectsOfType<PrototypeNetworkPlayerIdentity>();
+            for (var index = 0; index < identities.Length; index += 1)
+            {
+                var identity = identities[index];
+                if (identity == null || !TryParseNetworkPlayerId(identity.NetworkPlayerId, out var playerSlot))
+                {
+                    continue;
+                }
+
+                var caught = identity.GetComponent<CaughtStateController>();
+                var shouldBeCaught = (caughtMask & (1 << playerSlot)) != 0;
+                if (caught != null && shouldBeCaught && !caught.IsCaught)
+                {
+                    caught.MarkCaught(this, CaughtCause.Bang, roundNumber * 100 + playerSlot);
+                }
+                else if (caught != null && !shouldBeCaught && caught.IsCaught)
+                {
+                    caught.ResetCaughtState();
+                }
+
+                if (playerSlot != 0)
+                {
+                    continue;
+                }
+
+                var countered = identity.GetComponent<TayaCounteredStateController>();
+                if (countered != null && tayaCountered && !countered.IsCountered)
+                {
+                    countered.MarkCountered(this, roundNumber * 100);
+                }
+                else if (countered != null && !tayaCountered && countered.IsCountered)
+                {
+                    countered.ResetCounteredState();
+                }
+            }
+        }
+
+        private string BuildAuthorityRoundId(int roundNumber)
+        {
+            return $"bangsak_{ActiveRoomCode}_{Mathf.Max(1, roundNumber)}_{Guid.NewGuid():N}";
+        }
+
+        private void ResetMovementBaselineForSpawn()
+        {
+            integrityGuard.ResetMovementState();
+            movementValidationStartsAt = Time.unscaledTime + MovementSpawnGraceSeconds;
+        }
+
+        private void LogIntegrityRejection(
+            FusionNetworkMessageKind kind,
+            int senderSlot,
+            FusionIntegrityRejection rejection)
+        {
+            if (integrityDiagnostics >= MaximumIntegrityDiagnostics)
+            {
+                return;
+            }
+
+            integrityDiagnostics += 1;
+            Debug.LogWarning(
+                $"Bang-Sak integrity reject: kind={kind}, slot={senderSlot}, reason={rejection}, count={integrityGuard.RejectedCount}.");
+        }
+
+        private static bool TryParseNetworkPlayerId(string networkPlayerId, out int playerSlot)
+        {
+            playerSlot = -1;
+            return !string.IsNullOrWhiteSpace(networkPlayerId)
+                && networkPlayerId.StartsWith("preview-", StringComparison.Ordinal)
+                && int.TryParse(networkPlayerId.Substring("preview-".Length), out playerSlot)
+                && playerSlot >= 0
+                && playerSlot < MaximumPlayers;
+        }
+
+        private static bool ConstantTimeEquals(string left, string right)
+        {
+            if (left == null || right == null || left.Length != right.Length)
+            {
+                return false;
+            }
+
+            var difference = 0;
+            for (var index = 0; index < left.Length; index += 1)
+            {
+                difference |= left[index] ^ right[index];
+            }
+
+            return difference == 0;
+        }
+
+        private int NextLocalRequestSequence()
+        {
+            if (localRequestSequence == int.MaxValue)
+            {
+                localRequestSequence = 0;
+            }
+
+            localRequestSequence += 1;
+            return localRequestSequence;
+        }
+
+        private void ApplyMovement(FusionMovementPayload payload)
+        {
+            if (payload == null || !TryParseNetworkPlayerId(payload.networkPlayerId, out _))
             {
                 return;
             }
@@ -552,10 +1145,9 @@ namespace Palengke.BangSak.Network
                 payload.sentAt));
         }
 
-        private void ApplyAction(int senderSlot, FusionActionPayload payload)
+        private void ApplyAction(FusionActionPayload payload)
         {
             if (payload == null
-                || payload.actorNetworkPlayerId != NetworkPlayerIdFor(senderSlot)
                 || !Enum.IsDefined(typeof(PrototypeNetworkActionKind), payload.kind)
                 || !Enum.IsDefined(typeof(PrototypeNetworkActionOutcome), payload.outcome)
                 || !Enum.IsDefined(typeof(PlayerFacingDirection), payload.facingDirection))
@@ -598,6 +1190,8 @@ namespace Palengke.BangSak.Network
                 payload.remainingHiders,
                 payload.remainingSeconds,
                 payload.roundNumber));
+            authorityRoundId = payload.authorityRoundId ?? string.Empty;
+            ApplyAuthoritativeActorState(payload.caughtPlayerMask, payload.tayaCountered, payload.roundNumber);
         }
 
         private static PrototypeNetworkMovementSyncController FindMovementSync(string networkPlayerId)
@@ -682,6 +1276,11 @@ namespace Palengke.BangSak.Network
         public void OnPlayerJoined(NetworkRunner networkRunner, PlayerRef player)
         {
             StatusMessage = $"Connected to {ActiveRoomCode} · {GetRosterSize()}/{MaximumPlayers} players · {FixedRegion.ToUpperInvariant()}.";
+            credentialsRosterFingerprint = string.Empty;
+            if (IsMasterClient)
+            {
+                EnsureAuthorityCredentials();
+            }
             if (SceneManager.GetActiveScene().name == GameplaySceneName)
             {
                 BindGameplayScene();
@@ -691,6 +1290,12 @@ namespace Palengke.BangSak.Network
         public void OnPlayerLeft(NetworkRunner networkRunner, PlayerRef player)
         {
             StatusMessage = $"Player left · {GetRosterSize()}/{MaximumPlayers} remain. Room stays available for manual rejoin.";
+            localAuthorityToken = string.Empty;
+            credentialsRosterFingerprint = string.Empty;
+            if (IsMasterClient)
+            {
+                EnsureAuthorityCredentials();
+            }
             if (SceneManager.GetActiveScene().name == GameplaySceneName)
             {
                 BindGameplayScene();

@@ -143,6 +143,63 @@ public sealed class PrototypeNetworkActionSyncControllerTests
         Assert.That(taya.GetComponent<TayaCounteredStateController>().IsCountered, Is.True);
     }
 
+    [Test]
+    public void TryResolveAuthoritativeAction_IgnoresForgedOutcomeAndGeometry()
+    {
+        actor = CreatePlayer("JuanP", "preview-00", PlayerRole.Taya, Vector2.zero);
+        CreatePlayer("Maria", "preview-01", PlayerRole.Hider, Vector2.up * 8f);
+        sync = actor.AddComponent<PrototypeNetworkActionSyncController>();
+        sync.Configure(actor.GetComponent<PrototypeNetworkPlayerIdentity>());
+        Physics2D.SyncTransforms();
+
+        var forged = new FusionActionPayload
+        {
+            kind = (int)PrototypeNetworkActionKind.BangNameCall,
+            outcome = (int)PrototypeNetworkActionOutcome.BangHitTarget,
+            actorNetworkPlayerId = "preview-00",
+            targetNetworkPlayerId = "preview-01",
+            calledName = "Maria",
+            originX = 999f,
+            originY = 999f,
+            pointX = 999f,
+            pointY = 999f,
+            facingDirection = (int)PlayerFacingDirection.Up,
+            sequence = 41,
+            sentAt = 2f
+        };
+
+        Assert.That(sync.TryResolveAuthoritativeAction(forged, 3f, out var resolved), Is.True);
+        Assert.That(resolved.Outcome, Is.EqualTo(PrototypeNetworkActionOutcome.Miss));
+        Assert.That(resolved.TargetNetworkPlayerId, Is.Empty);
+        Assert.That(resolved.Origin.x, Is.Not.EqualTo(999f));
+    }
+
+    [Test]
+    public void TryResolveAuthoritativeAction_RecalculatesValidNamedBang()
+    {
+        actor = CreatePlayer("JuanP", "preview-00", PlayerRole.Taya, Vector2.zero);
+        var hider = CreatePlayer("Maria", "preview-01", PlayerRole.Hider, Vector2.down);
+        sync = actor.AddComponent<PrototypeNetworkActionSyncController>();
+        sync.Configure(actor.GetComponent<PrototypeNetworkPlayerIdentity>());
+        Physics2D.SyncTransforms();
+
+        var request = new FusionActionPayload
+        {
+            kind = (int)PrototypeNetworkActionKind.BangNameCall,
+            outcome = (int)PrototypeNetworkActionOutcome.Miss,
+            actorNetworkPlayerId = "preview-00",
+            calledName = "Maria",
+            facingDirection = (int)PlayerFacingDirection.Down,
+            sequence = 42,
+            sentAt = 2f
+        };
+
+        Assert.That(sync.TryResolveAuthoritativeAction(request, 3f, out var resolved), Is.True);
+        Assert.That(resolved.Outcome, Is.EqualTo(PrototypeNetworkActionOutcome.BangHitTarget));
+        Assert.That(resolved.TargetNetworkPlayerId, Is.EqualTo("preview-01"));
+        Assert.That(hider.GetComponent<CaughtStateController>().IsCaught, Is.True);
+    }
+
     private GameObject CreatePlayer(string displayName, string networkId, PlayerRole role, Vector2 position)
     {
         var player = new GameObject(displayName);
