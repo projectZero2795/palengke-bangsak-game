@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 28B: Unity WebGL build and local browser test**, ready for project-owner review.
+This repository is currently in **Phase 28C: Docker static hosting for Unity WebGL**, ready for project-owner review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -63,6 +63,8 @@ Phase 27A makes cooldowns visible inside each Hider button with independent prog
 Phase 28 connects the Unity WebGL client to authenticated Palengke identity, persistent scores, server-calculated coin rewards, and the live leaderboard. Session failure falls back safely to guest play; no token or server credential is embedded in the Unity project.
 
 Phase 28B restores the missing release prerequisite with a reproducible Unity WebGL build pipeline and local browser smoke test. It does not add Docker, Kubernetes, DNS, or a public release.
+
+Phase 28C packages the approved WebGL artifact in a non-root Nginx container with health, cache, MIME, and browser security configuration. It remains a local container test only; Kubernetes and public release belong to the next approved phase.
 
 ## Safety and branding rules
 
@@ -152,3 +154,4 @@ Do not skip ahead.
 - [Phase 27A visible action cooldowns](docs/phase-27a-visible-action-cooldowns.md)
 - [Phase 28 real Palengke integration](docs/phase-28-real-palengke-integration.md)
 - [Phase 28B WebGL build and local browser test](docs/phase-28b-webgl-build.md)
+- [Phase 28C Docker static hosting](docs/phase-28c-docker-static-hosting.md)

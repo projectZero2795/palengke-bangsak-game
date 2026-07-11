@@ -1,0 +1,8 @@
+**
+!Dockerfile
+!docker
+!docker/**
+!unity
+!unity/Build
+!unity/Build/WebGL
+!unity/Build/WebGL/**
