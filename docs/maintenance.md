@@ -65,3 +65,4 @@ Each release should include:
 - [Known Issues](known-issues.md)
 - [0.28.2 Public Release](releases/0.28.2.md)
 - [Phase 30 Monitoring and Maintenance](phase-30-monitoring-maintenance.md)
+- [Phase 31 Polish and Content Expansion Plan](phase-31-polish-content-expansion.md)

@@ -37,8 +37,12 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 28B | Unity WebGL build | Reproducible Unity build and local browser smoke test. | Done. |
 | 28C | Docker static hosting | Non-root Nginx image for the approved WebGL files. | Container serves game locally. |
 | 29 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Done. |
-| 30 | Monitoring and maintenance | Structured logs, request correlation, production verification, release/version records, operations, rollback, backup/config, and known issues. | Ready for review; the production release is diagnosable and repeatable. |
-| 31 | Polish and content expansion | Plan maps, art, skins, badges, events, sound, mobile, and anti-cheat after production foundations. | Content expansion plan approved. |
+| 30 | Monitoring and maintenance | Structured logs, request correlation, production verification, release/version records, operations, rollback, backup/config, and known issues. | Done. |
+| 31 | Polish and content expansion | Plan maps, art, skins, badges, events, sound, mobile, anti-cheat, tournaments, power-ups, and selectable components after production foundations. | Ready for review; implementation order, dependencies, gates, and owner decisions are documented. |
+
+Proposed Phases 32–41 are documented in the
+[Phase 31 expansion plan](phase-31-polish-content-expansion.md). They become
+implementation commitments only after the Phase 31 plan is approved.
 
 ## Mandatory stop rule
 
