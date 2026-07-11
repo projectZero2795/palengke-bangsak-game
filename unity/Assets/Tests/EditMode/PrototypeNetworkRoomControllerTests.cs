@@ -21,12 +21,13 @@ public sealed class PrototypeNetworkRoomControllerTests
     }
 
     [Test]
-    public void ComponentContract_MatchesPhase23PhotonScaffold()
+    public void ComponentContract_MatchesPhase32FusionRoom()
     {
         Assert.That(controller.ComponentIdValue, Is.EqualTo(PrototypeNetworkRoomController.ComponentId));
-        Assert.That(controller.ComponentVersionValue, Is.EqualTo(1));
-        Assert.That(controller.ComponentVariantValue, Is.EqualTo("phase23_photon_room_lifecycle_scaffold"));
-        Assert.That(controller.ProviderName, Is.EqualTo("Photon Fusion 2"));
+        Assert.That(controller.ComponentVersionValue, Is.EqualTo(2));
+        Assert.That(controller.ComponentVariantValue, Is.EqualTo("phase32_fusion_shared_room"));
+        Assert.That(controller.ProviderName, Is.EqualTo("Photon Fusion 2.1 Shared"));
+        Assert.That(controller.IsFusionSdkAvailable, Is.True);
     }
 
     [Test]
@@ -46,11 +47,11 @@ public sealed class PrototypeNetworkRoomControllerTests
     }
 
     [Test]
-    public void CreateRoom_EntersOfflinePreviewCreatedState()
+    public void CreateRoom_PreparesPhotonConnection()
     {
         Assert.That(controller.CreateRoom(), Is.True);
 
-        Assert.That(controller.State, Is.EqualTo(PrototypeNetworkRoomState.OfflinePreviewCreated));
+        Assert.That(controller.State, Is.EqualTo(PrototypeNetworkRoomState.Connecting));
         Assert.That(controller.HasActiveRoom, Is.True);
         Assert.That(PrototypeNetworkRoomController.IsValidRoomCode(controller.ActiveRoomCode), Is.True);
         Assert.That(controller.StatusMessage.Length, Is.GreaterThan(0));
@@ -61,7 +62,7 @@ public sealed class PrototypeNetworkRoomControllerTests
     {
         Assert.That(controller.JoinRoom("  ab12  "), Is.True);
 
-        Assert.That(controller.State, Is.EqualTo(PrototypeNetworkRoomState.OfflinePreviewJoined));
+        Assert.That(controller.State, Is.EqualTo(PrototypeNetworkRoomState.Connecting));
         Assert.That(controller.ActiveRoomCode, Is.EqualTo("AB12"));
     }
 

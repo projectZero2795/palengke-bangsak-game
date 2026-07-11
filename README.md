@@ -8,8 +8,8 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 31: Polish and content expansion
-planning**, ready for project-owner review.
+This repository is currently in **Phase 32: Photon Fusion Shared multiplayer
+vertical slice**, ready for project-owner review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -77,6 +77,13 @@ sound/accessibility, art, maps/component selection, cosmetics/badges, role
 power-ups, seasonal events, and tournaments. It defines common regression,
 safety, fairness, accessibility, security, performance, and production gates;
 it intentionally implements none of those later features yet.
+
+Phase 32 imports Photon Fusion 2.1.1 and replaces the compile-safe room,
+movement, action, and round scaffolds with a real two-client WebGL vertical
+slice. Photon Shared Mode now provides EU room create/join/leave, synchronized
+scene loading, dense roster roles, movement and Bang/SAK streams, room-creator
+round state, results, restart, and manual room-code rejoin. Shared Mode remains
+distributed authority; Phase 33 owns integrity and anti-cheat hardening.
 
 ## Safety and branding rules
 
@@ -170,6 +177,7 @@ Do not skip ahead.
 - [Phase 29 Kubernetes deployment and public release](docs/phase-29-kubernetes-public-release.md)
 - [Phase 30 monitoring and maintenance](docs/phase-30-monitoring-maintenance.md)
 - [Phase 31 polish and content expansion plan](docs/phase-31-polish-content-expansion.md)
+- [Phase 32 Photon Fusion Shared multiplayer](docs/phase-32-authoritative-photon.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)
 - [Release 0.28.2](docs/releases/0.28.2.md)

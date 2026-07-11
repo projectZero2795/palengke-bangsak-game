@@ -1,0 +1,3 @@
+# Photon Fusion is a third-party Unity SDK. Keep vendor files out of normal
+# source diffs while preserving their exact package bytes and meta GUIDs.
+unity/Assets/Photon/** -diff linguist-vendored

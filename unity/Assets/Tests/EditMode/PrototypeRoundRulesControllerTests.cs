@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Palengke.BangSak.Game;
 using Palengke.BangSak.Player;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public sealed class PrototypeRoundRulesControllerTests
@@ -14,6 +15,7 @@ public sealed class PrototypeRoundRulesControllerTests
     [SetUp]
     public void SetUp()
     {
+        EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         roundObject = new GameObject("Round Rules");
         roundRules = roundObject.AddComponent<PrototypeRoundRulesController>();
         taya = CreatePlayer("Taya", PlayerRole.Taya);
@@ -99,6 +101,58 @@ public sealed class PrototypeRoundRulesControllerTests
         Assert.That(firstHider.GetComponent<CaughtStateController>().IsCaught, Is.False);
         Assert.That(secondHider.GetComponent<CaughtStateController>().IsCaught, Is.False);
         Assert.That(roundRules.RemainingHiders, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void RemoteNetworkState_AppliesAuthoritySnapshot()
+    {
+        roundRules.SetNetworkStateMode(true, false);
+        var snapshot = new PrototypeRoundNetworkSnapshot(
+            PrototypeRoundState.Finished,
+            PrototypeRoundResult.HidersWin,
+            "Hiders win!",
+            "Network result",
+            3,
+            2,
+            17f,
+            4);
+
+        Assert.That(roundRules.ApplyNetworkSnapshot(snapshot), Is.True);
+        Assert.That(roundRules.State, Is.EqualTo(PrototypeRoundState.Finished));
+        Assert.That(roundRules.Result, Is.EqualTo(PrototypeRoundResult.HidersWin));
+        Assert.That(roundRules.RemainingHiders, Is.EqualTo(2));
+        Assert.That(roundRules.RemainingSeconds, Is.EqualTo(17f));
+        Assert.That(roundRules.RoundNumber, Is.EqualTo(4));
+    }
+
+    [Test]
+    public void NetworkAuthority_RejectsRemoteSnapshot()
+    {
+        roundRules.SetNetworkStateMode(true, true);
+        var snapshot = new PrototypeRoundNetworkSnapshot(
+            PrototypeRoundState.Finished,
+            PrototypeRoundResult.TayaWins,
+            "Taya wins!",
+            "Network result",
+            1,
+            0,
+            0f,
+            2);
+
+        Assert.That(roundRules.ApplyNetworkSnapshot(snapshot), Is.False);
+    }
+
+    [Test]
+    public void RefreshNetworkActors_RebindsAChangedNetworkRoster()
+    {
+        roundRules.StartRound(0f, true);
+        Object.DestroyImmediate(secondHider);
+        secondHider = null;
+
+        roundRules.RefreshNetworkActors();
+
+        Assert.That(roundRules.TotalHiders, Is.EqualTo(1));
+        Assert.That(roundRules.RemainingHiders, Is.EqualTo(1));
     }
 
     private static GameObject CreatePlayer(string name, PlayerRole role)

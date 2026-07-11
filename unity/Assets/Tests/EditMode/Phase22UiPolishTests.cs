@@ -26,7 +26,9 @@ public sealed class Phase22UiPolishTests
         Assert.That(
             typeof(PrototypeMainMenuController).GetCustomAttributes(typeof(UnityEngine.ExecuteAlways), false),
             Is.Not.Empty);
-        Assert.That(Object.FindObjectOfType<EventSystem>(), Is.Not.Null);
+        var menuEventSystem = menu.transform.Find("Phase 22 Menu EventSystem");
+        Assert.That(menuEventSystem, Is.Not.Null);
+        Assert.That(menuEventSystem.GetComponent<EventSystem>(), Is.Not.Null);
         Assert.That(menu.HasRuntimeMenu, Is.True);
         Assert.That(menu.transform.Find("Phase 22 Main Menu UI/Main Menu Dashboard/PLAY Dashboard Tile"), Is.Not.Null);
         Assert.That(menu.transform.Find("Phase 22 Main Menu UI/Main Menu Dashboard/HOW Dashboard Tile"), Is.Not.Null);

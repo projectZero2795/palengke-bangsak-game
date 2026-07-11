@@ -233,8 +233,8 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   componentId: prototype_network_room
-  componentVersion: 1
-  componentVariant: phase23_photon_room_lifecycle_scaffold
-  providerName: Photon Fusion 2
+  componentVersion: 2
+  componentVariant: phase32_fusion_shared_room
+  providerName: Photon Fusion 2.1 Shared
   defaultJoinRoomCode: 1234
   nextRoomNumber: 1234

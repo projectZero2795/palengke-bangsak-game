@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using UnityEngine;
 
@@ -8,9 +7,9 @@ namespace Palengke.BangSak.Network
     public sealed class PrototypeNetworkRoomController : MonoBehaviour
     {
         public const string ComponentId = "prototype_network_room";
-        public const int ComponentVersion = 1;
-        public const string ComponentVariant = "phase23_photon_room_lifecycle_scaffold";
-        public const string DefaultProviderName = "Photon Fusion 2";
+        public const int ComponentVersion = 2;
+        public const string ComponentVariant = "phase32_fusion_shared_room";
+        public const string DefaultProviderName = "Photon Fusion 2.1 Shared";
 
         [Header("Component Contract")]
         [SerializeField]
@@ -26,12 +25,17 @@ namespace Palengke.BangSak.Network
         [SerializeField]
         private string providerName = DefaultProviderName;
 
-        [Header("Offline Preview")]
+        [Header("Room")]
         [SerializeField]
         private string defaultJoinRoomCode = "1234";
 
         [SerializeField]
         private int nextRoomNumber = 1234;
+
+        private FusionNetworkSession session;
+        private PrototypeNetworkRoomState localState = PrototypeNetworkRoomState.Disconnected;
+        private string localRoomCode = string.Empty;
+        private string localStatusMessage = "Ready for a Photon room.";
 
         public string ComponentIdValue => componentId;
 
@@ -43,25 +47,32 @@ namespace Palengke.BangSak.Network
 
         public string DefaultJoinRoomCode => defaultJoinRoomCode;
 
-        public PrototypeNetworkRoomState State { get; private set; } = PrototypeNetworkRoomState.Disconnected;
+        public PrototypeNetworkRoomState State => session != null ? session.State : localState;
 
-        public string ActiveRoomCode { get; private set; } = string.Empty;
+        public string ActiveRoomCode => session != null ? session.ActiveRoomCode : localRoomCode;
 
-        public string StatusMessage { get; private set; } = "Ready for offline room preview. Import Photon Fusion to enable real rooms.";
+        public string StatusMessage => session != null ? session.StatusMessage : localStatusMessage;
 
         public bool HasActiveRoom => !string.IsNullOrWhiteSpace(ActiveRoomCode);
 
-        public bool IsFusionSdkAvailable => IsTypeAvailable("Fusion.NetworkRunner, Fusion.Runtime")
-            || IsTypeAvailable("Fusion.NetworkRunner, Fusion");
+        public bool IsFusionSdkAvailable => true;
+
+        public bool IsConnected => session != null && session.IsConnected;
+
+        private void OnEnable()
+        {
+            ResolveSession();
+        }
 
         public bool CreateRoom()
         {
-            ActiveRoomCode = GenerateRoomCode();
-            State = PrototypeNetworkRoomState.OfflinePreviewCreated;
-            StatusMessage = IsFusionSdkAvailable
-                ? "Fusion SDK detected. Real Photon adapter is intentionally not wired in this scaffold."
-                : "Offline preview room created. Import Photon Fusion before testing two browser clients.";
-            return true;
+            ResolveSession();
+            var roomCode = GenerateRoomCode();
+            localRoomCode = roomCode;
+            localState = PrototypeNetworkRoomState.Connecting;
+            localStatusMessage = $"Creating Photon room {roomCode}...";
+
+            return session == null || session.BeginConnect(roomCode, allowCreate: true);
         }
 
         public bool JoinDefaultRoom()
@@ -74,23 +85,41 @@ namespace Palengke.BangSak.Network
             var normalizedRoomCode = NormalizeRoomCode(roomCode);
             if (!IsValidRoomCode(normalizedRoomCode))
             {
-                StatusMessage = "Room code must be 3-12 letters or numbers.";
+                localStatusMessage = "Room code must be 3-12 letters or numbers.";
                 return false;
             }
 
-            ActiveRoomCode = normalizedRoomCode;
-            State = PrototypeNetworkRoomState.OfflinePreviewJoined;
-            StatusMessage = IsFusionSdkAvailable
-                ? "Fusion SDK detected. Real Photon join will be wired in the adapter phase."
-                : "Offline preview room joined. No network connection is made yet.";
-            return true;
+            ResolveSession();
+            localRoomCode = normalizedRoomCode;
+            localState = PrototypeNetworkRoomState.Connecting;
+            localStatusMessage = $"Joining Photon room {normalizedRoomCode}...";
+            return session == null || session.BeginConnect(normalizedRoomCode, allowCreate: false);
         }
 
         public void LeaveRoom()
         {
-            ActiveRoomCode = string.Empty;
-            State = PrototypeNetworkRoomState.Disconnected;
-            StatusMessage = "Left room preview.";
+            ResolveSession();
+            if (session != null)
+            {
+                session.BeginLeave();
+                return;
+            }
+
+            localRoomCode = string.Empty;
+            localState = PrototypeNetworkRoomState.Disconnected;
+            localStatusMessage = "Left Photon room.";
+        }
+
+        public bool StartNetworkRound(string sceneName)
+        {
+            ResolveSession();
+            return session != null && session.RequestNetworkRound(sceneName);
+        }
+
+        public bool RestartNetworkRound()
+        {
+            ResolveSession();
+            return session != null && session.RequestRoundRestart();
         }
 
         public static string NormalizeRoomCode(string roomCode)
@@ -119,6 +148,14 @@ namespace Palengke.BangSak.Network
             return true;
         }
 
+        private void ResolveSession()
+        {
+            if (session == null && Application.isPlaying)
+            {
+                session = FusionNetworkSession.EnsureInstance();
+            }
+        }
+
         private string GenerateRoomCode()
         {
             if (nextRoomNumber < 1000 || nextRoomNumber > 9998)
@@ -129,11 +166,6 @@ namespace Palengke.BangSak.Network
             var roomCode = nextRoomNumber.ToString("0000", CultureInfo.InvariantCulture);
             nextRoomNumber += 1;
             return roomCode;
-        }
-
-        private static bool IsTypeAvailable(string typeName)
-        {
-            return Type.GetType(typeName, throwOnError: false) != null;
         }
     }
 }

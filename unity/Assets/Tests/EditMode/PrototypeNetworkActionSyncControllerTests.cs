@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Palengke.BangSak.Game;
 using Palengke.BangSak.Network;
 using Palengke.BangSak.Player;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public sealed class PrototypeNetworkActionSyncControllerTests
@@ -10,6 +11,12 @@ public sealed class PrototypeNetworkActionSyncControllerTests
     private GameObject actor;
     private PrototypeNetworkActionSyncController sync;
     private readonly List<GameObject> createdObjects = new List<GameObject>();
+
+    [SetUp]
+    public void SetUp()
+    {
+        EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+    }
 
     [TearDown]
     public void TearDown()
@@ -153,7 +160,8 @@ public sealed class PrototypeNetworkActionSyncControllerTests
         player.AddComponent<CaughtStateController>();
         player.AddComponent<SakCounterController>();
         player.AddComponent<TayaCounteredStateController>();
-        player.AddComponent<PlayerRoleController>().SetRole(role);
+        var roleController = player.GetComponent<PlayerRoleController>() ?? player.AddComponent<PlayerRoleController>();
+        roleController.SetRole(role);
 
         var identity = player.AddComponent<PrototypeNetworkPlayerIdentity>();
         identity.Configure(new PrototypeNetworkPlayerDescriptor(

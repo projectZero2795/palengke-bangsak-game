@@ -2,8 +2,14 @@
 
 ## Active limitations
 
-- Photon Fusion is still a compile-safe scaffold; real two-client multiplayer
-  requires the approved SDK/configuration phase.
+- Photon Fusion Shared Mode now supports the Phase 32 two-client WebGL vertical
+  slice. It is distributed client authority rather than a dedicated server;
+  Phase 33 must harden sender validation, rate limits, action outcomes, and
+  result/reward integrity before competitive use.
+- Photon room rejoin is manual. Reloaded/disconnected clients must select
+  `ROOM` and re-enter the same room code.
+- Fusion reports a harmless warning when connecting from the main menu before
+  the room creator selects the synchronized gameplay scene.
 - The Unity WebGL artifact is generated and intentionally untracked. A licensed
   Unity Editor is required before building the container.
 - Authenticated game identity depends on signing in through the shared Palengke

@@ -1,4 +1,5 @@
 using Palengke.BangSak.Game;
+using Palengke.BangSak.Network;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -408,6 +409,14 @@ namespace Palengke.BangSak.UI
         {
             if (controller != null)
             {
+                var networkSession = FusionNetworkSession.Active;
+                if (networkSession != null
+                    && networkSession.IsConnected
+                    && networkSession.RequestRoundRestart())
+                {
+                    return;
+                }
+
                 controller.RestartRound();
             }
         }

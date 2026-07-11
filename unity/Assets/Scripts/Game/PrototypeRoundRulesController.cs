@@ -69,6 +69,8 @@ namespace Palengke.BangSak.Game
         private int[] tayaCounterBaselines = new int[0];
         private float roundStartedAt;
         private float roundEndsAt;
+        private bool networkStateControlled;
+        private bool hasNetworkStateAuthority = true;
 
         public string ComponentIdValue => componentId;
 
@@ -102,6 +104,10 @@ namespace Palengke.BangSak.Game
 
         public bool IsFinished => State == PrototypeRoundState.Finished;
 
+        public bool NetworkStateControlled => networkStateControlled;
+
+        public bool HasNetworkStateAuthority => hasNetworkStateAuthority;
+
         private void Start()
         {
             PalengkeRoundScoreSubmitter.EnsureAttached(gameObject);
@@ -116,6 +122,11 @@ namespace Palengke.BangSak.Game
         {
             if (IsRunning)
             {
+                if (networkStateControlled && !hasNetworkStateAuthority)
+                {
+                    return;
+                }
+
                 Tick(Time.time);
                 return;
             }
@@ -163,7 +174,55 @@ namespace Palengke.BangSak.Game
 
         public void RestartRound()
         {
+            if (networkStateControlled && !hasNetworkStateAuthority)
+            {
+                return;
+            }
+
             StartRound(Time.time, true);
+        }
+
+        public void SetNetworkStateMode(bool enabled, bool isAuthority)
+        {
+            networkStateControlled = enabled;
+            hasNetworkStateAuthority = !enabled || isAuthority;
+        }
+
+        public PrototypeRoundNetworkSnapshot CaptureNetworkSnapshot()
+        {
+            return new PrototypeRoundNetworkSnapshot(
+                State,
+                Result,
+                ResultTitle,
+                ResultMessage,
+                TotalHiders,
+                RemainingHiders,
+                RemainingSeconds,
+                RoundNumber);
+        }
+
+        public bool ApplyNetworkSnapshot(PrototypeRoundNetworkSnapshot snapshot)
+        {
+            if (!networkStateControlled || hasNetworkStateAuthority)
+            {
+                return false;
+            }
+
+            State = snapshot.State;
+            Result = snapshot.Result;
+            ResultTitle = snapshot.ResultTitle;
+            ResultMessage = snapshot.ResultMessage;
+            TotalHiders = Mathf.Max(0, snapshot.TotalHiders);
+            RemainingHiders = Mathf.Clamp(snapshot.RemainingHiders, 0, TotalHiders);
+            RemainingSeconds = Mathf.Max(0f, snapshot.RemainingSeconds);
+            RoundNumber = Mathf.Max(0, snapshot.RoundNumber);
+
+            if (IsFinished && freezeActorsWhenRoundEnds)
+            {
+                DisableActorControls();
+            }
+
+            return true;
         }
 
         public void Tick(float now)
@@ -202,6 +261,13 @@ namespace Palengke.BangSak.Game
             roleControllers = FindObjectsOfType<PlayerRoleController>();
             caughtStates = FindObjectsOfType<CaughtStateController>();
             tayaCounteredStates = FindObjectsOfType<TayaCounteredStateController>();
+        }
+
+        public void RefreshNetworkActors()
+        {
+            RefreshTrackedActors();
+            CaptureTayaCounterBaselines();
+            RecalculateHiderCounts();
         }
 
         public string FormatRemainingTime()

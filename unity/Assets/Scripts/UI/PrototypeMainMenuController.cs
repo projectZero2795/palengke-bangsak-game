@@ -121,6 +121,14 @@ namespace Palengke.BangSak.UI
 
         public void PlayLocal()
         {
+            ResolveRoomController();
+            if (roomController != null
+                && roomController.IsConnected
+                && roomController.StartNetworkRound(prototypeSceneName))
+            {
+                return;
+            }
+
             if (!string.IsNullOrWhiteSpace(prototypeSceneName))
             {
                 SceneManager.LoadScene(prototypeSceneName);
@@ -474,7 +482,7 @@ namespace Palengke.BangSak.UI
             var panel = networkPanel.transform;
 
             CreateText(panel, "ROOM", new Vector2(0f, 165f), new Vector2(500f, 44f), 30, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
-            CreateText(panel, "Photon-ready scaffold. The real Fusion adapter is wired after the SDK is imported.", new Vector2(0f, 126f), new Vector2(470f, 28f), 13, FontStyle.Bold, new Color(0.72f, 0.82f, 1f, 1f));
+            CreateText(panel, "Create or join a real Photon Fusion Shared room.", new Vector2(0f, 126f), new Vector2(470f, 28f), 13, FontStyle.Bold, new Color(0.72f, 0.82f, 1f, 1f));
 
             var statusCard = CreatePanel(panel, "Room Status Card", new Vector2(0f, 42f), new Vector2(470f, 138f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
             networkStatusLabel = CreateText(statusCard, string.Empty, Vector2.zero, new Vector2(424f, 104f), 15, FontStyle.Bold, new Color(0.86f, 0.93f, 1f, 1f));
@@ -615,7 +623,7 @@ namespace Palengke.BangSak.UI
             }
 
             ResolveRoomController();
-            var sdkStatus = roomController.IsFusionSdkAvailable ? "Fusion SDK: detected" : "Fusion SDK: not imported";
+            var sdkStatus = roomController.IsFusionSdkAvailable ? "Fusion SDK: 2.1 ready" : "Fusion SDK: not imported";
             var room = roomController.HasActiveRoom ? roomController.ActiveRoomCode : "none";
             networkStatusLabel.text =
                 $"{sdkStatus}\n" +

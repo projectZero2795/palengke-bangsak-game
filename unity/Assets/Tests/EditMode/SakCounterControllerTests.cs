@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Palengke.BangSak.Game;
 using Palengke.BangSak.Player;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public sealed class SakCounterControllerTests
@@ -14,6 +15,7 @@ public sealed class SakCounterControllerTests
     [SetUp]
     public void SetUp()
     {
+        EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         hider = CreatePlayer("Hider", Vector3.zero, PlayerRole.Hider);
         sakController = hider.AddComponent<SakCounterController>();
         hider.GetComponent<PlayerRoleController>().SetRole(PlayerRole.Hider);

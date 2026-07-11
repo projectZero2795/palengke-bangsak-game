@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Palengke.BangSak.Game;
 using Palengke.BangSak.Player;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public sealed class Phase18NamedBangTests
@@ -14,6 +15,7 @@ public sealed class Phase18NamedBangTests
     [SetUp]
     public void SetUp()
     {
+        EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         shooter = CreateShooter("JuanP");
         nameCall = shooter.AddComponent<BangNameCallController>();
         bang = shooter.AddComponent<BangActionController>();
