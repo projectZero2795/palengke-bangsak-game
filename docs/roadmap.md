@@ -36,7 +36,7 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 28 | Real Palengke integration | Connect identity, persistent scores, server rewards, and leaderboard with safe guest fallback. | Implemented; authenticated acceptance waits for public deployment. |
 | 28B | Unity WebGL build | Reproducible Unity build and local browser smoke test. | Done. |
 | 28C | Docker static hosting | Non-root Nginx image for the approved WebGL files. | Container serves game locally. |
-| 29 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Public game reachable. |
+| 29 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Public release is live and ready for owner review. |
 | 30 | Argo CD, Palengke API, monitoring, polish | GitOps, real Palengke rewards/leaderboard, monitoring, and content expansion after WebGL/deploy foundations. | Production expansion plan approved. |
 
 ## Mandatory stop rule
