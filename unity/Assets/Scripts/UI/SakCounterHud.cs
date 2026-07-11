@@ -21,6 +21,7 @@ namespace Palengke.BangSak.UI
         private GameObject hudRoot;
         private Button button;
         private Image buttonImage;
+        private Image cooldownFill;
         private Text label;
         private bool hudVisible = true;
 
@@ -91,6 +92,22 @@ namespace Palengke.BangSak.UI
             button.targetGraphic = buttonImage;
             button.onClick.AddListener(OnSakClicked);
 
+            var cooldownObject = new GameObject("SAK Cooldown Radial Fill");
+            cooldownObject.transform.SetParent(buttonObject.transform, false);
+            var cooldownRect = cooldownObject.AddComponent<RectTransform>();
+            cooldownRect.anchorMin = new Vector2(0.08f, 0.08f);
+            cooldownRect.anchorMax = new Vector2(0.92f, 0.92f);
+            cooldownRect.offsetMin = Vector2.zero;
+            cooldownRect.offsetMax = Vector2.zero;
+
+            cooldownFill = cooldownObject.AddComponent<Image>();
+            cooldownFill.color = new Color(0.02f, 0.08f, 0.035f, 0.8f);
+            cooldownFill.type = Image.Type.Filled;
+            cooldownFill.fillMethod = Image.FillMethod.Radial360;
+            cooldownFill.fillOrigin = (int)Image.Origin360.Top;
+            cooldownFill.fillClockwise = false;
+            cooldownFill.raycastTarget = false;
+
             label = CreateText(buttonObject.transform, "SAK", Vector2.zero, buttonSize, 18, FontStyle.Bold, Color.white);
             label.alignment = TextAnchor.MiddleCenter;
             ApplyHudVisibility();
@@ -146,6 +163,7 @@ namespace Palengke.BangSak.UI
 
             var now = Time.time;
             var canSak = controller.CanSak(now);
+            var remaining = controller.CooldownRemaining(now);
             button.interactable = canSak;
 
             if (buttonImage != null)
@@ -157,7 +175,13 @@ namespace Palengke.BangSak.UI
 
             if (label != null)
             {
-                label.text = canSak ? "SAK" : controller.CooldownRemaining(now).ToString("0.0");
+                label.text = canSak ? "SAK" : ActionCooldownDisplay.FormatSeconds(remaining);
+            }
+
+            if (cooldownFill != null)
+            {
+                cooldownFill.enabled = !canSak;
+                cooldownFill.fillAmount = ActionCooldownDisplay.RemainingFraction(remaining, controller.CooldownSeconds);
             }
         }
 

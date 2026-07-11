@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Palengke.BangSak.Game;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,9 @@ namespace Palengke.BangSak.UI
         private GameObject hudRoot;
         private Transform buttonRoot;
         private Text feedbackLabel;
+        private Text cooldownLabel;
+        private Image cooldownBarFill;
+        private readonly List<Button> targetButtons = new List<Button>();
         private string renderedTargetSignature = string.Empty;
 
         private void Start()
@@ -92,11 +96,45 @@ namespace Palengke.BangSak.UI
             buttonRootRect.offsetMax = Vector2.zero;
             buttonRoot = buttonRootObject.transform;
 
+            var cooldownTrackObject = new GameObject("Bang Cooldown Track");
+            cooldownTrackObject.transform.SetParent(panelObject.transform, false);
+            var cooldownTrackRect = cooldownTrackObject.AddComponent<RectTransform>();
+            cooldownTrackRect.anchorMin = new Vector2(0f, 0f);
+            cooldownTrackRect.anchorMax = new Vector2(0f, 0f);
+            cooldownTrackRect.pivot = new Vector2(0f, 0f);
+            cooldownTrackRect.anchoredPosition = new Vector2(10f, 7f);
+            cooldownTrackRect.sizeDelta = new Vector2(150f, 7f);
+            var cooldownTrack = cooldownTrackObject.AddComponent<Image>();
+            cooldownTrack.color = new Color(0.015f, 0.025f, 0.045f, 0.95f);
+            cooldownTrack.raycastTarget = false;
+
+            var cooldownFillObject = new GameObject("Bang Cooldown Fill");
+            cooldownFillObject.transform.SetParent(cooldownTrackObject.transform, false);
+            var cooldownFillRect = cooldownFillObject.AddComponent<RectTransform>();
+            cooldownFillRect.anchorMin = Vector2.zero;
+            cooldownFillRect.anchorMax = Vector2.one;
+            cooldownFillRect.offsetMin = Vector2.zero;
+            cooldownFillRect.offsetMax = Vector2.zero;
+            cooldownBarFill = cooldownFillObject.AddComponent<Image>();
+            cooldownBarFill.color = new Color(1f, 0.58f, 0.2f, 1f);
+            cooldownBarFill.type = Image.Type.Filled;
+            cooldownBarFill.fillMethod = Image.FillMethod.Horizontal;
+            cooldownBarFill.raycastTarget = false;
+
+            cooldownLabel = CreateText(
+                panelObject.transform,
+                "BANG READY",
+                new Vector2(164f, -97f),
+                new Vector2(64f, 16f),
+                10,
+                FontStyle.Bold,
+                new Color(1f, 0.78f, 0.28f, 1f));
+
             feedbackLabel = CreateText(
                 panelObject.transform,
                 "Tap the hider you see",
                 new Vector2(10f, -90f),
-                new Vector2(218f, 22f),
+                new Vector2(150f, 22f),
                 12,
                 FontStyle.Normal,
                 new Color(0.84f, 0.9f, 1f, 1f));
@@ -124,6 +162,7 @@ namespace Palengke.BangSak.UI
             var button = buttonObject.AddComponent<Button>();
             button.targetGraphic = image;
             button.onClick.AddListener(() => OnBangTargetClicked(targetName));
+            targetButtons.Add(button);
 
             CreateIcon(buttonObject.transform, buttonIconSprite);
 
@@ -215,6 +254,44 @@ namespace Palengke.BangSak.UI
             {
                 feedbackLabel.text = controller.LastFeedbackMessage;
             }
+
+            RefreshCooldown();
+        }
+
+        private void RefreshCooldown()
+        {
+            if (bangActionController == null)
+            {
+                return;
+            }
+
+            var now = Time.time;
+            var canBang = bangActionController.CanBang(now);
+            var remaining = bangActionController.CooldownRemaining(now);
+            for (var index = 0; index < targetButtons.Count; index += 1)
+            {
+                if (targetButtons[index] != null)
+                {
+                    targetButtons[index].interactable = canBang;
+                }
+            }
+
+            if (cooldownBarFill != null)
+            {
+                cooldownBarFill.fillAmount = canBang
+                    ? 1f
+                    : bangActionController.CooldownProgress(now);
+                cooldownBarFill.color = canBang
+                    ? new Color(0.28f, 0.9f, 0.42f, 1f)
+                    : new Color(1f, 0.58f, 0.2f, 1f);
+            }
+
+            if (cooldownLabel != null)
+            {
+                cooldownLabel.text = canBang
+                    ? "READY"
+                    : ActionCooldownDisplay.FormatSeconds(remaining);
+            }
         }
 
         private void RebuildButtonsIfNeeded()
@@ -238,6 +315,7 @@ namespace Palengke.BangSak.UI
             }
 
             renderedTargetSignature = signature;
+            targetButtons.Clear();
             for (var index = buttonRoot.childCount - 1; index >= 0; index -= 1)
             {
                 Destroy(buttonRoot.GetChild(index).gameObject);

@@ -28,6 +28,7 @@ namespace Palengke.BangSak.UI
         private Button button;
         private Image buttonImage;
         private Image iconImage;
+        private Image cooldownFill;
         private Text label;
         private bool hudVisible = true;
 
@@ -109,6 +110,23 @@ namespace Palengke.BangSak.UI
             iconImage.preserveAspect = true;
             iconImage.raycastTarget = false;
 
+            var cooldownObject = new GameObject("Bang Cooldown Radial Fill");
+            cooldownObject.transform.SetParent(buttonObject.transform, false);
+            var cooldownRect = cooldownObject.AddComponent<RectTransform>();
+            cooldownRect.anchorMin = new Vector2(0.08f, 0.08f);
+            cooldownRect.anchorMax = new Vector2(0.92f, 0.92f);
+            cooldownRect.offsetMin = Vector2.zero;
+            cooldownRect.offsetMax = Vector2.zero;
+
+            cooldownFill = cooldownObject.AddComponent<Image>();
+            cooldownFill.sprite = buttonBackgroundSprite;
+            cooldownFill.color = new Color(0.02f, 0.04f, 0.08f, 0.78f);
+            cooldownFill.type = Image.Type.Filled;
+            cooldownFill.fillMethod = Image.FillMethod.Radial360;
+            cooldownFill.fillOrigin = (int)Image.Origin360.Top;
+            cooldownFill.fillClockwise = false;
+            cooldownFill.raycastTarget = false;
+
             var textObject = new GameObject("Bang Button Label");
             textObject.transform.SetParent(buttonObject.transform, false);
 
@@ -159,6 +177,7 @@ namespace Palengke.BangSak.UI
 
             var now = Time.time;
             var canBang = controller.CanBang(now);
+            var remaining = controller.CooldownRemaining(now);
             button.interactable = canBang;
 
             if (iconImage != null)
@@ -173,7 +192,13 @@ namespace Palengke.BangSak.UI
 
             if (label != null)
             {
-                label.text = canBang ? buttonLabel : controller.CooldownRemaining(now).ToString("0.0");
+                label.text = canBang ? buttonLabel : ActionCooldownDisplay.FormatSeconds(remaining);
+            }
+
+            if (cooldownFill != null)
+            {
+                cooldownFill.enabled = !canBang;
+                cooldownFill.fillAmount = ActionCooldownDisplay.RemainingFraction(remaining, controller.CooldownSeconds);
             }
         }
 

@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 27: Palengke API placeholder**, ready for project-owner review.
+This repository is currently in **Phase 27A: Visible action cooldowns**, ready for project-owner review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -57,6 +57,8 @@ Phase 21 adds the first local round loop: `02:30` timer, Hiders-left status, Tay
 Phases 22–26 add UI polish and compile-safe multiplayer scaffolds for Photon room lifecycle, player spawning, movement synchronization, and Bang/SAK action events. Real Photon transport remains a later integration step.
 
 Phase 27 adds an isolated Palengke API placeholder with a configurable base URL, offline mock user and coins, and a visible mock leaderboard. It makes no production HTTP requests and contains no API credentials or tokens.
+
+Phase 27A makes the existing Bang and SAK cooldowns visible with radial overlays, seconds labels, a shared named-Bang progress bar, disabled action buttons during recharge, and a clear ready state. Gameplay timing is unchanged.
 
 ## Safety and branding rules
 
@@ -143,3 +145,4 @@ Do not skip ahead.
 - [Phase 25 multiplayer movement sync](docs/phase-25-multiplayer-movement-sync.md)
 - [Phase 26 multiplayer Bang/SAK sync](docs/phase-26-multiplayer-bang-sak-sync.md)
 - [Phase 27 Palengke API placeholder](docs/phase-27-palengke-api-placeholder.md)
+- [Phase 27A visible action cooldowns](docs/phase-27a-visible-action-cooldowns.md)
