@@ -7,8 +7,8 @@ rules.
 
 ## What changed
 
-- The main tsinelas Bang button now has a radial remaining-time overlay and a
-  seconds label.
+- The separate circular tsinelas button stays visually simple; cooldown
+  feedback belongs to the named Hider buttons.
 - Each named Bang button has an independent cooldown keyed by Hider name.
 - Every Hider-name button has its own visible progress strip and seconds badge
   so each Hider's recharge is readable at the point of interaction.
@@ -27,8 +27,8 @@ rules.
 4. Confirm only that Hider's button disables and counts down from about `1.2s`.
 5. Immediately click a different Hider and confirm that action is available and
    starts its own independent countdown.
-6. Confirm the circular tsinelas button shows the selected Hider's radial cooldown overlay.
-7. In a Hider/SAK test setup, use SAK and confirm its button shows the same
+6. Confirm the circular tsinelas button has no cooldown overlay or countdown.
+7. In a Hider/SAK test setup, use SAK and confirm its button shows the radial
    radial countdown and becomes available again.
 8. Confirm the cooldown duration and Bang/SAK outcomes have not changed.
 
@@ -42,7 +42,7 @@ Run all Unity EditMode tests, especially:
 
 ## Exit criteria
 
-- Bang cooldown progress and seconds are visible.
+- Bang cooldown progress and seconds are visible on each Hider button.
 - Each named Bang button blocks only its own Hider during cooldown.
 - SAK cooldown progress and seconds are visible.
 - Players receive a clear `READY` state.
