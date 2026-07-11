@@ -10,6 +10,8 @@ rules.
 - The main tsinelas Bang button now has a radial remaining-time overlay and a
   seconds label.
 - Named Bang buttons are disabled together while Bang is cooling down.
+- Every Hider-name button has its own visible progress strip and seconds badge
+  so the shared Bang recharge is readable at the point of interaction.
 - The named Bang panel now shows a progress bar, countdown, and `READY` state.
 - The panel reserves a separate footer row and progress track so cooldown
   feedback does not overlap the Hider instruction.

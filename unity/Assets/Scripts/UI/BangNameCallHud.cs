@@ -7,6 +7,13 @@ namespace Palengke.BangSak.UI
 {
     public sealed class BangNameCallHud : MonoBehaviour
     {
+        private sealed class TargetCooldownVisual
+        {
+            public Button Button;
+            public Image ProgressFill;
+            public Text SecondsLabel;
+        }
+
         [SerializeField]
         private BangNameCallController controller;
 
@@ -31,7 +38,7 @@ namespace Palengke.BangSak.UI
         private Text feedbackLabel;
         private Text cooldownLabel;
         private Image cooldownBarFill;
-        private readonly List<Button> targetButtons = new List<Button>();
+        private readonly List<TargetCooldownVisual> targetCooldownVisuals = new List<TargetCooldownVisual>();
         private string renderedTargetSignature = string.Empty;
 
         private void Start()
@@ -162,7 +169,6 @@ namespace Palengke.BangSak.UI
             var button = buttonObject.AddComponent<Button>();
             button.targetGraphic = image;
             button.onClick.AddListener(() => OnBangTargetClicked(targetName));
-            targetButtons.Add(button);
 
             CreateIcon(buttonObject.transform, buttonIconSprite);
 
@@ -170,11 +176,42 @@ namespace Palengke.BangSak.UI
                 buttonObject.transform,
                 targetName,
                 new Vector2(buttonIconSprite == null ? 10f : 36f, -2f),
-                new Vector2(buttonIconSprite == null ? 86f : 62f, 30f),
+                new Vector2(buttonIconSprite == null ? 68f : 42f, 30f),
                 15,
                 FontStyle.Bold,
                 Color.white);
             label.alignment = TextAnchor.MiddleCenter;
+
+            var progressObject = new GameObject($"{targetName} Cooldown Progress");
+            progressObject.transform.SetParent(buttonObject.transform, false);
+            var progressRect = progressObject.AddComponent<RectTransform>();
+            progressRect.anchorMin = new Vector2(0f, 0f);
+            progressRect.anchorMax = new Vector2(1f, 0f);
+            progressRect.pivot = new Vector2(0f, 0f);
+            progressRect.offsetMin = new Vector2(4f, 3f);
+            progressRect.offsetMax = new Vector2(-4f, 7f);
+            var progressFill = progressObject.AddComponent<Image>();
+            progressFill.color = new Color(1f, 0.78f, 0.24f, 1f);
+            progressFill.type = Image.Type.Filled;
+            progressFill.fillMethod = Image.FillMethod.Horizontal;
+            progressFill.raycastTarget = false;
+
+            var secondsLabel = CreateText(
+                buttonObject.transform,
+                string.Empty,
+                new Vector2(79f, -3f),
+                new Vector2(24f, 15f),
+                9,
+                FontStyle.Bold,
+                new Color(1f, 0.9f, 0.52f, 1f));
+            secondsLabel.alignment = TextAnchor.MiddleCenter;
+
+            targetCooldownVisuals.Add(new TargetCooldownVisual
+            {
+                Button = button,
+                ProgressFill = progressFill,
+                SecondsLabel = secondsLabel
+            });
             return button;
         }
 
@@ -268,11 +305,29 @@ namespace Palengke.BangSak.UI
             var now = Time.time;
             var canBang = bangActionController.CanBang(now);
             var remaining = bangActionController.CooldownRemaining(now);
-            for (var index = 0; index < targetButtons.Count; index += 1)
+            for (var index = 0; index < targetCooldownVisuals.Count; index += 1)
             {
-                if (targetButtons[index] != null)
+                var visual = targetCooldownVisuals[index];
+                if (visual.Button != null)
                 {
-                    targetButtons[index].interactable = canBang;
+                    visual.Button.interactable = canBang;
+                }
+
+                if (visual.ProgressFill != null)
+                {
+                    visual.ProgressFill.fillAmount = canBang
+                        ? 1f
+                        : bangActionController.CooldownProgress(now);
+                    visual.ProgressFill.color = canBang
+                        ? new Color(0.36f, 1f, 0.5f, 1f)
+                        : new Color(1f, 0.78f, 0.24f, 1f);
+                }
+
+                if (visual.SecondsLabel != null)
+                {
+                    visual.SecondsLabel.text = canBang
+                        ? string.Empty
+                        : ActionCooldownDisplay.FormatSeconds(remaining);
                 }
             }
 
@@ -315,7 +370,7 @@ namespace Palengke.BangSak.UI
             }
 
             renderedTargetSignature = signature;
-            targetButtons.Clear();
+            targetCooldownVisuals.Clear();
             for (var index = buttonRoot.childCount - 1; index >= 0; index -= 1)
             {
                 Destroy(buttonRoot.GetChild(index).gameObject);
