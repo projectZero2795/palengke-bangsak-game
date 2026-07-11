@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 28: Real Palengke integration**, ready for project-owner review.
+This repository is currently in **Phase 28B: Unity WebGL build and local browser test**, ready for project-owner review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -61,6 +61,8 @@ Phase 27 adds an isolated Palengke API placeholder with a configurable base URL,
 Phase 27A makes cooldowns visible inside each Hider button with independent progress, seconds labels, and disabled state during that Hider's recharge. There is no shared Bang cooldown bar or global `READY` label. SAK retains its radial cooldown feedback.
 
 Phase 28 connects the Unity WebGL client to authenticated Palengke identity, persistent scores, server-calculated coin rewards, and the live leaderboard. Session failure falls back safely to guest play; no token or server credential is embedded in the Unity project.
+
+Phase 28B restores the missing release prerequisite with a reproducible Unity WebGL build pipeline and local browser smoke test. It does not add Docker, Kubernetes, DNS, or a public release.
 
 ## Safety and branding rules
 
@@ -149,3 +151,4 @@ Do not skip ahead.
 - [Phase 27 Palengke API placeholder](docs/phase-27-palengke-api-placeholder.md)
 - [Phase 27A visible action cooldowns](docs/phase-27a-visible-action-cooldowns.md)
 - [Phase 28 real Palengke integration](docs/phase-28-real-palengke-integration.md)
+- [Phase 28B WebGL build and local browser test](docs/phase-28b-webgl-build.md)

@@ -362,7 +362,7 @@ namespace Palengke.BangSak.UI
             CreateDashboardTile(
                 card,
                 "SCORES",
-                "Mock API",
+                "Palengke",
                 "Leaderboard",
                 new Vector2(124f, -38f),
                 new Vector2(112f, 122f),
