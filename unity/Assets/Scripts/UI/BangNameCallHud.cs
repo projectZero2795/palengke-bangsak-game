@@ -14,7 +14,7 @@ namespace Palengke.BangSak.UI
         private BangActionController bangActionController;
 
         [SerializeField]
-        private Vector2 panelSize = new Vector2(238f, 118f);
+        private Vector2 panelSize = new Vector2(238f, 132f);
 
         [SerializeField]
         private Vector2 panelOffset = new Vector2(-18f, 18f);
@@ -102,8 +102,8 @@ namespace Palengke.BangSak.UI
             cooldownTrackRect.anchorMin = new Vector2(0f, 0f);
             cooldownTrackRect.anchorMax = new Vector2(0f, 0f);
             cooldownTrackRect.pivot = new Vector2(0f, 0f);
-            cooldownTrackRect.anchoredPosition = new Vector2(10f, 7f);
-            cooldownTrackRect.sizeDelta = new Vector2(150f, 7f);
+            cooldownTrackRect.anchoredPosition = new Vector2(10f, 6f);
+            cooldownTrackRect.sizeDelta = new Vector2(218f, 6f);
             var cooldownTrack = cooldownTrackObject.AddComponent<Image>();
             cooldownTrack.color = new Color(0.015f, 0.025f, 0.045f, 0.95f);
             cooldownTrack.raycastTarget = false;
@@ -124,7 +124,7 @@ namespace Palengke.BangSak.UI
             cooldownLabel = CreateText(
                 panelObject.transform,
                 "BANG READY",
-                new Vector2(164f, -97f),
+                new Vector2(164f, -(panelSize.y - 30f)),
                 new Vector2(64f, 16f),
                 10,
                 FontStyle.Bold,
@@ -133,7 +133,7 @@ namespace Palengke.BangSak.UI
             feedbackLabel = CreateText(
                 panelObject.transform,
                 "Tap the hider you see",
-                new Vector2(10f, -90f),
+                new Vector2(10f, -(panelSize.y - 37f)),
                 new Vector2(150f, 22f),
                 12,
                 FontStyle.Normal,
@@ -147,7 +147,7 @@ namespace Palengke.BangSak.UI
 
             var column = index % 2;
             var row = index / 2;
-            var position = new Vector2(10f + column * 112f, 76f - row * 40f);
+            var position = new Vector2(10f + column * 112f, panelSize.y - 42f - row * 40f);
 
             var rect = buttonObject.AddComponent<RectTransform>();
             rect.anchorMin = new Vector2(0f, 0f);

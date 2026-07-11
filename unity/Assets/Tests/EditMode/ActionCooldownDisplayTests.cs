@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using Palengke.BangSak.UI;
+using UnityEditor;
+using UnityEngine;
 
 public sealed class ActionCooldownDisplayTests
 {
@@ -17,5 +19,15 @@ public sealed class ActionCooldownDisplayTests
     {
         Assert.That(ActionCooldownDisplay.FormatSeconds(1.24f), Is.EqualTo("1.2s"));
         Assert.That(ActionCooldownDisplay.FormatSeconds(0f), Is.EqualTo("READY"));
+    }
+
+    [Test]
+    public void NamedBangPanel_HasDedicatedCooldownFooterSpace()
+    {
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PlayerPlaceholder.prefab");
+        var hud = prefab.GetComponent<BangNameCallHud>();
+        var serialized = new SerializedObject(hud);
+
+        Assert.That(serialized.FindProperty("panelSize").vector2Value.y, Is.GreaterThanOrEqualTo(132f));
     }
 }

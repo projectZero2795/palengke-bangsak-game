@@ -11,6 +11,8 @@ rules.
   seconds label.
 - Named Bang buttons are disabled together while Bang is cooling down.
 - The named Bang panel now shows a progress bar, countdown, and `READY` state.
+- The panel reserves a separate footer row and progress track so cooldown
+  feedback does not overlap the Hider instruction.
 - The SAK button now has the same radial countdown treatment.
 - Existing `1.25` second Bang and SAK cooldown values are unchanged.
 
