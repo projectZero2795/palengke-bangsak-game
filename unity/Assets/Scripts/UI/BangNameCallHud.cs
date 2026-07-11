@@ -37,8 +37,6 @@ namespace Palengke.BangSak.UI
         private GameObject hudRoot;
         private Transform buttonRoot;
         private Text feedbackLabel;
-        private Text cooldownLabel;
-        private Image cooldownBarFill;
         private readonly List<TargetCooldownVisual> targetCooldownVisuals = new List<TargetCooldownVisual>();
         private string renderedTargetSignature = string.Empty;
 
@@ -104,45 +102,11 @@ namespace Palengke.BangSak.UI
             buttonRootRect.offsetMax = Vector2.zero;
             buttonRoot = buttonRootObject.transform;
 
-            var cooldownTrackObject = new GameObject("Bang Cooldown Track");
-            cooldownTrackObject.transform.SetParent(panelObject.transform, false);
-            var cooldownTrackRect = cooldownTrackObject.AddComponent<RectTransform>();
-            cooldownTrackRect.anchorMin = new Vector2(0f, 0f);
-            cooldownTrackRect.anchorMax = new Vector2(0f, 0f);
-            cooldownTrackRect.pivot = new Vector2(0f, 0f);
-            cooldownTrackRect.anchoredPosition = new Vector2(10f, 6f);
-            cooldownTrackRect.sizeDelta = new Vector2(218f, 6f);
-            var cooldownTrack = cooldownTrackObject.AddComponent<Image>();
-            cooldownTrack.color = new Color(0.015f, 0.025f, 0.045f, 0.95f);
-            cooldownTrack.raycastTarget = false;
-
-            var cooldownFillObject = new GameObject("Bang Cooldown Fill");
-            cooldownFillObject.transform.SetParent(cooldownTrackObject.transform, false);
-            var cooldownFillRect = cooldownFillObject.AddComponent<RectTransform>();
-            cooldownFillRect.anchorMin = Vector2.zero;
-            cooldownFillRect.anchorMax = Vector2.one;
-            cooldownFillRect.offsetMin = Vector2.zero;
-            cooldownFillRect.offsetMax = Vector2.zero;
-            cooldownBarFill = cooldownFillObject.AddComponent<Image>();
-            cooldownBarFill.color = new Color(1f, 0.58f, 0.2f, 1f);
-            cooldownBarFill.type = Image.Type.Filled;
-            cooldownBarFill.fillMethod = Image.FillMethod.Horizontal;
-            cooldownBarFill.raycastTarget = false;
-
-            cooldownLabel = CreateText(
-                panelObject.transform,
-                "BANG READY",
-                new Vector2(164f, -(panelSize.y - 30f)),
-                new Vector2(64f, 16f),
-                10,
-                FontStyle.Bold,
-                new Color(1f, 0.78f, 0.28f, 1f));
-
             feedbackLabel = CreateText(
                 panelObject.transform,
                 "Tap the hider you see",
                 new Vector2(10f, -(panelSize.y - 37f)),
-                new Vector2(150f, 22f),
+                new Vector2(218f, 22f),
                 12,
                 FontStyle.Normal,
                 new Color(0.84f, 0.9f, 1f, 1f));
@@ -333,26 +297,6 @@ namespace Palengke.BangSak.UI
                 }
             }
 
-            if (cooldownBarFill != null)
-            {
-                var selectedName = controller != null ? controller.SelectedTargetName : string.Empty;
-                var selectedCanBang = bangActionController.CanBangTarget(selectedName, now);
-                cooldownBarFill.fillAmount = selectedCanBang
-                    ? 1f
-                    : bangActionController.CooldownProgressForTarget(selectedName, now);
-                cooldownBarFill.color = selectedCanBang
-                    ? new Color(0.28f, 0.9f, 0.42f, 1f)
-                    : new Color(1f, 0.58f, 0.2f, 1f);
-            }
-
-            if (cooldownLabel != null)
-            {
-                var selectedName = controller != null ? controller.SelectedTargetName : string.Empty;
-                var selectedRemaining = bangActionController.CooldownRemainingForTarget(selectedName, now);
-                cooldownLabel.text = selectedRemaining <= 0f
-                    ? "READY"
-                    : ActionCooldownDisplay.FormatSeconds(selectedRemaining);
-            }
         }
 
         private void RebuildButtonsIfNeeded()

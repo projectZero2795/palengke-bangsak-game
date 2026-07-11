@@ -12,9 +12,8 @@ rules.
 - Each named Bang button has an independent cooldown keyed by Hider name.
 - Every Hider-name button has its own visible progress strip and seconds badge
   so each Hider's recharge is readable at the point of interaction.
-- The named Bang panel now shows a progress bar, countdown, and `READY` state.
-- The panel reserves a separate footer row and progress track so cooldown
-  feedback does not overlap the Hider instruction.
+- The named Bang panel has no shared/global progress bar or `READY` label;
+  cooldown feedback appears only inside the relevant Hider button.
 - The SAK button now has the same radial countdown treatment.
 - The existing `1.25` second duration is unchanged, but using Bang for one
   Hider no longer blocks Bang actions for other Hiders.
@@ -45,5 +44,5 @@ Run all Unity EditMode tests, especially:
 - Bang cooldown progress and seconds are visible on each Hider button.
 - Each named Bang button blocks only its own Hider during cooldown.
 - SAK cooldown progress and seconds are visible.
-- Players receive a clear `READY` state.
+- Each Hider button returns to its normal ready appearance independently.
 - Gameplay timing remains unchanged.
