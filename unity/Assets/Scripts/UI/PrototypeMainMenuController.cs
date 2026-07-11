@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Palengke.BangSak.Api;
 using Palengke.BangSak.Network;
 
 namespace Palengke.BangSak.UI
@@ -37,8 +38,11 @@ namespace Palengke.BangSak.UI
         private GameObject howToPanel;
         private GameObject settingsPanel;
         private GameObject networkPanel;
+        private GameObject leaderboardPanel;
         private Text networkStatusLabel;
+        private Text playerSummaryLabel;
         private PrototypeNetworkRoomController roomController;
+        private PalengkeApiClient apiClient;
         private static Sprite roundedPanelSprite;
 
         public string ComponentIdValue => componentId;
@@ -83,6 +87,12 @@ namespace Palengke.BangSak.UI
             if (Input.GetKeyDown(KeyCode.R))
             {
                 ShowNetworkRoom();
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                ShowLeaderboard();
                 return;
             }
 
@@ -153,6 +163,11 @@ namespace Palengke.BangSak.UI
             {
                 networkPanel.SetActive(false);
             }
+
+            if (leaderboardPanel != null)
+            {
+                leaderboardPanel.SetActive(false);
+            }
         }
 
         private void CreateMenu()
@@ -194,6 +209,7 @@ namespace Palengke.BangSak.UI
             CreateHowToPanel(canvasObject.transform);
             CreateSettingsPanel(canvasObject.transform);
             CreateNetworkPanel(canvasObject.transform);
+            CreateLeaderboardPanel(canvasObject.transform);
             HidePanels();
         }
 
@@ -208,7 +224,9 @@ namespace Palengke.BangSak.UI
                 howToPanel = null;
                 settingsPanel = null;
                 networkPanel = null;
+                leaderboardPanel = null;
                 networkStatusLabel = null;
+                playerSummaryLabel = null;
             }
         }
 
@@ -223,6 +241,20 @@ namespace Palengke.BangSak.UI
             if (roomController == null)
             {
                 roomController = gameObject.AddComponent<PrototypeNetworkRoomController>();
+            }
+        }
+
+        private void ResolveApiClient()
+        {
+            if (apiClient != null)
+            {
+                return;
+            }
+
+            apiClient = GetComponent<PalengkeApiClient>();
+            if (apiClient == null)
+            {
+                apiClient = gameObject.AddComponent<PalengkeApiClient>();
             }
         }
 
@@ -295,8 +327,8 @@ namespace Palengke.BangSak.UI
                 "PLAY",
                 "Local",
                 "Start round",
-                new Vector2(-234f, -38f),
-                new Vector2(132f, 122f),
+                new Vector2(-248f, -38f),
+                new Vector2(112f, 122f),
                 new Color(0.1f, 0.2f, 0.34f, 1f),
                 new Color(0.36f, 0.58f, 1f, 1f),
                 PlayLocal);
@@ -306,8 +338,8 @@ namespace Palengke.BangSak.UI
                 "ROOM",
                 "Photon",
                 "Create / join",
-                new Vector2(-78f, -38f),
-                new Vector2(132f, 122f),
+                new Vector2(-124f, -38f),
+                new Vector2(112f, 122f),
                 new Color(0.08f, 0.18f, 0.28f, 1f),
                 new Color(0.35f, 0.85f, 1f, 1f),
                 ShowNetworkRoom);
@@ -317,26 +349,39 @@ namespace Palengke.BangSak.UI
                 "HOW",
                 "Rules",
                 "Learn",
-                new Vector2(78f, -38f),
-                new Vector2(132f, 122f),
+                new Vector2(0f, -38f),
+                new Vector2(112f, 122f),
                 new Color(0.32f, 0.16f, 0.08f, 1f),
                 new Color(1f, 0.58f, 0.28f, 1f),
                 ShowHowTo);
 
             CreateDashboardTile(
                 card,
+                "SCORES",
+                "Mock API",
+                "Leaderboard",
+                new Vector2(124f, -38f),
+                new Vector2(112f, 122f),
+                new Color(0.18f, 0.12f, 0.3f, 1f),
+                new Color(0.72f, 0.52f, 1f, 1f),
+                ShowLeaderboard);
+
+            CreateDashboardTile(
+                card,
                 "SET",
                 "Options",
                 "Settings",
-                new Vector2(234f, -38f),
-                new Vector2(132f, 122f),
+                new Vector2(248f, -38f),
+                new Vector2(112f, 122f),
                 new Color(0.08f, 0.2f, 0.12f, 1f),
                 new Color(0.35f, 0.92f, 0.52f, 1f),
                 ShowSettings);
 
             var footer = CreatePanel(card, "Dashboard Footer", new Vector2(0f, -163f), new Vector2(560f, 48f), new Color(0.015f, 0.026f, 0.048f, 0.96f));
-            CreateText(footer, "Guest Player", new Vector2(-205f, 0f), new Vector2(130f, 24f), 14, FontStyle.Bold, new Color(0.9f, 0.96f, 1f, 1f));
-            CreateText(footer, "P Play   ·   R Room   ·   H Help   ·   Esc Close", new Vector2(80f, 0f), new Vector2(360f, 24f), 12, FontStyle.Bold, new Color(0.55f, 0.66f, 0.82f, 1f));
+            ResolveApiClient();
+            var user = apiClient.GetCurrentUser();
+            playerSummaryLabel = CreateText(footer, $"{user.displayName}  ·  {user.coins} coins", new Vector2(-178f, 0f), new Vector2(190f, 24f), 14, FontStyle.Bold, new Color(0.9f, 0.96f, 1f, 1f));
+            CreateText(footer, "P Play · R Room · H Help · L Scores · Esc", new Vector2(98f, 0f), new Vector2(330f, 24f), 11, FontStyle.Bold, new Color(0.55f, 0.66f, 0.82f, 1f));
         }
 
         private void CreateStatusBadge(Transform parent, string text, Vector2 position, Vector2 size, Color fillColor, Color textColor)
@@ -436,6 +481,49 @@ namespace Palengke.BangSak.UI
 
             CreateButton(panel, "BACK", new Vector2(0f, -156f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
             RefreshNetworkPanel();
+        }
+
+        public void ShowLeaderboard()
+        {
+            CreateMenu();
+            HidePanels();
+            RefreshLeaderboardPanel();
+            leaderboardPanel.SetActive(true);
+        }
+
+        private void CreateLeaderboardPanel(Transform parent)
+        {
+            leaderboardPanel = CreatePanel(parent, "Mock Leaderboard Panel", Vector2.zero, new Vector2(520f, 450f), new Color(0.025f, 0.04f, 0.075f, 0.98f)).gameObject;
+            var panel = leaderboardPanel.transform;
+
+            CreateText(panel, "PALENGKE LEADERBOARD", new Vector2(0f, 174f), new Vector2(460f, 42f), 28, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
+            CreateText(panel, "OFFLINE MOCK PREVIEW", new Vector2(0f, 139f), new Vector2(300f, 24f), 12, FontStyle.Bold, new Color(0.6f, 0.78f, 1f, 1f));
+
+            var rows = CreatePanel(panel, "Leaderboard Rows", new Vector2(0f, 15f), new Vector2(430f, 220f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
+            ResolveApiClient();
+            var entries = apiClient.GetLeaderboard();
+            for (var index = 0; index < entries.Length; index += 1)
+            {
+                var entry = entries[index];
+                var color = entry.displayName == apiClient.GetCurrentUser().displayName
+                    ? new Color(1f, 0.82f, 0.23f, 1f)
+                    : new Color(0.86f, 0.93f, 1f, 1f);
+                CreateText(rows, $"#{entry.rank}   {entry.displayName}", new Vector2(-95f, 78f - index * 39f), new Vector2(190f, 30f), 17, FontStyle.Bold, color);
+                CreateText(rows, entry.score.ToString(), new Vector2(130f, 78f - index * 39f), new Vector2(110f, 30f), 17, FontStyle.Bold, color);
+            }
+
+            CreateText(panel, apiClient.StatusMessage, new Vector2(0f, -122f), new Vector2(430f, 34f), 13, FontStyle.Bold, new Color(0.62f, 0.76f, 0.94f, 1f));
+            CreateButton(panel, "BACK", new Vector2(0f, -177f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+        }
+
+        private void RefreshLeaderboardPanel()
+        {
+            ResolveApiClient();
+            var user = apiClient.GetCurrentUser();
+            if (playerSummaryLabel != null)
+            {
+                playerSummaryLabel.text = $"{user.displayName}  ·  {user.coins} coins";
+            }
         }
 
         private void OnCreateRoomClicked()

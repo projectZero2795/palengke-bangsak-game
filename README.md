@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 21: Round rules**, ready for review before UI polish is added.
+This repository is currently in **Phase 27: Palengke API placeholder**, ready for project-owner review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -53,6 +53,10 @@ Phase 19 adds the first local safe hider `SAK` counter. Hiders get a close-range
 Phase 20 adds the first reviewable playable map layout contract. `PrototypeMap` now has a versioned `Phase 20 Map Layout` component with Taya and Hider spawn points, visible review spawn markers, bounded camera follow, map/camera bounds, validation helpers, and a widened `50 x 34` wall boundary inside a noticeably larger `52 x 36` nighttime barangay/palengke map. This phase intentionally does not add round rules, win/loss screens, scoring, reveal behavior, or multiplayer.
 
 Phase 21 adds the first local round loop: `02:30` timer, Hiders-left status, Taya win when all Hiders are caught, Hiders win when Taya is countered by SAK, default Hiders win on timer expiry, restart by `R` or button, and actor placement on Phase 20 spawn points. The old default-player hiders counter HUD is removed because the Phase 21 round HUD owns that display. Multiplayer, scoring, Palengke API, and stealth/reveal dog/light rules remain out of scope.
+
+Phases 22–26 add UI polish and compile-safe multiplayer scaffolds for Photon room lifecycle, player spawning, movement synchronization, and Bang/SAK action events. Real Photon transport remains a later integration step.
+
+Phase 27 adds an isolated Palengke API placeholder with a configurable base URL, offline mock user and coins, and a visible mock leaderboard. It makes no production HTTP requests and contains no API credentials or tokens.
 
 ## Safety and branding rules
 
@@ -133,3 +137,9 @@ Do not skip ahead.
 - [Phase 19 safe SAK counter](docs/phase-19-sak-counter.md)
 - [Phase 20 map layout v1](docs/phase-20-map-layout.md)
 - [Phase 21 round rules](docs/phase-21-round-rules.md)
+- [Phase 22 UI polish](docs/phase-22-ui-polish.md)
+- [Phase 23 Photon setup scaffold](docs/phase-23-photon-setup.md)
+- [Phase 24 multiplayer player spawning](docs/phase-24-multiplayer-player-spawning.md)
+- [Phase 25 multiplayer movement sync](docs/phase-25-multiplayer-movement-sync.md)
+- [Phase 26 multiplayer Bang/SAK sync](docs/phase-26-multiplayer-bang-sak-sync.md)
+- [Phase 27 Palengke API placeholder](docs/phase-27-palengke-api-placeholder.md)
