@@ -9,6 +9,7 @@ namespace Palengke.BangSak.UI
     {
         private sealed class TargetCooldownVisual
         {
+            public string TargetName;
             public Button Button;
             public Image ProgressFill;
             public Text SecondsLabel;
@@ -208,6 +209,7 @@ namespace Palengke.BangSak.UI
 
             targetCooldownVisuals.Add(new TargetCooldownVisual
             {
+                TargetName = targetName,
                 Button = button,
                 ProgressFill = progressFill,
                 SecondsLabel = secondsLabel
@@ -303,11 +305,11 @@ namespace Palengke.BangSak.UI
             }
 
             var now = Time.time;
-            var canBang = bangActionController.CanBang(now);
-            var remaining = bangActionController.CooldownRemaining(now);
             for (var index = 0; index < targetCooldownVisuals.Count; index += 1)
             {
                 var visual = targetCooldownVisuals[index];
+                var canBang = bangActionController.CanBangTarget(visual.TargetName, now);
+                var remaining = bangActionController.CooldownRemainingForTarget(visual.TargetName, now);
                 if (visual.Button != null)
                 {
                     visual.Button.interactable = canBang;
@@ -317,7 +319,7 @@ namespace Palengke.BangSak.UI
                 {
                     visual.ProgressFill.fillAmount = canBang
                         ? 1f
-                        : bangActionController.CooldownProgress(now);
+                        : bangActionController.CooldownProgressForTarget(visual.TargetName, now);
                     visual.ProgressFill.color = canBang
                         ? new Color(0.36f, 1f, 0.5f, 1f)
                         : new Color(1f, 0.78f, 0.24f, 1f);
@@ -333,19 +335,23 @@ namespace Palengke.BangSak.UI
 
             if (cooldownBarFill != null)
             {
-                cooldownBarFill.fillAmount = canBang
+                var selectedName = controller != null ? controller.SelectedTargetName : string.Empty;
+                var selectedCanBang = bangActionController.CanBangTarget(selectedName, now);
+                cooldownBarFill.fillAmount = selectedCanBang
                     ? 1f
-                    : bangActionController.CooldownProgress(now);
-                cooldownBarFill.color = canBang
+                    : bangActionController.CooldownProgressForTarget(selectedName, now);
+                cooldownBarFill.color = selectedCanBang
                     ? new Color(0.28f, 0.9f, 0.42f, 1f)
                     : new Color(1f, 0.58f, 0.2f, 1f);
             }
 
             if (cooldownLabel != null)
             {
-                cooldownLabel.text = canBang
+                var selectedName = controller != null ? controller.SelectedTargetName : string.Empty;
+                var selectedRemaining = bangActionController.CooldownRemainingForTarget(selectedName, now);
+                cooldownLabel.text = selectedRemaining <= 0f
                     ? "READY"
-                    : ActionCooldownDisplay.FormatSeconds(remaining);
+                    : ActionCooldownDisplay.FormatSeconds(selectedRemaining);
             }
         }
 
@@ -389,10 +395,9 @@ namespace Palengke.BangSak.UI
                 return;
             }
 
-            controller.SetSelectedTargetName(targetName);
             if (bangActionController != null && bangActionController.isActiveAndEnabled)
             {
-                bangActionController.TryBangNow();
+                bangActionController.TryBangTargetNow(targetName);
             }
         }
 

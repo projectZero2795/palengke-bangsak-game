@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Palengke.BangSak.Player;
 using UnityEngine;
 
@@ -92,6 +93,7 @@ namespace Palengke.BangSak.Game
         private SpriteRenderer rangeIndicatorRenderer;
         private SpriteRenderer impactRenderer;
         private float lastBangTime = -999f;
+        private readonly Dictionary<string, float> lastBangTimeByTarget = new Dictionary<string, float>();
         private float effectStartedAt = -999f;
         private float effectVisibleUntil = -999f;
         private PlayerFacingDirection fallbackFacingDirection = PlayerFacingDirection.Down;
@@ -160,15 +162,15 @@ namespace Palengke.BangSak.Game
 
         public bool TryBang(float now)
         {
+            ResolveReferences();
             if (!CanBang(now))
             {
                 return false;
             }
 
-            ResolveReferences();
             CreateVisualsIfNeeded();
 
-            lastBangTime = now;
+            RememberBangTime(CurrentCooldownTargetName, now);
             lastBangDirection = CurrentFacingDirection;
             bangSequenceId += 1;
             lastHitResult = ResolveBangHit(transform.position, lastBangDirection, bangSequenceId);
@@ -188,7 +190,7 @@ namespace Palengke.BangSak.Game
 
         public float CooldownRemaining(float now)
         {
-            return Mathf.Max(0f, cooldownSeconds - (now - lastBangTime));
+            return CooldownRemainingForTarget(CurrentCooldownTargetName, now);
         }
 
         public float CooldownProgress(float now)
@@ -199,6 +201,66 @@ namespace Palengke.BangSak.Game
             }
 
             return Mathf.Clamp01(1f - CooldownRemaining(now) / cooldownSeconds);
+        }
+
+        public bool TryBangTargetNow(string targetName)
+        {
+            return TryBangTarget(targetName, Time.time);
+        }
+
+        public bool TryBangTarget(string targetName, float now)
+        {
+            ResolveReferences();
+            if (nameCallController != null)
+            {
+                nameCallController.SetSelectedTargetName(targetName);
+            }
+
+            return TryBang(now);
+        }
+
+        public bool CanBangTarget(string targetName, float now)
+        {
+            return isActiveAndEnabled && CooldownRemainingForTarget(targetName, now) <= 0f;
+        }
+
+        public float CooldownRemainingForTarget(string targetName, float now)
+        {
+            var normalizedTargetName = PlayerNameIdentity.NormalizeName(targetName);
+            var lastUsedAt = lastBangTime;
+            if (!string.IsNullOrEmpty(normalizedTargetName)
+                && lastBangTimeByTarget.TryGetValue(normalizedTargetName, out var targetLastUsedAt))
+            {
+                lastUsedAt = targetLastUsedAt;
+            }
+            else if (!string.IsNullOrEmpty(normalizedTargetName))
+            {
+                lastUsedAt = -999f;
+            }
+
+            return Mathf.Max(0f, cooldownSeconds - (now - lastUsedAt));
+        }
+
+        public float CooldownProgressForTarget(string targetName, float now)
+        {
+            return cooldownSeconds <= 0f
+                ? 1f
+                : Mathf.Clamp01(1f - CooldownRemainingForTarget(targetName, now) / cooldownSeconds);
+        }
+
+        private string CurrentCooldownTargetName =>
+            nameCallController != null ? nameCallController.SelectedTargetName : string.Empty;
+
+        private void RememberBangTime(string targetName, float now)
+        {
+            var normalizedTargetName = PlayerNameIdentity.NormalizeName(targetName);
+            if (string.IsNullOrEmpty(normalizedTargetName))
+            {
+                lastBangTime = now;
+                return;
+            }
+
+            lastBangTimeByTarget[normalizedTargetName] = now;
         }
 
         public Vector2 GetDirectionVector(PlayerFacingDirection direction)

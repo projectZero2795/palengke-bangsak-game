@@ -50,6 +50,40 @@ public sealed class BangActionControllerTests
     }
 
     [Test]
+    public void NamedBangCooldown_IsIndependentForEachHider()
+    {
+        gameObject.AddComponent<BangNameCallController>();
+        var ana = CreateHider("Ana");
+        var pedro = CreateHider("Pedro");
+
+        try
+        {
+            Assert.That(controller.TryBangTarget("Ana", 0f), Is.True);
+            Assert.That(controller.CanBangTarget("Ana", 0.2f), Is.False);
+            Assert.That(controller.CanBangTarget("Pedro", 0.2f), Is.True);
+
+            Assert.That(controller.TryBangTarget("Pedro", 0.2f), Is.True);
+            Assert.That(controller.CanBangTarget("Ana", 0.3f), Is.False);
+            Assert.That(controller.CanBangTarget("Pedro", 0.3f), Is.False);
+            Assert.That(controller.CanBangTarget("Ana", 1.3f), Is.True);
+            Assert.That(controller.CanBangTarget("Pedro", 1.3f), Is.False);
+        }
+        finally
+        {
+            Object.DestroyImmediate(ana);
+            Object.DestroyImmediate(pedro);
+        }
+    }
+
+    private static GameObject CreateHider(string displayName)
+    {
+        var hider = new GameObject(displayName);
+        hider.AddComponent<PlayerNameIdentity>().SetDisplayName(displayName);
+        hider.AddComponent<PlayerRoleController>().SetRole(PlayerRole.Hider);
+        return hider;
+    }
+
+    [Test]
     public void GetDirectionVector_SupportsEightDirections()
     {
         Assert.That(controller.GetDirectionVector(PlayerFacingDirection.Up), Is.EqualTo(Vector2.up));

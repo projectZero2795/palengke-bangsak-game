@@ -58,7 +58,7 @@ Phases 22–26 add UI polish and compile-safe multiplayer scaffolds for Photon r
 
 Phase 27 adds an isolated Palengke API placeholder with a configurable base URL, offline mock user and coins, and a visible mock leaderboard. It makes no production HTTP requests and contains no API credentials or tokens.
 
-Phase 27A makes the existing Bang and SAK cooldowns visible with radial overlays, seconds labels, a shared named-Bang progress bar, disabled action buttons during recharge, and a clear ready state. Gameplay timing is unchanged.
+Phase 27A makes Bang and SAK cooldowns visible with radial overlays, seconds labels, per-Hider named-Bang progress, disabled action buttons during their own recharge, and a clear ready state. Named Bang cooldowns are independent per Hider; the 1.25-second duration is unchanged.
 
 ## Safety and branding rules
 
