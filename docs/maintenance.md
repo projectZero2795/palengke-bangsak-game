@@ -58,3 +58,10 @@ Each release should include:
 - test summary;
 - known issues;
 - rollback notes once deployment phases begin.
+
+## Production references
+
+- [Production Operations](operations.md)
+- [Known Issues](known-issues.md)
+- [0.28.2 Public Release](releases/0.28.2.md)
+- [Phase 30 Monitoring and Maintenance](phase-30-monitoring-maintenance.md)

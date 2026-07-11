@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 29: Kubernetes deployment and public release**, ready for project-owner review.
+This repository is currently in **Phase 30: Monitoring and maintenance**.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -67,6 +67,8 @@ Phase 28B restores the missing release prerequisite with a reproducible Unity We
 Phase 28C packages the approved WebGL artifact in a non-root Nginx container with health, cache, MIME, and browser security configuration. It remains a local container test only; Kubernetes and public release belong to the next approved phase.
 
 Phase 29 publishes the immutable game image through the existing Palengke GitOps platform at `https://games.palengke.es`. Two hardened Kubernetes replicas, health probes, disruption protection, TLS routing, rollback notes, and the live Bang-Sak leaderboard API are in place.
+
+Phase 30 adds structured production logs, request correlation, scripted public verification, release/version records, operations and rollback guidance, configuration/backup ownership, and a maintained known-issues register without recreating the removed monitoring stack.
 
 ## Safety and branding rules
 
@@ -158,3 +160,7 @@ Do not skip ahead.
 - [Phase 28B WebGL build and local browser test](docs/phase-28b-webgl-build.md)
 - [Phase 28C Docker static hosting](docs/phase-28c-docker-static-hosting.md)
 - [Phase 29 Kubernetes deployment and public release](docs/phase-29-kubernetes-public-release.md)
+- [Phase 30 monitoring and maintenance](docs/phase-30-monitoring-maintenance.md)
+- [Production operations](docs/operations.md)
+- [Known issues](docs/known-issues.md)
+- [Release 0.28.2](docs/releases/0.28.2.md)
