@@ -27,6 +27,21 @@ ssh k8s-node-1 \
 
 Confirm the public game still loads and plays after the logging image rollout.
 
+## Production verification
+
+Verified on 2026-07-11:
+
+- source commit: `bc078b5`;
+- immutable image: `registry.renzlab.com/palengke/bang-sak:bc078b5`;
+- image digest: `sha256:c4fd4e388f0c1e90b5375ba51b103f8b6cad3922c2862a343c3dd6a01986a569`;
+- GitOps commit: `fd4cb4c`;
+- Argo CD application `palengke-prod`: `Synced` and `Healthy`;
+- two Phase 30 game replicas: Ready;
+- `./tools/verify-production.sh`: passed against `https://games.palengke.es`;
+- public `X-Request-ID` correlated with the same ID in the JSON pod log;
+- production WebGL menu rendered successfully with no browser warnings or
+  errors.
+
 ## Exit criteria
 
 - Errors can be investigated from request ID through pod/backend logs.

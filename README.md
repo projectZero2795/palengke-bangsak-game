@@ -8,7 +8,8 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 30: Monitoring and maintenance**.
+This repository is currently in **Phase 30: Monitoring and maintenance**, ready
+for project-owner review.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 

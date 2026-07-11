@@ -36,8 +36,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 28 | Real Palengke integration | Connect identity, persistent scores, server rewards, and leaderboard with safe guest fallback. | Implemented; authenticated acceptance waits for public deployment. |
 | 28B | Unity WebGL build | Reproducible Unity build and local browser smoke test. | Done. |
 | 28C | Docker static hosting | Non-root Nginx image for the approved WebGL files. | Container serves game locally. |
-| 29 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Public release is live and ready for owner review. |
-| 30 | Monitoring and maintenance | Structured logs, request correlation, production verification, release/version records, operations, rollback, backup/config, and known issues. | Production release is diagnosable and repeatable. |
+| 29 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Done. |
+| 30 | Monitoring and maintenance | Structured logs, request correlation, production verification, release/version records, operations, rollback, backup/config, and known issues. | Ready for review; the production release is diagnosable and repeatable. |
 | 31 | Polish and content expansion | Plan maps, art, skins, badges, events, sound, mobile, and anti-cheat after production foundations. | Content expansion plan approved. |
 
 ## Mandatory stop rule
