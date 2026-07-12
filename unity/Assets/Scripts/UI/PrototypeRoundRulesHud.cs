@@ -160,6 +160,8 @@ namespace Palengke.BangSak.UI
 
             CreateStatusPanel(safeAreaRoot);
             CreateResultPanel(safeAreaRoot);
+            var cueHud = canvasObject.AddComponent<AccessibilityCueHud>();
+            cueHud.Initialize(safeAreaRoot);
         }
 
         private void CreateStatusPanel(Transform parent)

@@ -1,4 +1,5 @@
 using Palengke.BangSak.Player;
+using Palengke.BangSak.UI;
 using UnityEngine;
 
 namespace Palengke.BangSak.Game
@@ -206,6 +207,7 @@ namespace Palengke.BangSak.Game
                 var pulse = pulseSpeed > 0f
                     ? Mathf.Sin(now * pulseSpeed) * 0.5f + 0.5f
                     : 0f;
+                pulse = AccessibilitySettings.ResolvePulse(pulse);
                 spriteRenderer.color = Color.Lerp(caughtTint, caughtPulseTint, pulse * 0.45f);
             }
 
@@ -269,7 +271,8 @@ namespace Palengke.BangSak.Game
                 return;
             }
 
-            var bob = pulseSpeed > 0f ? Mathf.Sin(now * pulseSpeed) * 0.025f : 0f;
+            var reducedMotion = AccessibilitySettings.ReducedMotionEnabled;
+            var bob = !reducedMotion && pulseSpeed > 0f ? Mathf.Sin(now * pulseSpeed) * 0.025f : 0f;
             indicatorRoot.localPosition = indicatorOffset + Vector3.up * bob;
 
             for (var index = 0; index < starRenderers.Length; index += 1)
@@ -280,13 +283,16 @@ namespace Palengke.BangSak.Game
                     continue;
                 }
 
-                var phase = now * starSpinSpeed + index * Mathf.PI * 2f / StarCount;
-                var localPulse = Mathf.Sin(phase * 1.7f) * 0.5f + 0.5f;
+                var fixedPhase = index * Mathf.PI * 2f / StarCount;
+                var phase = reducedMotion ? fixedPhase : now * starSpinSpeed + fixedPhase;
+                var localPulse = reducedMotion ? 0.5f : Mathf.Sin(phase * 1.7f) * 0.5f + 0.5f;
                 starRenderer.transform.localPosition = new Vector3(
                     Mathf.Cos(phase) * starOrbitRadius,
                     Mathf.Sin(phase) * starVerticalSpread,
                     0f);
-                starRenderer.transform.localRotation = Quaternion.Euler(0f, 0f, -phase * Mathf.Rad2Deg);
+                starRenderer.transform.localRotation = reducedMotion
+                    ? Quaternion.identity
+                    : Quaternion.Euler(0f, 0f, -phase * Mathf.Rad2Deg);
                 starRenderer.transform.localScale = Vector3.one * Mathf.Lerp(starSize * 0.82f, starSize * 1.16f, localPulse);
                 starRenderer.color = Color.Lerp(starColor, starPulseColor, localPulse);
             }

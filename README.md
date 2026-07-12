@@ -8,13 +8,13 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 34C: Android touch layout**.
-Phase 34B was approved after its debug APK acceptance audit. Phase 34C now has
-safe-area-aware, balanced wide-screen menu and round HUD layouts plus a
-`0.34.1` ARM64 debug APK. One complete local round was played by touch on the
-Pixel 6 Android 15 reference emulator with the hole-punch simulation enabled.
-It is ready for project-owner review; accessibility work remains blocked until
-that review is approved.
+This repository is currently in **Phase 34D: Mobile accessibility**.
+Phase 34C was owner-approved after installing and reviewing Android build
+`0.34.1`. Phase 34D adds four persistent, touch-checkable settings: readable
+text, high contrast, reduced motion, and visual Bang/SAK action cues. Android
+debug version `0.34.2` is installed on the reference emulator and ready for
+owner review; 225 tests pass. Phase 34E1 and later work remain blocked until
+the Phase 34D owner review is approved.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -104,10 +104,12 @@ Phase 34A records the approved Android release decisions without creating a
 build or changing Play Console. Phase 34B installs the Unity Android toolchain
 and adds a reproducible IL2CPP ARM64 debug APK for `es.palengke.bangsak`. The
 APK targets API 35 and supports API 29 and newer. Phase 34C adds safe-area and
-balanced wide-screen layout across the menu and round controls; joystick,
-named-Bang, result, and Restart touch paths pass on the Pixel 6 Android 15
-reference emulator. Accessibility, release signing, Play Console creation, and
-store upload remain later owner-gated phases.
+balanced wide-screen layout across the menu and round controls. Phase 34D adds
+readable-text, high-contrast, reduced-motion, and visual-action-cue settings.
+The former broad Android Photon lifecycle phase is split into Phase 34E1–34E5
+so create/join, voluntary leave confirmation, remaining-room leave rules,
+pause/resume, and reconnect can each be reviewed separately. Release signing,
+Play Console creation, and store upload remain later owner-gated phases.
 
 ## Safety and branding rules
 
@@ -210,6 +212,7 @@ Do not skip ahead.
 - [Phase 34A Android release decisions](docs/phase-34a-android-release-decisions.md)
 - [Phase 34B Android debug build](docs/phase-34b-android-debug-build.md)
 - [Phase 34C Android touch layout](docs/phase-34c-android-touch-layout.md)
+- [Phase 34D mobile accessibility](docs/phase-34d-mobile-accessibility.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)
 - [Release 0.28.2](docs/releases/0.28.2.md)

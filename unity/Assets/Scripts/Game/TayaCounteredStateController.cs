@@ -1,4 +1,5 @@
 using Palengke.BangSak.Player;
+using Palengke.BangSak.UI;
 using UnityEngine;
 
 namespace Palengke.BangSak.Game
@@ -166,7 +167,7 @@ namespace Palengke.BangSak.Game
 
         private void ApplyCounteredPulse(float now)
         {
-            var pulse = Mathf.Sin(now * 9f) * 0.5f + 0.5f;
+            var pulse = AccessibilitySettings.ResolvePulse(Mathf.Sin(now * 9f) * 0.5f + 0.5f);
             if (spriteRenderer != null)
             {
                 spriteRenderer.color = Color.Lerp(counteredTint, counteredPulseTint, pulse * 0.5f);
@@ -174,7 +175,9 @@ namespace Palengke.BangSak.Game
 
             if (indicatorRenderer != null)
             {
-                indicatorRenderer.transform.localRotation = Quaternion.Euler(0f, 0f, now * indicatorSpinSpeed * 90f);
+                indicatorRenderer.transform.localRotation = AccessibilitySettings.ReducedMotionEnabled
+                    ? Quaternion.identity
+                    : Quaternion.Euler(0f, 0f, now * indicatorSpinSpeed * 90f);
                 indicatorRenderer.transform.localScale = Vector3.one * Mathf.Lerp(indicatorSize * 0.88f, indicatorSize * 1.12f, pulse);
                 indicatorRenderer.color = Color.Lerp(Color.white, counteredPulseTint, pulse * 0.45f);
             }

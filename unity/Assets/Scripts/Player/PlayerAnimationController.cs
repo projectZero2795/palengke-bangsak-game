@@ -1,4 +1,5 @@
 using UnityEngine;
+using Palengke.BangSak.UI;
 
 namespace Palengke.BangSak.Player
 {
@@ -81,7 +82,16 @@ namespace Palengke.BangSak.Player
             if (IsWalking)
             {
                 facingDirection = ResolveFacingDirection(movementInput, facingDirection);
-                StepWalkAnimation(deltaTime);
+                if (AccessibilitySettings.ReducedMotionEnabled)
+                {
+                    frameTimer = 0f;
+                    walkFrameIndex = 0;
+                    ApplyReducedMotionWalkFrame();
+                }
+                else
+                {
+                    StepWalkAnimation(deltaTime);
+                }
             }
             else
             {
@@ -201,6 +211,18 @@ namespace Palengke.BangSak.Player
             {
                 spriteRenderer.sprite = GetWalkSprite(facingDirection, walkFrameIndex);
             }
+        }
+
+        private void ApplyReducedMotionWalkFrame()
+        {
+            if (spriteRenderer == null)
+            {
+                return;
+            }
+
+            spriteRenderer.sprite = GetWalkFrameCount(facingDirection) > 0
+                ? GetWalkSprite(facingDirection, 0)
+                : GetIdleSprite(facingDirection);
         }
 
         private void ApplyIdleFrame()

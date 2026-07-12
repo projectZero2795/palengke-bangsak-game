@@ -42,6 +42,12 @@ namespace Palengke.BangSak.UI
         private Text networkStatusLabel;
         private Text playerSummaryLabel;
         private Text apiStatusLabel;
+        private Text readableTextStatusLabel;
+        private Text highContrastStatusLabel;
+        private Text reducedMotionStatusLabel;
+        private Text visualCuesStatusLabel;
+        private Text accessibilityPreviewLabel;
+        private RectTransform motionPreviewMarker;
         private Transform leaderboardRows;
         private PrototypeNetworkRoomController roomController;
         private PalengkeApiClient apiClient;
@@ -106,6 +112,11 @@ namespace Palengke.BangSak.UI
             if (networkPanel != null && networkPanel.activeSelf)
             {
                 RefreshNetworkPanel();
+            }
+
+            if (settingsPanel != null && settingsPanel.activeSelf)
+            {
+                UpdateAccessibilityPreview();
             }
         }
 
@@ -238,6 +249,12 @@ namespace Palengke.BangSak.UI
                 networkStatusLabel = null;
                 playerSummaryLabel = null;
                 apiStatusLabel = null;
+                readableTextStatusLabel = null;
+                highContrastStatusLabel = null;
+                reducedMotionStatusLabel = null;
+                visualCuesStatusLabel = null;
+                accessibilityPreviewLabel = null;
+                motionPreviewMarker = null;
                 leaderboardRows = null;
             }
         }
@@ -468,12 +485,115 @@ namespace Palengke.BangSak.UI
 
         private void CreateSettingsPanel(Transform parent)
         {
-            settingsPanel = CreatePanel(parent, "Settings Placeholder Panel", Vector2.zero, new Vector2(500f, 330f), new Color(0.025f, 0.04f, 0.075f, 0.97f)).gameObject;
+            settingsPanel = CreatePanel(parent, "Accessibility Settings Panel", Vector2.zero, new Vector2(560f, 460f), new Color(0.025f, 0.04f, 0.075f, 0.98f)).gameObject;
             var panel = settingsPanel.transform;
 
-            CreateText(panel, "SETTINGS", new Vector2(0f, 112f), new Vector2(430f, 42f), 30, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
-            CreateText(panel, "Placeholder for the local prototype.\nLater phases can add volume, language, controls, and accessibility here.", new Vector2(0f, 25f), new Vector2(420f, 86f), 17, FontStyle.Bold, new Color(0.82f, 0.9f, 1f, 1f));
-            CreateButton(panel, "BACK", new Vector2(0f, -102f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+            CreateText(panel, "ACCESSIBILITY", new Vector2(0f, 188f), new Vector2(500f, 42f), 30, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
+            CreateText(panel, "Tap each option to preview and save it.", new Vector2(0f, 157f), new Vector2(470f, 24f), 13, FontStyle.Bold, new Color(0.82f, 0.9f, 1f, 1f));
+
+            readableTextStatusLabel = CreateAccessibilityToggleRow(panel, "READABLE TEXT", 114f, ToggleReadableText);
+            highContrastStatusLabel = CreateAccessibilityToggleRow(panel, "HIGH CONTRAST", 67f, ToggleHighContrast);
+            reducedMotionStatusLabel = CreateAccessibilityToggleRow(panel, "REDUCED MOTION", 20f, ToggleReducedMotion);
+            visualCuesStatusLabel = CreateAccessibilityToggleRow(panel, "VISUAL ACTION CUES", -27f, ToggleVisualCues);
+
+            accessibilityPreviewLabel = CreateText(panel, "VISUAL CUE: BANG! CAUGHT", new Vector2(0f, -75f), new Vector2(450f, 34f), 18, FontStyle.Bold, new Color(0.55f, 1f, 0.58f, 1f));
+            CreateText(panel, "MOTION PREVIEW", new Vector2(-94f, -111f), new Vector2(170f, 22f), 11, FontStyle.Bold, new Color(0.72f, 0.82f, 1f, 1f));
+
+            var markerObject = new GameObject("Motion Preview Marker");
+            markerObject.transform.SetParent(panel, false);
+            motionPreviewMarker = markerObject.AddComponent<RectTransform>();
+            motionPreviewMarker.anchorMin = new Vector2(0.5f, 0.5f);
+            motionPreviewMarker.anchorMax = new Vector2(0.5f, 0.5f);
+            motionPreviewMarker.pivot = new Vector2(0.5f, 0.5f);
+            motionPreviewMarker.anchoredPosition = new Vector2(48f, -111f);
+            motionPreviewMarker.sizeDelta = new Vector2(24f, 14f);
+            var markerImage = markerObject.AddComponent<Image>();
+            ApplyRoundedSprite(markerImage);
+            markerImage.color = new Color(0.35f, 0.85f, 1f, 1f);
+            markerImage.raycastTarget = false;
+
+            CreateButton(panel, "BACK", new Vector2(0f, -183f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+            RefreshAccessibilityPanel();
+        }
+
+        private Text CreateAccessibilityToggleRow(
+            Transform parent,
+            string label,
+            float y,
+            UnityEngine.Events.UnityAction onClick)
+        {
+            CreateText(parent, label, new Vector2(-105f, y), new Vector2(290f, 36f), 17, FontStyle.Bold, Color.white);
+            var button = CreateButton(parent, "TOGGLE", new Vector2(174f, y), new Vector2(116f, 38f), new Color(0.12f, 0.28f, 0.4f, 1f), onClick);
+            var existingLabel = button.GetComponentInChildren<Text>();
+            if (existingLabel != null)
+            {
+                existingLabel.text = "OFF";
+            }
+            return existingLabel;
+        }
+
+        public void ToggleReadableText()
+        {
+            AccessibilitySettings.SetReadableText(!AccessibilitySettings.ReadableTextEnabled);
+            RefreshAccessibilityPanel();
+        }
+
+        public void ToggleHighContrast()
+        {
+            AccessibilitySettings.SetHighContrast(!AccessibilitySettings.HighContrastEnabled);
+            RefreshAccessibilityPanel();
+        }
+
+        public void ToggleReducedMotion()
+        {
+            AccessibilitySettings.SetReducedMotion(!AccessibilitySettings.ReducedMotionEnabled);
+            RefreshAccessibilityPanel();
+        }
+
+        public void ToggleVisualCues()
+        {
+            AccessibilitySettings.SetVisualCues(!AccessibilitySettings.VisualCuesEnabled);
+            RefreshAccessibilityPanel();
+        }
+
+        private void RefreshAccessibilityPanel()
+        {
+            SetToggleStatus(readableTextStatusLabel, AccessibilitySettings.ReadableTextEnabled);
+            SetToggleStatus(highContrastStatusLabel, AccessibilitySettings.HighContrastEnabled);
+            SetToggleStatus(reducedMotionStatusLabel, AccessibilitySettings.ReducedMotionEnabled);
+            SetToggleStatus(visualCuesStatusLabel, AccessibilitySettings.VisualCuesEnabled);
+            UpdateAccessibilityPreview();
+        }
+
+        private static void SetToggleStatus(Text label, bool enabled)
+        {
+            if (label == null)
+            {
+                return;
+            }
+
+            label.text = AccessibilitySettings.FormatToggle(enabled);
+            label.color = enabled
+                ? new Color(0.55f, 1f, 0.68f, 1f)
+                : new Color(0.72f, 0.78f, 0.88f, 1f);
+        }
+
+        private void UpdateAccessibilityPreview()
+        {
+            if (accessibilityPreviewLabel != null)
+            {
+                accessibilityPreviewLabel.text = AccessibilitySettings.VisualCuesEnabled
+                    ? "VISUAL CUE: BANG! CAUGHT"
+                    : "VISUAL ACTION CUES OFF";
+            }
+
+            if (motionPreviewMarker != null)
+            {
+                var x = AccessibilitySettings.ReducedMotionEnabled
+                    ? 48f
+                    : 48f + Mathf.Sin(Time.unscaledTime * 3.5f) * 54f;
+                motionPreviewMarker.anchoredPosition = new Vector2(x, -111f);
+            }
         }
 
         private void CreateNetworkPanel(Transform parent)

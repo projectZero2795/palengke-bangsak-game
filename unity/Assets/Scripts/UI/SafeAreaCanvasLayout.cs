@@ -87,6 +87,11 @@ namespace Palengke.BangSak.UI
             scaler.referenceResolution = ReferenceResolution;
             scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             scaler.matchWidthOrHeight = BalancedScreenMatch;
+
+            if (scaler.GetComponent<AccessibilityCanvasAdapter>() == null)
+            {
+                scaler.gameObject.AddComponent<AccessibilityCanvasAdapter>();
+            }
         }
 
         public static RectTransform GetOrCreateSafeAreaRoot(Transform canvasTransform)

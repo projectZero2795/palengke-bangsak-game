@@ -1,4 +1,5 @@
 using Palengke.BangSak.Player;
+using Palengke.BangSak.UI;
 using UnityEngine;
 
 namespace Palengke.BangSak.Game
@@ -116,6 +117,7 @@ namespace Palengke.BangSak.Game
             sakSequenceId += 1;
             lastResult = ResolveSakHit(transform.position, CurrentFacingDirection, sakSequenceId);
             ShowEffect(now, lastResult);
+            AccessibilityCueService.PublishSak(lastResult.Outcome);
             return true;
         }
 
@@ -278,6 +280,16 @@ namespace Palengke.BangSak.Game
             if (now >= effectVisibleUntil)
             {
                 HideEffect();
+                return;
+            }
+
+            if (AccessibilitySettings.ReducedMotionEnabled)
+            {
+                burstRenderer.transform.localScale = Vector3.one * 0.78f;
+                burstRenderer.transform.rotation = Quaternion.identity;
+                var staticColor = burstRenderer.color;
+                staticColor.a = 1f;
+                burstRenderer.color = staticColor;
                 return;
             }
 

@@ -57,7 +57,7 @@ result-integrity, moderation, and operational gates pass.
 | 34B | Android debug build | Reproducible Unity debug APK. | APK installs and opens the main menu on the reference device. |
 | 34C | Android touch layout | Touch controls, safe areas, notches, and screen-size layout only. | A local touch round completes with no critical overlap. |
 | 34D | Mobile accessibility | Readable text/contrast, reduced motion, and non-audio cues only. | Each option has one visible owner-checkable result. |
-| 34E | Android Photon lifecycle | Create/join plus pause, background, resume, disconnect, and reconnect only. | Two Android clients pass the focused lifecycle checklist. |
+| 34E1–34E5 | Android Photon lifecycle and voluntary leave | Split create/join, leave confirmation, remaining-room cleanup/rules, pause/resume, and reconnect into separate checkpoints. | Each checkpoint has one focused two-device checklist and stops for approval. |
 | 34F | Android performance | Reference-device FPS/frame time, memory, temperature, and size budgets only. | One measured round meets the recorded budgets. |
 | 34G | Signed Play bundle | Versioned signed AAB with external signing-secret handling. | Bundle and certificate/version metadata validate locally. |
 | 34H | Play internal test | Play Console app plus internal-testing release only. | Owner downloads and installs from the Play Store tester link. |

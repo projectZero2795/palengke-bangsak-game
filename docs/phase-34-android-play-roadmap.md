@@ -7,8 +7,8 @@ owner-reviewable checkpoints. Phase 34A records decisions and Phase 34B adds a
 local debug APK; later phases remain gated and this roadmap never authorizes a
 Play Console upload or publication by itself.
 
-Phase 33, Phase 34A, and Phase 34B are approved. Every 34-series phase stops for
-owner review before the next one begins.
+Phase 33 and Phases 34A through 34C are approved. Every 34-series phase stops
+for owner review before the next one begins.
 
 ## Small review phases
 
@@ -18,7 +18,11 @@ owner review before the next one begins.
 | 34B | Install/verify Unity Android build support and add one reproducible debug-APK build command. | Install the APK on the reference phone and confirm the main menu opens. | Touch polish, multiplayer testing, signing, Play Console. |
 | 34C | Fix only touch controls, safe areas, notches, and Android screen-size layout. | Complete one local round using touch; confirm no critical overlap. | Accessibility options, reconnect work, performance tuning. |
 | 34D | Add only readable contrast/text, reduced-motion behavior, and visual alternatives for essential audio cues. | Toggle each option and confirm its visible effect. | Networking, performance tuning, store work. |
-| 34E | Fix only Photon create/join and Android pause/background/resume/reconnect behavior. | Two Android clients create/join, background/resume, reconnect, and finish one round. | Performance tuning, signing, Play upload. |
+| 34E1 | Verify only Android Photon room creation and joining. | One Android client creates a room and a second Android client joins the same roster. | Leave behavior, background/resume, reconnect, performance. |
+| 34E2 | Add only an accessible Leave Game control and confirmation during multiplayer play. | Cancel once and remain in play; confirm once and return to the menu. | Remote cleanup, role/authority rules, reconnect. |
+| 34E3 | Apply only Photon roster cleanup, freed-slot behavior, and deterministic Taya/authority/last-player rules after a confirmed leave. | One client leaves; the remaining clients agree on roster/round state and no ghost player remains. | Background/resume, involuntary reconnect, performance. |
+| 34E4 | Handle only Android pause, background, and resume for a joined room. | Background and resume one client; both clients still agree on room and round. | Real disconnect/reconnect, performance, signing. |
+| 34E5 | Handle only involuntary Android disconnect and room-code reconnect. | Disconnect and reconnect one client, then finish one agreed round. | Performance tuning, signing, Play upload. |
 | 34F | Measure and tune only the agreed reference-device FPS/frame time, memory, temperature, and package/download-size budgets. | Play one measured round and compare the recorded result with the budget. | Signing, listing, publishing. |
 | 34G | Produce one versioned signed `.aab`; configure Play App Signing/upload-key handling without committing keys or passwords. | Validate the bundle and compare the recorded certificate fingerprint/version. | Play upload or tester distribution. |
 | 34H | Create the Play Console app and publish the approved bundle to internal testing only. | Use the Play tester link to install the game from Google Play. | Public listing, closed test, production release. |

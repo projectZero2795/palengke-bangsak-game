@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Palengke.BangSak.Player;
+using Palengke.BangSak.UI;
 using UnityEngine;
 
 namespace Palengke.BangSak.Game
@@ -175,6 +176,7 @@ namespace Palengke.BangSak.Game
             bangSequenceId += 1;
             lastHitResult = ResolveBangHit(transform.position, lastBangDirection, bangSequenceId);
             ShowBangEffect(now, lastBangDirection, lastHitResult);
+            AccessibilityCueService.PublishBang(lastHitResult.Outcome);
             return true;
         }
 
@@ -430,6 +432,16 @@ namespace Palengke.BangSak.Game
         {
             if (bangMarkerRenderer == null)
             {
+                return;
+            }
+
+            if (AccessibilitySettings.ReducedMotionEnabled)
+            {
+                bangMarkerRenderer.transform.position = effectEndPosition;
+                bangMarkerRenderer.transform.rotation = Quaternion.Euler(0f, 0f, GetEffectRotationZ(lastBangDirection));
+                bangMarkerRenderer.transform.localScale = Vector3.one;
+                bangMarkerRenderer.color = Color.white;
+                UpdateImpact(1f, Mathf.Clamp(impactStartsAt, 0.1f, 0.95f));
                 return;
             }
 
