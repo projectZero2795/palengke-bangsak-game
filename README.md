@@ -8,14 +8,16 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 34E2: In-game leave confirmation**.
+This repository is currently in **urgent Phase 29B: dual-host domain migration**.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
-34E2 adds only a compact safe-area exit icon and Cancel/confirm dialog.
-This is a visible UI change, so it stops with screenshots for explicit owner
-approval. Android build `0.34.4` passes the focused behavior check and 227
-tests.
+34E2 added a compact safe-area exit icon and Cancel/confirm dialog. The owner
+approved the revised icon on 2026-07-12 after Android build `0.34.4` passed the
+focused behavior check and 227 tests. Urgent Phase 29A then audited the exact
+DNS, edge, certificate, GitOps, verification, redirect, and rollback boundary
+without changing production. Phase 29B now adds `bangsak.palengke.es` alongside
+the unchanged `games.palengke.es` endpoint.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -221,6 +223,7 @@ Do not skip ahead.
 - [Phase 34D mobile accessibility](docs/phase-34d-mobile-accessibility.md)
 - [Phase 34E1 Android Photon create/join](docs/phase-34e1-android-photon-create-join.md)
 - [Phase 34E2 in-game leave confirmation](docs/phase-34e2-in-game-leave-confirmation.md)
+- [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Urgent domain migration roadmap](docs/urgent-domain-migration-roadmap.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)

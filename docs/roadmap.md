@@ -37,7 +37,7 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 28B | Unity WebGL build | Reproducible Unity build and local browser smoke test. | Done. |
 | 28C | Docker static hosting | Non-root Nginx image for the approved WebGL files. | Container serves game locally. |
 | 29 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Done. |
-| 29A | Urgent Bang-Sak domain audit | Inventory DNS, edge TLS/proxy, GitOps route, CORS/CSP, docs/tools, smoke checks, redirect, rollback, and cleanup ownership. | Investigation recorded; no live mutation until the urgent phase is executed. |
+| 29A | Urgent Bang-Sak domain audit | Inventory DNS, edge TLS/proxy, GitOps route, CORS/CSP, docs/tools, smoke checks, redirect, rollback, and cleanup ownership. | Done by authorized self-review on 2026-07-12; every dependency, command, policy, and rollback boundary is recorded with no live mutation. |
 | 29B | Urgent dual-host migration | Add `bangsak.palengke.es` TLS/edge/GitOps routing while leaving `games.palengke.es` unchanged. | Both hostnames serve the same verified healthy build. |
 | 29C | Urgent canonical cutover | Make `bangsak` canonical and redirect old `games` paths to it. | New URL passes full guest/auth/Photon checks and old URLs preserve paths when redirecting. |
 | 29D | Urgent old-host cleanup | Remove obsolete old-host application routing/references after the observation window and record redirect retirement policy. | No active dependency or orphaned config remains; rollback is documented. |
@@ -50,7 +50,7 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 34C | Android touch layout | Make the existing HUD and controls fit touch screens and safe areas. | Done and owner-approved on 2026-07-12 after installing and reviewing Android build `0.34.1`. |
 | 34D | Mobile accessibility | Add readable text/contrast, reduced-motion behavior, and visual alternatives for important audio cues. | Done and owner-approved on 2026-07-12 after reviewing Android build `0.34.2`. |
 | 34E1 | Android Photon create/join | Verify room creation and joining between two Android clients only. | Done; all acceptance criteria passed the authorized self-review on build `0.34.3`. |
-| 34E2 | In-game leave confirmation | Add an accessible Leave Game control and confirmation during active multiplayer play. | Ready for visual review: `0.34.4` passes Cancel/confirm behavior and 227 tests; screenshots require explicit owner approval. |
+| 34E2 | In-game leave confirmation | Add an accessible Leave Game control and confirmation during active multiplayer play. | Done; owner approved the compact exit icon on 2026-07-12 after `0.34.4` passed Cancel/confirm behavior and 227 tests. |
 | 34E3 | Photon leave cleanup and room rules | Remove a voluntary leaver, free the slot, update counts, and apply deterministic Taya/authority/last-player rules. | Remaining clients agree on roster and round state with no ghost player. |
 | 34E4 | Android pause/resume | Handle Android pause, background, and resume only. | A backgrounded client resumes into the same coherent room and round. |
 | 34E5 | Android disconnect/reconnect | Handle involuntary disconnect and room-code reconnect only. | A disconnected Android client rejoins and both clients finish one agreed round. |
