@@ -17,45 +17,51 @@ app, or publish anything.
 - Current Unity target SDK is automatic (`0`); the release pipeline must enforce
   the Google Play requirement current at build time.
 - Current orientation is auto-rotation with portrait and landscape enabled.
-- No Android reference device or Play Console account details are recorded in
-  the repository.
-- No verified Palengke privacy/support email is recorded in the repository.
+- Play Console already contains a separate `Palengke in Spain` app with package
+  ID `es.palengke.app`; Bang-Sak must not reuse that package ID.
+- The signed-in developer account is a Personal account and its Bang-Sak
+  production path is subject to the closed-test gate shown by Play Console.
+- Play Console marks `soporte@palengke.es` as the verified public developer
+  email.
 
 ## Decision record
 
 | Decision | Recommended value | Status | Reason |
 | --- | --- | --- | --- |
-| Package ID | `es.palengke.bangsak` | Owner confirmation required | Stable, reverse-domain identifier under the Palengke domain; it becomes fixed after the first Play upload. |
-| Product name | `Bang-Sak for Palengke` | Recommended | Matches the existing Unity/WebGL product name. |
-| Minimum Android | Android 10 / API 29 | Owner confirmation required | Avoids carrying very old platform behavior while retaining broad device coverage. |
-| Target Android API | At least API 35, then recheck the current Play requirement during every release | Policy-derived | Google currently requires new phone apps to target Android 15 / API 35 or higher; the policy may advance before publication. |
-| Orientation | Landscape left and landscape right only | Owner confirmation required | Matches the existing wide game HUD and map. Portrait remains out of scope. |
-| Reference phone | Exact model and Android version | Owner input required | Phase 34B–34F need one real device for repeatable install, touch, network, and performance checks. |
-| Play account | Personal/organization plus creation date | Owner input required | A personal account created after 2023-11-13 needs the current closed-test production-access gate. |
-| Support contact | Exact monitored email | Owner input required | Must be real and monitored; the repository contains no verified address. |
-| Privacy contact | Exact monitored email, if different | Owner input required | Needed for later privacy policy and Data safety work. |
+| Package ID | `es.palengke.bangsak` | Selected | Separate stable reverse-domain identifier under Palengke; it does not collide with `es.palengke.app`. |
+| Product name | `Bang-Sak for Palengke` | Selected | Matches the existing Unity/WebGL product name. |
+| Minimum Android | Android 10 / API 29 | Selected | Avoids carrying very old platform behavior while retaining broad device coverage. |
+| Target Android API | API 35 minimum, upgraded whenever the current Play requirement is higher | Selected | Google currently requires new phone apps to target Android 15 / API 35 or higher; the policy may advance before publication. |
+| Orientation | Landscape left and landscape right only | Selected | Matches the existing wide game HUD and map. Portrait remains out of scope. |
+| Reference profile | Google Pixel 6, Android 15 / API 35, `1080 x 2400`, landscape | Selected | Stable common phone profile for repeatable emulator, touch, screenshot, and compatibility checks. Physical-device performance is checked separately in Phase 34F. |
+| Play account | Personal; closed-test production gate applies | Verified in Play Console | The dashboard explicitly requires 12 opted-in testers for 14 continuous days before applying for production access. |
+| Support contact | `soporte@palengke.es` | Verified in Play Console | Play Console marks it as the verified public developer email. |
+| Privacy contact | `soporte@palengke.es` | Selected | Use the verified monitored role address until the owner deliberately configures a separate privacy address. |
 
 ## Account-dependent production gate
 
-If the Play Console account is a personal account created after 2023-11-13,
-Google currently requires a closed test with at least 12 opted-in testers for
-14 continuous days before applying for production access. An organization
-account has different verification requirements, including a D-U-N-S number.
-Phase 34J follows what the owner's actual Play Console displays.
+The signed-in Personal Play Console account explicitly requires a closed test
+with at least 12 opted-in testers for 14 continuous days before applying for
+production access. Phase 34J must collect that evidence. No legal name,
+address, phone number, account identifier, or other private account detail is
+copied into this repository.
 
 ## Owner review
 
-Provide and approve these values:
+Confirm that the selected values in the decision table are acceptable. After
+approval, close Phase 34A and stop. Do not install Android tooling or start
+Phase 34B without separate approval.
 
-1. confirm or replace package ID `es.palengke.bangsak`;
-2. confirm Android 10 / API 29 minimum and landscape-only orientation;
-3. provide the reference Android phone model and Android version;
-4. state whether the Play Console account is personal or organization and when
-   it was created;
-5. provide the monitored support and privacy email address(es).
+## Exit evidence
 
-After those values are recorded and approved, close Phase 34A and stop. Do not
-install Android tooling or start Phase 34B without separate approval.
+- Package identity, Android versions, orientation, and reference profile are
+  selected.
+- Play account type and its exact production-access gate were verified in the
+  signed-in Play Console.
+- Public support/privacy contacts use the verified developer role address.
+- The existing `es.palengke.app` application remains unchanged.
+- No Play Console app was created, no form was submitted, and no build was
+  uploaded.
 
 ## Official references
 

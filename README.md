@@ -10,8 +10,8 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 This repository is currently in **Phase 34A: Android release decisions**.
 Phase 33 was approved after the `0.33.2` production room-connectivity hotfix.
-Phase 34A changes documentation and release decisions only; Android build work
-remains blocked until the owner approves the decision record.
+Phase 34A has a completed decision record ready for project-owner review;
+Android build work remains blocked until that review is approved.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
