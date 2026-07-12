@@ -186,7 +186,7 @@ namespace Palengke.BangSak.UI
             buttonRect.anchorMax = new Vector2(0f, 1f);
             buttonRect.pivot = new Vector2(0f, 1f);
             buttonRect.anchoredPosition = new Vector2(8f, -8f);
-            buttonRect.sizeDelta = new Vector2(118f, 42f);
+            buttonRect.sizeDelta = new Vector2(44f, 44f);
 
             var buttonImage = buttonObject.AddComponent<Image>();
             ApplyRoundedSprite(buttonImage);
@@ -196,7 +196,7 @@ namespace Palengke.BangSak.UI
             leaveGameButton = buttonObject.AddComponent<Button>();
             leaveGameButton.targetGraphic = buttonImage;
             leaveGameButton.onClick.AddListener(ShowLeaveConfirmation);
-            CreateText(buttonObject.transform, "LEAVE GAME", Vector2.zero, buttonRect.sizeDelta, 15, FontStyle.Bold, Color.white);
+            CreateLeaveIcon(buttonObject.transform);
 
             leaveConfirmationBlocker = new GameObject("Leave Confirmation Blocker");
             leaveConfirmationBlocker.transform.SetParent(parent, false);
@@ -253,6 +253,49 @@ namespace Palengke.BangSak.UI
 
             leaveConfirmationBlocker.SetActive(false);
             RefreshLeaveControl();
+        }
+
+        private static void CreateLeaveIcon(Transform parent)
+        {
+            var iconRoot = new GameObject("Exit Icon");
+            iconRoot.transform.SetParent(parent, false);
+            var iconRect = iconRoot.AddComponent<RectTransform>();
+            iconRect.anchorMin = new Vector2(0.5f, 0.5f);
+            iconRect.anchorMax = new Vector2(0.5f, 0.5f);
+            iconRect.pivot = new Vector2(0.5f, 0.5f);
+            iconRect.anchoredPosition = Vector2.zero;
+            iconRect.sizeDelta = new Vector2(26f, 26f);
+
+            var iconColor = new Color(1f, 0.94f, 0.9f, 1f);
+            CreateIconLine(iconRoot.transform, "Door Left", new Vector2(-8f, 0f), new Vector2(2.5f, 20f), 0f, iconColor);
+            CreateIconLine(iconRoot.transform, "Door Top", new Vector2(-3.5f, 9f), new Vector2(11f, 2.5f), 0f, iconColor);
+            CreateIconLine(iconRoot.transform, "Door Bottom", new Vector2(-3.5f, -9f), new Vector2(11f, 2.5f), 0f, iconColor);
+            CreateIconLine(iconRoot.transform, "Arrow Shaft", new Vector2(2f, 0f), new Vector2(16f, 2.8f), 0f, iconColor);
+            CreateIconLine(iconRoot.transform, "Arrow Upper", new Vector2(8.5f, 3.2f), new Vector2(9f, 2.8f), -45f, iconColor);
+            CreateIconLine(iconRoot.transform, "Arrow Lower", new Vector2(8.5f, -3.2f), new Vector2(9f, 2.8f), 45f, iconColor);
+        }
+
+        private static void CreateIconLine(
+            Transform parent,
+            string name,
+            Vector2 position,
+            Vector2 size,
+            float rotation,
+            Color color)
+        {
+            var lineObject = new GameObject(name);
+            lineObject.transform.SetParent(parent, false);
+            var rect = lineObject.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+            rect.localRotation = Quaternion.Euler(0f, 0f, rotation);
+
+            var image = lineObject.AddComponent<Image>();
+            image.color = color;
+            image.raycastTarget = false;
         }
 
         private Button CreateLeaveModalButton(

@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public sealed class Phase22UiPolishTests
 {
@@ -87,6 +88,9 @@ public sealed class Phase22UiPolishTests
         var leaveButton = runtimeRoot.transform.Find($"{SafeAreaCanvasLayout.SafeAreaRootName}/Leave Game Button");
         var blocker = runtimeRoot.transform.Find($"{SafeAreaCanvasLayout.SafeAreaRootName}/Leave Confirmation Blocker");
         Assert.That(leaveButton, Is.Not.Null);
+        Assert.That(leaveButton.GetComponent<RectTransform>().sizeDelta, Is.EqualTo(new Vector2(44f, 44f)));
+        Assert.That(leaveButton.Find("Exit Icon"), Is.Not.Null);
+        Assert.That(leaveButton.GetComponentInChildren<Text>(), Is.Null, "The gameplay leave control must be icon-only.");
         Assert.That(leaveButton.gameObject.activeSelf, Is.False, "Local play must not show the multiplayer leave control.");
         Assert.That(blocker, Is.Not.Null);
         Assert.That(blocker.Find("Leave Game Confirmation Panel"), Is.Not.Null);

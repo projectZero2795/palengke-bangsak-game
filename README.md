@@ -12,7 +12,7 @@ This repository is currently in **Phase 34E2: In-game leave confirmation**.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
-34E2 adds only a safe-area **LEAVE GAME** button and Cancel/confirm dialog.
+34E2 adds only a compact safe-area exit icon and Cancel/confirm dialog.
 This is a visible UI change, so it stops with screenshots for explicit owner
 approval. Android build `0.34.4` passes the focused behavior check and 227
 tests.
