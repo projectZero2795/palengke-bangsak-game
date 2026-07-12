@@ -41,11 +41,24 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 31 | Polish and content expansion | Plan maps, art, skins, badges, events, sound, mobile, anti-cheat, tournaments, power-ups, and selectable components after production foundations. | Ready for review; implementation order, dependencies, gates, and owner decisions are documented. |
 | 32 | Photon Fusion Shared multiplayer vertical slice | Replace the room/movement/action scaffolds with a real two-client WebGL Photon path. | Done; owner approved the two-client Photon vertical slice. |
 | 33 | Multiplayer integrity and anti-cheat | Validate authority, rate limits, action outcomes, result/reward submission, and abuse cases. | Ready for review; credential-bound authority requests, replay/rate/role/state/geometry validation, confirmed-state reconciliation, and authority-only idempotent score submission are implemented. |
+| 34A | Android release decisions | Lock the package ID, minimum Android version, orientation, reference device, Play Console account type, and privacy/support contacts. | Owner approves the recorded decisions; no build is made. |
+| 34B | Android debug build | Add a reproducible Unity Android debug-APK build without signing or store work. | The APK installs and opens the main menu on the reference device. |
+| 34C | Android touch layout | Make the existing HUD and controls fit touch screens and safe areas. | One local round is playable by touch with no critical overlap. |
+| 34D | Mobile accessibility | Add readable text/contrast, reduced-motion behavior, and visual alternatives for important audio cues. | Each accessibility option can be switched on and visibly checked on the reference device. |
+| 34E | Android Photon lifecycle | Handle create/join, pause, background, resume, disconnect, and reconnect on Android. | Two devices complete the focused reconnect checklist without corrupting the room. |
+| 34F | Android performance | Measure and meet the agreed frame-time, memory, temperature, and download-size budgets. | The reference device completes one round within the recorded budgets. |
+| 34G | Signed Play bundle | Produce a versioned, signed Android App Bundle while keeping signing secrets outside Git. | The `.aab` validates locally and its version/signing fingerprints are recorded. |
+| 34H | Play internal test | Create the Play Console app and publish only to the internal testing track. | The owner installs Bang-Sak from its Play Store tester link. |
+| 34I | Play listing and compliance | Add the store listing, screenshots, privacy policy, Data safety declaration, content rating, audience, and required app-content answers. | Play Console shows no unresolved required listing/app-content task. |
+| 34J | Play production access | Complete the required closed test or other account-specific production-access gate. | Play Console grants production access; tester evidence is recorded when required. |
+| 34K | Public Play Store release | Submit a staged production release, verify the public listing/install, and record rollback/support steps. | Bang-Sak is publicly downloadable from Google Play and a clean device completes the install/open smoke test. |
 
-Phases 32–41 are ordered in the
-[Phase 31 expansion plan](phase-31-polish-content-expansion.md). Phase 33 is the
-current implemented review checkpoint; later phases remain blocked by the
-mandatory stop rule.
+Phases 32–41, including the small Phase 34A–34K Android/Google Play track, are
+ordered in the [Phase 31 expansion plan](phase-31-polish-content-expansion.md).
+The detailed Android gates are in the
+[Phase 34 Android and Google Play roadmap](phase-34-android-play-roadmap.md).
+Phase 33 is the current implemented review checkpoint; later phases remain
+blocked by the mandatory stop rule.
 
 ## Mandatory stop rule
 

@@ -73,11 +73,12 @@ Phase 29 publishes the immutable game image through the existing Palengke GitOps
 Phase 30 adds structured production logs, request correlation, scripted public verification, release/version records, operations and rollback guidance, configuration/backup ownership, and a maintained known-issues register without recreating the removed monitoring stack.
 
 Phase 31 turns the requested post-release work into a dependency-ordered plan:
-authoritative multiplayer and integrity first, followed by mobile/Android,
-sound/accessibility, art, maps/component selection, cosmetics/badges, role
-power-ups, seasonal events, and tournaments. It defines common regression,
-safety, fairness, accessibility, security, performance, and production gates;
-it intentionally implements none of those later features yet.
+authoritative multiplayer and integrity first, followed by a small Phase
+34A–34K Android/Google Play release track, sound, art, maps/component selection,
+cosmetics/badges, role power-ups, seasonal events, and tournaments. It defines
+common regression, safety, fairness, accessibility, security, performance, and
+production gates; it intentionally implements none of those later features
+yet.
 
 Phase 32 imports Photon Fusion 2.1.1 and replaces the compile-safe room,
 movement, action, and round scaffolds with a real two-client WebGL vertical
@@ -124,8 +125,11 @@ lethal combat.
 ## Target stack
 
 - Game engine: Unity 2D.
-- Target build: WebGL first.
-- Public host later: `games.palengke.es`.
+- Target builds: WebGL first, then Android through the Phase 34A–34K Google Play
+  release track.
+- Web release: `games.palengke.es`.
+- Android release target: publicly downloadable from Google Play after Phase
+  34K approval.
 - Multiplayer later: Photon Fusion 2.
 - Palengke integration later: login, points, coins, leaderboard, badges.
 
@@ -189,6 +193,7 @@ Do not skip ahead.
 - [Phase 31 polish and content expansion plan](docs/phase-31-polish-content-expansion.md)
 - [Phase 32 Photon Fusion Shared multiplayer](docs/phase-32-authoritative-photon.md)
 - [Phase 33 multiplayer integrity baseline](docs/phase-33-multiplayer-integrity.md)
+- [Phase 34 Android and Google Play roadmap](docs/phase-34-android-play-roadmap.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)
 - [Release 0.28.2](docs/releases/0.28.2.md)
