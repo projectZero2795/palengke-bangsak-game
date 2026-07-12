@@ -3,7 +3,7 @@ set -euo pipefail
 
 game_url="${BANG_SAK_GAME_URL:-https://games.palengke.es}"
 api_url="${PALENGKE_API_URL:-https://palengke.es/api/backend}"
-expected_version="${BANG_SAK_EXPECTED_VERSION:-0.33.1}"
+expected_version="${BANG_SAK_EXPECTED_VERSION:-0.33.2}"
 origin="${BANG_SAK_ORIGIN:-https://games.palengke.es}"
 
 tmp_dir="$(mktemp -d)"

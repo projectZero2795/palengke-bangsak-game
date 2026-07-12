@@ -143,6 +143,17 @@ Verified on 2026-07-12 for release `0.33.1`:
 - Argo CD reconciled GitOps revision `33eaa42` as `Synced` and `Healthy`, with
   two Ready `622a8c2` replicas and zero restarts.
 
+Verified on 2026-07-12 for follow-up release `0.33.2`:
+
+- the WebGL retry wait uses Unity coroutine timing instead of `Task.Delay`;
+- `213` Unity EditMode tests passed with `0` failures;
+- the final local WebGL artifact created room `1234` through the direct EU
+  route;
+- the permanent production URL `https://games.palengke.es` loaded `0.33.2`
+  without a version query and created room `1234` as `Connected`, `1/4`, `EU`;
+- Argo CD reconciled GitOps revision `84a3305` as `Synced` and `Healthy`, with
+  two Ready `af0bfc7` replicas and zero restarts.
+
 ## Owner review in production
 
 1. Open `https://games.palengke.es` in two separate browser tabs.

@@ -199,3 +199,4 @@ Do not skip ahead.
 - [Release 0.28.2](docs/releases/0.28.2.md)
 - [Release 0.33.0](docs/releases/0.33.0.md)
 - [Release 0.33.1](docs/releases/0.33.1.md)
+- [Release 0.33.2](docs/releases/0.33.2.md)
