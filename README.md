@@ -8,9 +8,10 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 33: multiplayer integrity and
-anti-cheat baseline**, ready for project-owner review after direct production
-verification.
+This repository is currently in **Phase 34A: Android release decisions**.
+Phase 33 was approved after the `0.33.2` production room-connectivity hotfix.
+Phase 34A changes documentation and release decisions only; Android build work
+remains blocked until the owner approves the decision record.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -194,6 +195,7 @@ Do not skip ahead.
 - [Phase 32 Photon Fusion Shared multiplayer](docs/phase-32-authoritative-photon.md)
 - [Phase 33 multiplayer integrity baseline](docs/phase-33-multiplayer-integrity.md)
 - [Phase 34 Android and Google Play roadmap](docs/phase-34-android-play-roadmap.md)
+- [Phase 34A Android release decisions](docs/phase-34a-android-release-decisions.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)
 - [Release 0.28.2](docs/releases/0.28.2.md)

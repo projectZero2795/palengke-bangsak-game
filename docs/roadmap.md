@@ -40,8 +40,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 30 | Monitoring and maintenance | Structured logs, request correlation, production verification, release/version records, operations, rollback, backup/config, and known issues. | Done. |
 | 31 | Polish and content expansion | Plan maps, art, skins, badges, events, sound, mobile, anti-cheat, tournaments, power-ups, and selectable components after production foundations. | Ready for review; implementation order, dependencies, gates, and owner decisions are documented. |
 | 32 | Photon Fusion Shared multiplayer vertical slice | Replace the room/movement/action scaffolds with a real two-client WebGL Photon path. | Done; owner approved the two-client Photon vertical slice. |
-| 33 | Multiplayer integrity and anti-cheat | Validate authority, rate limits, action outcomes, result/reward submission, and abuse cases. | Ready for review; credential-bound authority requests, replay/rate/role/state/geometry validation, confirmed-state reconciliation, and authority-only idempotent score submission are implemented. |
-| 34A | Android release decisions | Lock the package ID, minimum Android version, orientation, reference device, Play Console account type, and privacy/support contacts. | Owner approves the recorded decisions; no build is made. |
+| 33 | Multiplayer integrity and anti-cheat | Validate authority, rate limits, action outcomes, result/reward submission, and abuse cases. | Done; owner approved after the production `0.33.2` Photon room-connectivity hotfix. |
+| 34A | Android release decisions | Lock the package ID, minimum Android version, orientation, reference device, Play Console account type, and privacy/support contacts. | In progress; recommended defaults are recorded and owner-specific decisions are pending. No build is made. |
 | 34B | Android debug build | Add a reproducible Unity Android debug-APK build without signing or store work. | The APK installs and opens the main menu on the reference device. |
 | 34C | Android touch layout | Make the existing HUD and controls fit touch screens and safe areas. | One local round is playable by touch with no critical overlap. |
 | 34D | Mobile accessibility | Add readable text/contrast, reduced-motion behavior, and visual alternatives for important audio cues. | Each accessibility option can be switched on and visibly checked on the reference device. |
@@ -57,8 +57,8 @@ Phases 32–41, including the small Phase 34A–34K Android/Google Play track, a
 ordered in the [Phase 31 expansion plan](phase-31-polish-content-expansion.md).
 The detailed Android gates are in the
 [Phase 34 Android and Google Play roadmap](phase-34-android-play-roadmap.md).
-Phase 33 is the current implemented review checkpoint; later phases remain
-blocked by the mandatory stop rule.
+Phase 34A is the current documentation-only checkpoint; Phase 34B and later
+remain blocked by the mandatory stop rule.
 
 ## Mandatory stop rule
 
