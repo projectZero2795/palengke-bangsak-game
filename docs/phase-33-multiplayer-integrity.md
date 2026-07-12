@@ -127,6 +127,22 @@ Verified on 2026-07-11:
   confirmed build `0.33.0`, security headers, WebGL assets, and the live
   leaderboard API.
 
+### Photon connectivity hotfix verification
+
+Verified on 2026-07-12 for release `0.33.1`:
+
+- `213` Unity EditMode tests passed with `0` failures;
+- the WebGL build completed at `37,442,211` bytes;
+- the browser logged `direct EU secure name server` before Photon startup;
+- a local WebGL client created room `1234`, and a second clean client joined as
+  Player 2 with the authority credential active;
+- production created room `1234` through the direct EU route and reported
+  `Connected`, `1/4 players`, and `EU`;
+- production verification passed build metadata, WebGL MIME/assets, request
+  IDs, CORS, and the live leaderboard API;
+- Argo CD reconciled GitOps revision `33eaa42` as `Synced` and `Healthy`, with
+  two Ready `622a8c2` replicas and zero restarts.
+
 ## Owner review in production
 
 1. Open `https://games.palengke.es` in two separate browser tabs.

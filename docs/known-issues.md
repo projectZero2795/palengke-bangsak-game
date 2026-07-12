@@ -36,6 +36,10 @@
 
 ## Resolved during release
 
+- WebGL room creation could fail with generic `Error` when a client resolver
+  could not follow Photon's global name-server alias reliably. Version `0.33.1`
+  uses the fixed EU secure name-server route for WebGL, retries one failed
+  connection, and preserves the detailed last failure for the room UI.
 - The registry wildcard certificate expired on 2026-07-11. A dedicated
   automatically renewable `registry.renzlab.com` certificate replaced it.
 - The Palengke backend pipeline was blocked by a Go TLS vulnerability in
