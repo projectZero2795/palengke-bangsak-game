@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 using Palengke.BangSak.UI;
 using UnityEditor;
@@ -66,5 +67,33 @@ public sealed class Phase22UiPolishTests
         Assert.That(hud, Is.Not.Null);
         Assert.That(hud.ShowMainMenuButton, Is.True);
         Assert.That(hud.MainMenuSceneName, Is.EqualTo("MainMenu"));
+    }
+
+    [Test]
+    public void PrototypeMap_RoundHudContainsLeaveConfirmationUi()
+    {
+        var scene = EditorSceneManager.OpenScene("Assets/Scenes/PrototypeMap.unity");
+        var roundRoot = scene.GetRootGameObjects().FirstOrDefault(root => root.name == "Phase 21 Round Rules");
+        var hud = roundRoot.GetComponent<PrototypeRoundRulesHud>();
+        var createHud = typeof(PrototypeRoundRulesHud).GetMethod("CreateHud", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        Assert.That(createHud, Is.Not.Null);
+        createHud.Invoke(hud, null);
+
+        Assert.That(hud.HasLeaveConfirmationUi, Is.True);
+        Assert.That(hud.IsLeaveConfirmationVisible, Is.False);
+        var runtimeRoot = GameObject.Find("Phase 21 Round Rules HUD");
+        Assert.That(runtimeRoot, Is.Not.Null);
+        var leaveButton = runtimeRoot.transform.Find($"{SafeAreaCanvasLayout.SafeAreaRootName}/Leave Game Button");
+        var blocker = runtimeRoot.transform.Find($"{SafeAreaCanvasLayout.SafeAreaRootName}/Leave Confirmation Blocker");
+        Assert.That(leaveButton, Is.Not.Null);
+        Assert.That(leaveButton.gameObject.activeSelf, Is.False, "Local play must not show the multiplayer leave control.");
+        Assert.That(blocker, Is.Not.Null);
+        Assert.That(blocker.Find("Leave Game Confirmation Panel"), Is.Not.Null);
+
+        blocker.gameObject.SetActive(true);
+        hud.CancelLeaveConfirmation();
+        Assert.That(hud.IsLeaveConfirmationVisible, Is.False);
+        Object.DestroyImmediate(runtimeRoot);
     }
 }

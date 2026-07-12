@@ -8,14 +8,14 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 34E1: Android Photon create/join**.
+This repository is currently in **Phase 34E2: In-game leave confirmation**.
 Phase 34D was owner-approved after reviewing Android accessibility build
-`0.34.2`. Phase 34E1 adds a visible stable roster to the room panel and uses
-Android debug version `0.34.3` for the focused two-client create/join check.
-Two Android 15 clients now pass room `1234` with the matching `JuanP · Maria`
-roster; 226 tests pass. Phase 34E1 is ready for owner review.
-Voluntary leave, background/resume, reconnect, performance, and later visual
-work remain blocked until the Phase 34E1 owner review is approved.
+`0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
+clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
+34E2 adds only a safe-area **LEAVE GAME** button and Cancel/confirm dialog.
+This is a visible UI change, so it stops with screenshots for explicit owner
+approval. Android build `0.34.4` passes the focused behavior check and 227
+tests.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -163,7 +163,9 @@ After each phase:
 3. Update docs if needed.
 4. Create or update GitHub issues.
 5. Explain how to test.
-6. Stop and wait for review before continuing.
+6. Self-review nonvisual acceptance criteria and continue only when all pass.
+7. For visible additions or changes, provide screenshots and stop for explicit
+   owner approval.
 
 Do not skip ahead.
 
@@ -218,6 +220,8 @@ Do not skip ahead.
 - [Phase 34C Android touch layout](docs/phase-34c-android-touch-layout.md)
 - [Phase 34D mobile accessibility](docs/phase-34d-mobile-accessibility.md)
 - [Phase 34E1 Android Photon create/join](docs/phase-34e1-android-photon-create-join.md)
+- [Phase 34E2 in-game leave confirmation](docs/phase-34e2-in-game-leave-confirmation.md)
+- [Urgent domain migration roadmap](docs/urgent-domain-migration-roadmap.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)
 - [Release 0.28.2](docs/releases/0.28.2.md)

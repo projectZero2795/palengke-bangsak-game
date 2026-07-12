@@ -38,6 +38,11 @@ namespace Palengke.BangSak.UI
         private Text resultTitleLabel;
         private Text resultMessageLabel;
         private Button restartButton;
+        private Button leaveGameButton;
+        private GameObject leaveConfirmationBlocker;
+        private GameObject leaveConfirmationPanel;
+        private Button confirmLeaveButton;
+        private Text leaveConfirmationMessage;
         private static Sprite roundedHudSprite;
 
         public PrototypeRoundRulesController Controller => controller;
@@ -49,6 +54,11 @@ namespace Palengke.BangSak.UI
         public bool ShowMainMenuButton => showMainMenuButton;
 
         public bool HasRuntimeHud => hudRoot != null;
+
+        public bool HasLeaveConfirmationUi => leaveConfirmationPanel != null;
+
+        public bool IsLeaveConfirmationVisible =>
+            leaveConfirmationBlocker != null && leaveConfirmationBlocker.activeSelf;
 
         private void Start()
         {
@@ -127,6 +137,8 @@ namespace Palengke.BangSak.UI
                     resultMessageLabel.text = $"{controller.ResultMessage}\nPress R or tap Restart.";
                 }
             }
+
+            RefreshLeaveControl();
         }
 
         private void ResolveController()
@@ -160,8 +172,171 @@ namespace Palengke.BangSak.UI
 
             CreateStatusPanel(safeAreaRoot);
             CreateResultPanel(safeAreaRoot);
+            CreateLeaveControls(safeAreaRoot);
             var cueHud = canvasObject.AddComponent<AccessibilityCueHud>();
             cueHud.Initialize(safeAreaRoot);
+        }
+
+        private void CreateLeaveControls(Transform parent)
+        {
+            var buttonObject = new GameObject("Leave Game Button");
+            buttonObject.transform.SetParent(parent, false);
+            var buttonRect = buttonObject.AddComponent<RectTransform>();
+            buttonRect.anchorMin = new Vector2(0f, 1f);
+            buttonRect.anchorMax = new Vector2(0f, 1f);
+            buttonRect.pivot = new Vector2(0f, 1f);
+            buttonRect.anchoredPosition = new Vector2(8f, -8f);
+            buttonRect.sizeDelta = new Vector2(118f, 42f);
+
+            var buttonImage = buttonObject.AddComponent<Image>();
+            ApplyRoundedSprite(buttonImage);
+            buttonImage.color = new Color(0.34f, 0.09f, 0.09f, 0.96f);
+            AddOutline(buttonObject, new Color(1f, 0.4f, 0.34f, 0.92f), new Vector2(1f, -1f));
+
+            leaveGameButton = buttonObject.AddComponent<Button>();
+            leaveGameButton.targetGraphic = buttonImage;
+            leaveGameButton.onClick.AddListener(ShowLeaveConfirmation);
+            CreateText(buttonObject.transform, "LEAVE GAME", Vector2.zero, buttonRect.sizeDelta, 15, FontStyle.Bold, Color.white);
+
+            leaveConfirmationBlocker = new GameObject("Leave Confirmation Blocker");
+            leaveConfirmationBlocker.transform.SetParent(parent, false);
+            var blockerRect = leaveConfirmationBlocker.AddComponent<RectTransform>();
+            blockerRect.anchorMin = Vector2.zero;
+            blockerRect.anchorMax = Vector2.one;
+            blockerRect.offsetMin = Vector2.zero;
+            blockerRect.offsetMax = Vector2.zero;
+            var blockerImage = leaveConfirmationBlocker.AddComponent<Image>();
+            blockerImage.color = new Color(0f, 0f, 0f, 0.68f);
+            blockerImage.raycastTarget = true;
+
+            leaveConfirmationPanel = new GameObject("Leave Game Confirmation Panel");
+            leaveConfirmationPanel.transform.SetParent(leaveConfirmationBlocker.transform, false);
+            var panelRect = leaveConfirmationPanel.AddComponent<RectTransform>();
+            panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+            panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRect.pivot = new Vector2(0.5f, 0.5f);
+            panelRect.anchoredPosition = Vector2.zero;
+            panelRect.sizeDelta = new Vector2(410f, 228f);
+            var panelImage = leaveConfirmationPanel.AddComponent<Image>();
+            ApplyRoundedSprite(panelImage);
+            panelImage.color = new Color(0.025f, 0.04f, 0.075f, 0.99f);
+            AddOutline(leaveConfirmationPanel, new Color(1f, 0.42f, 0.3f, 0.92f), new Vector2(1.5f, -1.5f));
+            AddShadow(leaveConfirmationPanel, new Color(0f, 0f, 0f, 0.62f), new Vector2(0f, -5f));
+
+            CreateText(
+                leaveConfirmationPanel.transform,
+                "LEAVE THIS GAME?",
+                new Vector2(0f, 70f),
+                new Vector2(360f, 42f),
+                27,
+                FontStyle.Bold,
+                new Color(1f, 0.72f, 0.28f, 1f));
+            leaveConfirmationMessage = CreateText(
+                leaveConfirmationPanel.transform,
+                "You will leave the room and return to the main menu.",
+                new Vector2(0f, 20f),
+                new Vector2(350f, 54f),
+                16,
+                FontStyle.Bold,
+                new Color(0.86f, 0.93f, 1f, 1f));
+
+            CreateLeaveModalButton(
+                "CANCEL",
+                new Vector2(-92f, -66f),
+                new Color(0.16f, 0.24f, 0.36f, 1f),
+                CancelLeaveConfirmation);
+            confirmLeaveButton = CreateLeaveModalButton(
+                "LEAVE GAME",
+                new Vector2(92f, -66f),
+                new Color(0.72f, 0.16f, 0.12f, 1f),
+                ConfirmLeaveGame);
+
+            leaveConfirmationBlocker.SetActive(false);
+            RefreshLeaveControl();
+        }
+
+        private Button CreateLeaveModalButton(
+            string label,
+            Vector2 position,
+            Color color,
+            UnityEngine.Events.UnityAction onClick)
+        {
+            var buttonObject = new GameObject($"{label} Leave Confirmation Button");
+            buttonObject.transform.SetParent(leaveConfirmationPanel.transform, false);
+            var rect = buttonObject.AddComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = position;
+            rect.sizeDelta = new Vector2(158f, 44f);
+
+            var image = buttonObject.AddComponent<Image>();
+            ApplyRoundedSprite(image);
+            image.color = color;
+            var button = buttonObject.AddComponent<Button>();
+            button.targetGraphic = image;
+            button.onClick.AddListener(onClick);
+            CreateText(buttonObject.transform, label, Vector2.zero, rect.sizeDelta, 16, FontStyle.Bold, Color.white);
+            return button;
+        }
+
+        public void ShowLeaveConfirmation()
+        {
+            var networkSession = FusionNetworkSession.Active;
+            if (networkSession == null || !networkSession.IsConnected || leaveConfirmationBlocker == null)
+            {
+                return;
+            }
+
+            if (confirmLeaveButton != null)
+            {
+                confirmLeaveButton.interactable = true;
+            }
+            if (leaveConfirmationMessage != null)
+            {
+                leaveConfirmationMessage.text = "You will leave the room and return to the main menu.";
+            }
+            leaveConfirmationBlocker.transform.SetAsLastSibling();
+            leaveConfirmationBlocker.SetActive(true);
+        }
+
+        public void CancelLeaveConfirmation()
+        {
+            if (leaveConfirmationBlocker != null)
+            {
+                leaveConfirmationBlocker.SetActive(false);
+            }
+        }
+
+        public void ConfirmLeaveGame()
+        {
+            var networkSession = FusionNetworkSession.Active;
+            if (networkSession == null || !networkSession.IsConnected)
+            {
+                CancelLeaveConfirmation();
+                return;
+            }
+
+            if (confirmLeaveButton != null)
+            {
+                confirmLeaveButton.interactable = false;
+            }
+            if (leaveConfirmationMessage != null)
+            {
+                leaveConfirmationMessage.text = "Leaving room...";
+            }
+            networkSession.BeginLeave();
+        }
+
+        private void RefreshLeaveControl()
+        {
+            if (leaveGameButton == null)
+            {
+                return;
+            }
+
+            var networkSession = FusionNetworkSession.Active;
+            leaveGameButton.gameObject.SetActive(networkSession != null && networkSession.IsConnected);
         }
 
         private void CreateStatusPanel(Transform parent)

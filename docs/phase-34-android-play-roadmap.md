@@ -7,8 +7,9 @@ owner-reviewable checkpoints. Phase 34A records decisions and Phase 34B adds a
 local debug APK; later phases remain gated and this roadmap never authorizes a
 Play Console upload or publication by itself.
 
-Phase 33 and Phases 34A through 34D are approved. Every 34-series phase stops
-for owner review before the next one begins.
+Phase 33 and Phases 34A through 34E1 are approved. Nonvisual phases may proceed
+after a complete evidence-backed self-review; visible phases still stop with
+screenshots for explicit owner approval.
 
 ## Small review phases
 
@@ -57,15 +58,16 @@ for owner review before the next one begins.
 - [Data safety declaration](https://support.google.com/googleplay/android-developer/answer/10787469)
 - [Content rating requirements](https://support.google.com/googleplay/android-developer/answer/9859655)
 
-## Stop rule
+## Review rule
 
 At the end of every phase:
 
 1. commit and push only that phase;
 2. record its build/version and test evidence;
-3. explain the short owner verification;
-4. stop;
-5. continue only after explicit owner approval.
+3. self-review every objective nonvisual acceptance criterion;
+4. continue only when every criterion passes;
+5. for any visible addition/change, provide screenshots and stop for explicit
+   owner approval before continuing.
 
 ## Final exit criterion
 

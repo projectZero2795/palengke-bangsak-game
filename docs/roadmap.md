@@ -37,6 +37,10 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 28B | Unity WebGL build | Reproducible Unity build and local browser smoke test. | Done. |
 | 28C | Docker static hosting | Non-root Nginx image for the approved WebGL files. | Container serves game locally. |
 | 29 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Done. |
+| 29A | Urgent Bang-Sak domain audit | Inventory DNS, edge TLS/proxy, GitOps route, CORS/CSP, docs/tools, smoke checks, redirect, rollback, and cleanup ownership. | Investigation recorded; no live mutation until the urgent phase is executed. |
+| 29B | Urgent dual-host migration | Add `bangsak.palengke.es` TLS/edge/GitOps routing while leaving `games.palengke.es` unchanged. | Both hostnames serve the same verified healthy build. |
+| 29C | Urgent canonical cutover | Make `bangsak` canonical and redirect old `games` paths to it. | New URL passes full guest/auth/Photon checks and old URLs preserve paths when redirecting. |
+| 29D | Urgent old-host cleanup | Remove obsolete old-host application routing/references after the observation window and record redirect retirement policy. | No active dependency or orphaned config remains; rollback is documented. |
 | 30 | Monitoring and maintenance | Structured logs, request correlation, production verification, release/version records, operations, rollback, backup/config, and known issues. | Done. |
 | 31 | Polish and content expansion | Plan maps, art, skins, badges, events, sound, mobile, anti-cheat, tournaments, power-ups, and selectable components after production foundations. | Ready for review; implementation order, dependencies, gates, and owner decisions are documented. |
 | 32 | Photon Fusion Shared multiplayer vertical slice | Replace the room/movement/action scaffolds with a real two-client WebGL Photon path. | Done; owner approved the two-client Photon vertical slice. |
@@ -45,8 +49,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 34B | Android debug build | Add a reproducible Unity Android debug-APK build without signing or store work. | Done and owner-approved on 2026-07-12 after the acceptance-criteria audit. |
 | 34C | Android touch layout | Make the existing HUD and controls fit touch screens and safe areas. | Done and owner-approved on 2026-07-12 after installing and reviewing Android build `0.34.1`. |
 | 34D | Mobile accessibility | Add readable text/contrast, reduced-motion behavior, and visual alternatives for important audio cues. | Done and owner-approved on 2026-07-12 after reviewing Android build `0.34.2`. |
-| 34E1 | Android Photon create/join | Verify room creation and joining between two Android clients only. | Ready for review: two Android 15 clients show room `1234`, roster `JuanP · Maria`, and distinct local names on build `0.34.3`. |
-| 34E2 | In-game leave confirmation | Add an accessible Leave Game control and confirmation during active multiplayer play. | Cancel keeps the player in-game; confirm returns that player to the menu. |
+| 34E1 | Android Photon create/join | Verify room creation and joining between two Android clients only. | Done; all acceptance criteria passed the authorized self-review on build `0.34.3`. |
+| 34E2 | In-game leave confirmation | Add an accessible Leave Game control and confirmation during active multiplayer play. | Ready for visual review: `0.34.4` passes Cancel/confirm behavior and 227 tests; screenshots require explicit owner approval. |
 | 34E3 | Photon leave cleanup and room rules | Remove a voluntary leaver, free the slot, update counts, and apply deterministic Taya/authority/last-player rules. | Remaining clients agree on roster and round state with no ghost player. |
 | 34E4 | Android pause/resume | Handle Android pause, background, and resume only. | A backgrounded client resumes into the same coherent room and round. |
 | 34E5 | Android disconnect/reconnect | Handle involuntary disconnect and room-code reconnect only. | A disconnected Android client rejoins and both clients finish one agreed round. |
@@ -61,17 +65,25 @@ Phases 32–41, including the small Phase 34A–34K Android/Google Play track, a
 ordered in the [Phase 31 expansion plan](phase-31-polish-content-expansion.md).
 The detailed Android gates are in the
 [Phase 34 Android and Google Play roadmap](phase-34-android-play-roadmap.md).
-Phase 34E1 is the current implementation checkpoint. Phase 34E2 and later
-remain blocked by the mandatory stop rule.
+Phase 34E2 is the current implementation checkpoint. Phase 34E3 and later
+remain blocked by the review rule.
 
 The requested closer camera, darkness, cone-only vision, and self-only minimap
 are split into future Phases 42A–42E in the
 [Phase 31 expansion plan](phase-31-polish-content-expansion.md). They are
 planning only and are not part of the current Android Photon phase.
 
-## Mandatory stop rule
+The urgent hostname track is documented in the
+[domain migration roadmap](urgent-domain-migration-roadmap.md). After the
+current Phase 34E2 visual review, Phases 29A–29D take priority over Phase 34E3.
 
-After each phase, stop and wait for review before continuing.
+## Review rule
+
+- Codex may self-review a nonvisual phase and continue only when every recorded
+  acceptance criterion has objective evidence.
+- Any phase that adds or modifies visible components must stop with screenshots
+  and wait for explicit owner approval.
+- A failed or incomplete criterion always stops the sequence.
 
 ## Future gameplay rules to respect
 

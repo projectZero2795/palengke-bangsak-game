@@ -14,11 +14,11 @@ namespace Palengke.BangSak.Editor
         public const string MenuPath = "Bang-Sak/Build/Android Debug APK";
         public const string RelativeOutputPath = "Build/Android/BangSak-debug.apk";
         public const string PackageId = "es.palengke.bangsak";
-        public const string PhaseVersion = "0.34.3";
+        public const string PhaseVersion = "0.34.4";
         public const int VersionCode = 1;
         public const int MinimumApiLevel = 29;
         public const int TargetApiLevel = 35;
-        public const string CurrentPhase = "34E1";
+        public const string CurrentPhase = "34E2";
 
         [MenuItem(MenuPath)]
         public static void BuildFromMenu()
