@@ -8,10 +8,12 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 34A: Android release decisions**.
-Phase 33 was approved after the `0.33.2` production room-connectivity hotfix.
-Phase 34A has a completed decision record ready for project-owner review;
-Android build work remains blocked until that review is approved.
+This repository is currently in **Phase 34B: Android debug build**.
+Phase 34A was approved with the package, compatibility, orientation, reference
+device, account gate, and support/privacy decisions locked. Phase 34B now has a
+reproducible `0.34.0` ARM64 debug APK that installs and opens the main menu on
+the Pixel 6 Android 15 reference emulator. It is ready for project-owner review;
+touch-layout work remains blocked until that review is approved.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -96,6 +98,13 @@ movement, action, caught-state, timer, result, and restart state. Multiplayer
 score submission is restricted to the room authority and a stable per-round
 idempotency ID. Shared Mode still trusts the player-hosted room creator, so this
 is a practical baseline rather than dedicated-server competitive security.
+
+Phase 34A records the approved Android release decisions without creating a
+build or changing Play Console. Phase 34B installs the Unity Android toolchain
+and adds a reproducible IL2CPP ARM64 debug APK for `es.palengke.bangsak`. The
+APK targets API 35, supports API 29 and newer, and has been installed and opened
+on the Pixel 6 Android 15 reference emulator. Touch layout, release signing,
+Play Console creation, and store upload remain later owner-gated phases.
 
 ## Safety and branding rules
 
@@ -196,6 +205,7 @@ Do not skip ahead.
 - [Phase 33 multiplayer integrity baseline](docs/phase-33-multiplayer-integrity.md)
 - [Phase 34 Android and Google Play roadmap](docs/phase-34-android-play-roadmap.md)
 - [Phase 34A Android release decisions](docs/phase-34a-android-release-decisions.md)
+- [Phase 34B Android debug build](docs/phase-34b-android-debug-build.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)
 - [Release 0.28.2](docs/releases/0.28.2.md)

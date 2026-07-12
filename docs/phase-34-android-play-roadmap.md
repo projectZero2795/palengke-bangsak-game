@@ -3,12 +3,12 @@
 ## Goal
 
 Make Bang-Sak publicly downloadable from Google Play through very small,
-owner-reviewable checkpoints. This document is a plan only. It does not start
-Android implementation, create a Play Console app, upload a build, or publish
-anything.
+owner-reviewable checkpoints. Phase 34A records decisions and Phase 34B adds a
+local debug APK; later phases remain gated and this roadmap never authorizes a
+Play Console upload or publication by itself.
 
-Phase 33 must be approved before Phase 34A starts. Every 34-series phase stops
-for owner review before the next one begins.
+Phase 33 and Phase 34A are approved. Every 34-series phase stops for owner
+review before the next one begins.
 
 ## Small review phases
 
