@@ -20,7 +20,7 @@ namespace Palengke.BangSak.Network
         public const string DirectEuNameServer = "ns-eu.photonengine.io";
         public const string GameplaySceneName = "PrototypeMap";
         public const int MaximumConnectionAttempts = 2;
-        private const int ConnectionRetryDelayMilliseconds = 750;
+        private const float ConnectionRetryDelaySeconds = 0.75f;
         private const float MovementSendIntervalSeconds = 0.1f;
         private const float RoundSendIntervalSeconds = 0.25f;
         private const float CredentialRefreshIntervalSeconds = 5f;
@@ -297,13 +297,26 @@ namespace Palengke.BangSak.Network
                 {
                     StatusMessage = $"Photon connection interrupted ({lastFailure}). Retrying secure EU route "
                         + $"{attempt + 1}/{MaximumConnectionAttempts}...";
-                    await Task.Delay(ConnectionRetryDelayMilliseconds);
+                    await WaitForConnectionRetryAsync();
                 }
             }
 
             FailConnection(
                 $"Photon could not connect after {MaximumConnectionAttempts} attempts ({lastFailure}). "
                 + "Check the connection and select CREATE or JOIN again.");
+        }
+
+        private Task WaitForConnectionRetryAsync()
+        {
+            var completion = new TaskCompletionSource<bool>();
+            StartCoroutine(CompleteConnectionRetryAfterDelay(completion));
+            return completion.Task;
+        }
+
+        private static IEnumerator CompleteConnectionRetryAfterDelay(TaskCompletionSource<bool> completion)
+        {
+            yield return new WaitForSecondsRealtime(ConnectionRetryDelaySeconds);
+            completion.TrySetResult(true);
         }
 
         private NetworkSceneManagerDefault CreateRunner()
