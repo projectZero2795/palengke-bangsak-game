@@ -9,7 +9,7 @@ mobile/content expansion without weakening the core rules.
 ## High-level architecture
 
 ```text
-Player Browser -> games.palengke.es -> Unity WebGL build (live)
+Player Browser -> bangsak.palengke.es -> Unity WebGL build (canonical)
 Android device -> Unity Android client (planned)
 
 Both clients

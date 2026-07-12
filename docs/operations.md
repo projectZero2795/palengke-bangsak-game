@@ -6,7 +6,9 @@
 - Kubernetes desired state: `projectZero2795/palengke-gitops`.
 - Identity, scores, rewards, and leaderboard: `Elis-Homelab/palengke`.
 - Immutable images: `registry.renzlab.com/palengke/bang-sak:<git-commit>`.
-- Public endpoint: `https://games.palengke.es`.
+- Canonical public endpoint: `https://bangsak.palengke.es`.
+- Legacy redirect: `https://games.palengke.es` preserves the path and query
+  during the migration observation window.
 
 Do not edit a running Deployment as a release mechanism. Update GitOps and let
 Argo CD reconcile it.
@@ -46,8 +48,8 @@ tokens into an issue.
 ## Version identification
 
 ```bash
-curl --fail https://games.palengke.es/build-info.json
-curl --head https://games.palengke.es/ | grep -i x-request-id
+curl --fail https://bangsak.palengke.es/build-info.json
+curl --head https://bangsak.palengke.es/ | grep -i x-request-id
 ssh k8s-node-1 \
   'kubectl -n palengke-prod get deployment bang-sak \
    -o jsonpath="{.spec.template.spec.containers[0].image}{\"\\n\"}"'

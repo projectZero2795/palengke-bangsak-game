@@ -52,7 +52,7 @@ This is a Phase 28 integration contract, not a final competitive balance.
 
 Phase 28 can be reviewed only partially before hosting exists. Its complete
 authenticated acceptance test is deferred to **Phase 29: Kubernetes deployment
-and public release**, when `https://games.palengke.es` is reachable.
+and public release**, when `https://bangsak.palengke.es` is reachable.
 
 Do not close or fully approve Phase 28 based only on Editor guest-mode and unit
 tests. Final approval requires the Phase 29 environment to verify shared login,

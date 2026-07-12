@@ -156,7 +156,7 @@ Verified on 2026-07-12 for follow-up release `0.33.2`:
 
 ## Owner review in production
 
-1. Open `https://games.palengke.es` in two separate browser tabs.
+1. Open `https://bangsak.palengke.es` in two separate browser tabs.
 2. Tab 1: choose `ROOM`, then `CREATE`; confirm room `1234`, `1/4`, and `EU`.
 3. Tab 2: choose `ROOM`, then `JOIN 1234`; confirm `2/4` and the message
    `authority credential active`.

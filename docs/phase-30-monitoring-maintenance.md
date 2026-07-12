@@ -20,7 +20,7 @@ homelab.
 
 ```bash
 ./tools/verify-production.sh
-curl --head https://games.palengke.es/ | grep -i x-request-id
+curl --head https://bangsak.palengke.es/ | grep -i x-request-id
 ssh k8s-node-1 \
   'kubectl -n palengke-prod logs deployment/bang-sak --tail=5 --prefix'
 ```
@@ -37,7 +37,7 @@ Verified on 2026-07-11:
 - GitOps commit: `fd4cb4c`;
 - Argo CD application `palengke-prod`: `Synced` and `Healthy`;
 - two Phase 30 game replicas: Ready;
-- `./tools/verify-production.sh`: passed against `https://games.palengke.es`;
+- `./tools/verify-production.sh`: passed against `https://bangsak.palengke.es`;
 - public `X-Request-ID` correlated with the same ID in the JSON pod log;
 - production WebGL menu rendered successfully with no browser warnings or
   errors.

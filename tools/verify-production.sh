@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-game_url="${BANG_SAK_GAME_URL:-https://games.palengke.es}"
+game_url="${BANG_SAK_GAME_URL:-https://bangsak.palengke.es}"
 api_url="${PALENGKE_API_URL:-https://palengke.es/api/backend}"
 expected_version="${BANG_SAK_EXPECTED_VERSION:-0.33.3}"
-origin="${BANG_SAK_ORIGIN:-https://games.palengke.es}"
+origin="${BANG_SAK_ORIGIN:-https://bangsak.palengke.es}"
 
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT

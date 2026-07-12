@@ -3,7 +3,7 @@
 ## Goal
 
 Release the approved Bang-Sak WebGL container through the existing Palengke
-GitOps platform at `https://games.palengke.es` and activate the real public
+GitOps platform at `https://bangsak.palengke.es` and activate the real public
 leaderboard API.
 
 ## Release inventory
@@ -18,7 +18,7 @@ leaderboard API.
 
 ## Production architecture
 
-`games.palengke.es` terminates TLS at the existing public Nginx/Traefik path.
+`bangsak.palengke.es` terminates TLS at the existing public Nginx/Traefik path.
 Traefik routes the request to the `bang-sak` ClusterIP service in
 `palengke-prod`. Two hardened, non-root Nginx pods serve the immutable WebGL
 image. Argo CD owns the desired Kubernetes state in `palengke-gitops`.
@@ -35,7 +35,7 @@ The Deployment includes:
 
 ## Public review
 
-1. Open `https://games.palengke.es`.
+1. Open `https://bangsak.palengke.es`.
 2. Confirm MainMenu renders over HTTPS.
 3. Open `HOW`, `SET`, `ROOM`, and `SCORES`.
 4. Confirm `SCORES` says `No scores yet` instead of `Leaderboard unavailable`.
@@ -46,7 +46,7 @@ The Deployment includes:
 Authenticated owner check:
 
 1. Sign in at `https://palengke.es` in the same browser.
-2. Open `https://games.palengke.es` in a new tab.
+2. Open `https://bangsak.palengke.es` in a new tab.
 3. Confirm the footer shows the Palengke identity instead of `Guest Player`.
 4. Complete a round and confirm the result grants server-calculated coins.
 5. Reopen `SCORES` and confirm the persisted score appears.
@@ -64,8 +64,8 @@ kubectl -n networking get ingressroute bang-sak
 Public endpoints:
 
 ```bash
-curl --fail https://games.palengke.es/healthz
-curl --fail https://games.palengke.es/build-info.json
+curl --fail https://bangsak.palengke.es/healthz
+curl --fail https://bangsak.palengke.es/build-info.json
 curl --fail https://palengke.es/api/backend/games/bang-sak/leaderboard
 ```
 

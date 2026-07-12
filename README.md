@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **urgent Phase 29C: canonical domain cutover**.
+This repository is currently in **urgent Phase 29D: old-host observation and cleanup**.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
@@ -19,8 +19,10 @@ DNS, edge, certificate, GitOps, verification, redirect, and rollback boundary
 without changing production. Phase 29B added `bangsak.palengke.es` alongside
 the unchanged `games.palengke.es` endpoint and passed the complete guest,
 authenticated reward, leaderboard, and two-client Photon acceptance matrix.
-Phase 29C now makes the new hostname canonical while preserving old paths and
-queries through a temporary redirect.
+Phase 29C made the new hostname canonical while preserving old paths and
+queries through a temporary redirect. Phase 29D is now in its required
+observation window before any old-host application route or reference is
+removed.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -78,7 +80,7 @@ Phase 28B restores the missing release prerequisite with a reproducible Unity We
 
 Phase 28C packages the approved WebGL artifact in a non-root Nginx container with health, cache, MIME, and browser security configuration. It remains a local container test only; Kubernetes and public release belong to the next approved phase.
 
-Phase 29 publishes the immutable game image through the existing Palengke GitOps platform at `https://games.palengke.es`. Two hardened Kubernetes replicas, health probes, disruption protection, TLS routing, rollback notes, and the live Bang-Sak leaderboard API are in place.
+Phase 29 publishes the immutable game image through the existing Palengke GitOps platform at `https://bangsak.palengke.es`. Two hardened Kubernetes replicas, health probes, disruption protection, TLS routing, rollback notes, and the live Bang-Sak leaderboard API are in place.
 
 Phase 30 adds structured production logs, request correlation, scripted public verification, release/version records, operations and rollback guidance, configuration/backup ownership, and a maintained known-issues register without recreating the removed monitoring stack.
 
@@ -151,7 +153,7 @@ lethal combat.
 - Game engine: Unity 2D.
 - Target builds: WebGL first, then Android through the Phase 34A–34K Google Play
   release track.
-- Web release: `games.palengke.es`.
+- Web release: `bangsak.palengke.es`.
 - Android release target: publicly downloadable from Google Play after Phase
   34K approval.
 - Multiplayer later: Photon Fusion 2.
@@ -229,6 +231,7 @@ Do not skip ahead.
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)
+- [Phase 29C canonical hostname cutover](docs/phase-29c-canonical-cutover.md)
 - [Urgent domain migration roadmap](docs/urgent-domain-migration-roadmap.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)
