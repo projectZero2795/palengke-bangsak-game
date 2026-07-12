@@ -224,6 +224,7 @@ Do not skip ahead.
 - [Phase 34E1 Android Photon create/join](docs/phase-34e1-android-photon-create-join.md)
 - [Phase 34E2 in-game leave confirmation](docs/phase-34e2-in-game-leave-confirmation.md)
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
+- [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Urgent domain migration roadmap](docs/urgent-domain-migration-roadmap.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)

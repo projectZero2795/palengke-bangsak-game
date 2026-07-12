@@ -38,7 +38,7 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 28C | Docker static hosting | Non-root Nginx image for the approved WebGL files. | Container serves game locally. |
 | 29 | Kubernetes deployment | Deploy to cluster and expose games.palengke.es. | Done. |
 | 29A | Urgent Bang-Sak domain audit | Inventory DNS, edge TLS/proxy, GitOps route, CORS/CSP, docs/tools, smoke checks, redirect, rollback, and cleanup ownership. | Done by authorized self-review on 2026-07-12; every dependency, command, policy, and rollback boundary is recorded with no live mutation. |
-| 29B | Urgent dual-host migration | Add `bangsak.palengke.es` TLS/edge/GitOps routing while leaving `games.palengke.es` unchanged. | Both hostnames serve the same verified healthy build. |
+| 29B | Urgent dual-host migration | Add `bangsak.palengke.es` TLS/edge/GitOps routing while leaving `games.palengke.es` unchanged. | Live dual-host TLS, routing, automated, local-round, guest-leaderboard, and two-client Photon checks pass; authenticated Chrome acceptance waits for the owner to sign in. |
 | 29C | Urgent canonical cutover | Make `bangsak` canonical and redirect old `games` paths to it. | New URL passes full guest/auth/Photon checks and old URLs preserve paths when redirecting. |
 | 29D | Urgent old-host cleanup | Remove obsolete old-host application routing/references after the observation window and record redirect retirement policy. | No active dependency or orphaned config remains; rollback is documented. |
 | 30 | Monitoring and maintenance | Structured logs, request correlation, production verification, release/version records, operations, rollback, backup/config, and known issues. | Done. |
