@@ -12,7 +12,7 @@ namespace Palengke.BangSak.Editor
     {
         public const string MenuPath = "Bang-Sak/Build/Phase 28B WebGL";
         public const string RelativeOutputPath = "Build/WebGL";
-        public const string PhaseVersion = "0.33.0";
+        public const string PhaseVersion = "0.33.1";
         public const string CurrentPhase = "33";
 
         [MenuItem(MenuPath)]

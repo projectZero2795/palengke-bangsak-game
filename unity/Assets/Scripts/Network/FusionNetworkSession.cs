@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Fusion;
+using Fusion.Photon.Realtime;
 using Fusion.Sockets;
 using Palengke.BangSak.Game;
 using Palengke.BangSak.Player;
@@ -16,7 +17,10 @@ namespace Palengke.BangSak.Network
     {
         public const int MaximumPlayers = 4;
         public const string FixedRegion = "eu";
+        public const string DirectEuNameServer = "ns-eu.photonengine.io";
         public const string GameplaySceneName = "PrototypeMap";
+        public const int MaximumConnectionAttempts = 2;
+        private const int ConnectionRetryDelayMilliseconds = 750;
         private const float MovementSendIntervalSeconds = 0.1f;
         private const float RoundSendIntervalSeconds = 0.25f;
         private const float CredentialRefreshIntervalSeconds = 5f;
@@ -232,6 +236,7 @@ namespace Palengke.BangSak.Network
         private async Task ConnectAsync(string roomCode, bool allowCreate)
         {
             ResetIntegrityState();
+            intentionalShutdown = false;
             ActiveRoomCode = roomCode;
             State = PrototypeNetworkRoomState.Connecting;
             StatusMessage = allowCreate
@@ -239,42 +244,118 @@ namespace Palengke.BangSak.Network
                 : $"Joining Photon room {roomCode} in {FixedRegion.ToUpperInvariant()}...";
 
             CleanupRunnerObject();
+            string lastFailure = "Unknown connection error";
+            for (var attempt = 1; attempt <= MaximumConnectionAttempts; attempt += 1)
+            {
+                State = PrototypeNetworkRoomState.Connecting;
+                var useDirectEuNameServer = ShouldUseDirectEuNameServer(attempt);
+                ConfigurePhotonNameServer(useDirectEuNameServer);
+                var sceneManager = CreateRunner();
+                var result = default(StartGameResult);
+                var receivedResult = false;
+
+                try
+                {
+                    result = await runner.StartGame(new StartGameArgs
+                    {
+                        GameMode = GameMode.Shared,
+                        SessionName = roomCode,
+                        PlayerCount = MaximumPlayers,
+                        SceneManager = sceneManager,
+                        IsOpen = true,
+                        IsVisible = false,
+                        EnableClientSessionCreation = allowCreate,
+                        UseCachedRegions = true
+                    });
+                    receivedResult = true;
+                }
+                catch (Exception exception)
+                {
+                    lastFailure = exception.Message;
+                    Debug.LogWarning(
+                        $"Bang-Sak Photon attempt {attempt}/{MaximumConnectionAttempts} threw: {exception.Message}");
+                }
+
+                if (result.Ok)
+                {
+                    State = PrototypeNetworkRoomState.Connected;
+                    StatusMessage = $"Connected to {roomCode} · {ActivePlayerCount}/{MaximumPlayers} players · {FixedRegion.ToUpperInvariant()}.";
+                    return;
+                }
+
+                if (receivedResult && !string.IsNullOrWhiteSpace(result.ShutdownReason.ToString()))
+                {
+                    lastFailure = result.ShutdownReason.ToString();
+                }
+
+                Debug.LogWarning(
+                    $"Bang-Sak Photon attempt {attempt}/{MaximumConnectionAttempts} failed ({lastFailure}); "
+                    + $"direct EU name server: {useDirectEuNameServer}.");
+                CleanupRunnerObject();
+
+                if (attempt < MaximumConnectionAttempts)
+                {
+                    StatusMessage = $"Photon connection interrupted ({lastFailure}). Retrying secure EU route "
+                        + $"{attempt + 1}/{MaximumConnectionAttempts}...";
+                    await Task.Delay(ConnectionRetryDelayMilliseconds);
+                }
+            }
+
+            FailConnection(
+                $"Photon could not connect after {MaximumConnectionAttempts} attempts ({lastFailure}). "
+                + "Check the connection and select CREATE or JOIN again.");
+        }
+
+        private NetworkSceneManagerDefault CreateRunner()
+        {
             runnerObject = new GameObject("Bang-Sak Fusion Runner");
             DontDestroyOnLoad(runnerObject);
             runner = runnerObject.AddComponent<NetworkRunner>();
             runner.ProvideInput = false;
             runner.AddCallbacks(this);
-            var sceneManager = runnerObject.AddComponent<NetworkSceneManagerDefault>();
+            return runnerObject.AddComponent<NetworkSceneManagerDefault>();
+        }
 
-            StartGameResult result;
-            try
+        public static string ResolvePhotonNameServer(bool useDirectEuNameServer)
+        {
+            return useDirectEuNameServer ? DirectEuNameServer : string.Empty;
+        }
+
+        private static void ConfigurePhotonNameServer(bool useDirectEuNameServer)
+        {
+            var server = ResolvePhotonNameServer(useDirectEuNameServer);
+            if (string.IsNullOrEmpty(server))
             {
-                result = await runner.StartGame(new StartGameArgs
-                {
-                    GameMode = GameMode.Shared,
-                    SessionName = roomCode,
-                    PlayerCount = MaximumPlayers,
-                    SceneManager = sceneManager,
-                    IsOpen = true,
-                    IsVisible = false,
-                    EnableClientSessionCreation = allowCreate,
-                    UseCachedRegions = true
-                });
-            }
-            catch (Exception exception)
-            {
-                FailConnection($"Photon connection failed: {exception.Message}");
                 return;
             }
 
-            if (!result.Ok)
+            var settingsWrapper = PhotonAppSettings.Global;
+            var appSettingsField = settingsWrapper.GetType().GetField("AppSettings");
+            var appSettings = appSettingsField?.GetValue(settingsWrapper);
+            var appSettingsType = appSettings?.GetType();
+            var serverField = appSettingsType?.GetField("Server");
+            var useNameServerField = appSettingsType?.GetField("UseNameServer");
+            var fixedRegionField = appSettingsType?.GetField("FixedRegion");
+
+            if (serverField == null || useNameServerField == null || fixedRegionField == null)
             {
-                FailConnection($"Photon connection failed: {result.ShutdownReason}.");
+                Debug.LogWarning("Bang-Sak could not configure the direct Photon EU name server; using the SDK default route.");
                 return;
             }
 
-            State = PrototypeNetworkRoomState.Connected;
-            StatusMessage = $"Connected to {roomCode} · {ActivePlayerCount}/{MaximumPlayers} players · {FixedRegion.ToUpperInvariant()}.";
+            serverField.SetValue(appSettings, server);
+            useNameServerField.SetValue(appSettings, true);
+            fixedRegionField.SetValue(appSettings, FixedRegion);
+            Debug.Log("Bang-Sak Photon route: direct EU secure name server.");
+        }
+
+        public static bool ShouldUseDirectEuNameServer(int attempt)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            return true;
+#else
+            return attempt > 1;
+#endif
         }
 
         private async Task LeaveAsync()
@@ -1304,6 +1385,12 @@ namespace Palengke.BangSak.Network
 
         public void OnShutdown(NetworkRunner networkRunner, ShutdownReason shutdownReason)
         {
+            if (State == PrototypeNetworkRoomState.Connecting)
+            {
+                Debug.LogWarning($"Bang-Sak Photon shutdown while connecting: {shutdownReason}.");
+                return;
+            }
+
             if (!intentionalShutdown && State != PrototypeNetworkRoomState.Failed)
             {
                 State = PrototypeNetworkRoomState.Failed;
@@ -1313,6 +1400,12 @@ namespace Palengke.BangSak.Network
 
         public void OnDisconnectedFromServer(NetworkRunner networkRunner, NetDisconnectReason reason)
         {
+            if (State == PrototypeNetworkRoomState.Connecting)
+            {
+                Debug.LogWarning($"Bang-Sak Photon disconnected while connecting: {reason}.");
+                return;
+            }
+
             if (!intentionalShutdown)
             {
                 State = PrototypeNetworkRoomState.Failed;
@@ -1322,6 +1415,13 @@ namespace Palengke.BangSak.Network
 
         public void OnConnectFailed(NetworkRunner networkRunner, NetAddress remoteAddress, NetConnectFailedReason reason)
         {
+            if (State == PrototypeNetworkRoomState.Connecting)
+            {
+                StatusMessage = $"Photon route failed ({reason}). Preparing retry...";
+                Debug.LogWarning($"Bang-Sak Photon connect failed at {remoteAddress}: {reason}.");
+                return;
+            }
+
             FailConnection($"Photon connection failed: {reason}.");
         }
 

@@ -70,4 +70,24 @@ public sealed class FusionNetworkProtocolTests
         Assert.That(FusionNetworkSession.ResolveEnvelopeSenderSlot(0, 1, 2), Is.EqualTo(-1));
         Assert.That(FusionNetworkSession.ResolveEnvelopeSenderSlot(-1, 2, 2), Is.EqualTo(-1));
     }
+
+    [Test]
+    public void ResolvePhotonNameServer_ReturnsDirectEuRouteOnlyWhenRequested()
+    {
+        Assert.That(
+            FusionNetworkSession.ResolvePhotonNameServer(true),
+            Is.EqualTo(FusionNetworkSession.DirectEuNameServer));
+        Assert.That(FusionNetworkSession.ResolvePhotonNameServer(false), Is.Empty);
+    }
+
+    [Test]
+    public void ShouldUseDirectEuNameServer_RetriesDirectOutsideWebGl()
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        Assert.That(FusionNetworkSession.ShouldUseDirectEuNameServer(1), Is.True);
+#else
+        Assert.That(FusionNetworkSession.ShouldUseDirectEuNameServer(1), Is.False);
+        Assert.That(FusionNetworkSession.ShouldUseDirectEuNameServer(2), Is.True);
+#endif
+    }
 }
