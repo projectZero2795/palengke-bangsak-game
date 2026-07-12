@@ -118,6 +118,11 @@ namespace Palengke.BangSak.UI
             {
                 UpdateAccessibilityPreview();
             }
+
+            if (apiClient != null && playerSummaryLabel != null)
+            {
+                RefreshApiLabels();
+            }
         }
 
         private void OnDestroy()

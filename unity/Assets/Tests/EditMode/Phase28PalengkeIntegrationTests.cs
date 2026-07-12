@@ -21,5 +21,8 @@ public sealed class Phase28PalengkeIntegrationTests
     public void WebGlBridge_UsesGuestFallbackOutsideWebGl()
     {
         Assert.That(PalengkeWebGlAuthBridge.TryReadAccessToken(), Is.Empty);
+        Assert.That(PalengkeWebGlAuthBridge.BridgeUrl, Is.EqualTo("https://palengke.es/api/game-auth/bang-sak"));
+        Assert.That(PalengkeWebGlAuthBridge.RequestMessageType, Is.EqualTo("palengke-bang-sak-auth-request"));
+        Assert.That(PalengkeWebGlAuthBridge.ResponseMessageType, Is.EqualTo("palengke-bang-sak-auth-response"));
     }
 }

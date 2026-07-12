@@ -62,6 +62,12 @@ namespace Palengke.BangSak.Api
             if (!HasAccessToken)
             {
                 accessToken = PalengkeWebGlAuthBridge.TryReadAccessToken();
+                if (!HasAccessToken)
+                {
+                    PalengkeWebGlAuthBridge.RequestAccessToken(
+                        gameObject.name,
+                        nameof(ReceiveAccessTokenFromWebGl));
+                }
             }
             if (HasAccessToken)
             {
@@ -88,6 +94,14 @@ namespace Palengke.BangSak.Api
             if (Application.isPlaying && !useMockData && HasAccessToken)
             {
                 BeginSessionRefresh();
+            }
+        }
+
+        public void ReceiveAccessTokenFromWebGl(string token)
+        {
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                SetAccessToken(token);
             }
         }
 

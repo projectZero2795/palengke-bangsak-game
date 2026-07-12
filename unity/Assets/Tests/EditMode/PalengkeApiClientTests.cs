@@ -80,4 +80,13 @@ public sealed class PalengkeApiClientTests
         Assert.That(client.HasAuthenticatedSession, Is.False);
         Assert.That(client.StatusMessage, Does.Contain("Guest mode"));
     }
+
+    [Test]
+    public void WebGlBridgeCallback_AcceptsTokenWithoutPersistingIt()
+    {
+        client.ReceiveAccessTokenFromWebGl(" bridge-token ");
+
+        Assert.That(client.HasAccessToken, Is.True);
+        Assert.That(client.HasAuthenticatedSession, Is.False, "Session remains guest until the API validates the token.");
+    }
 }
