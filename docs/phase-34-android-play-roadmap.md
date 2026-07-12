@@ -7,7 +7,7 @@ owner-reviewable checkpoints. Phase 34A records decisions and Phase 34B adds a
 local debug APK; later phases remain gated and this roadmap never authorizes a
 Play Console upload or publication by itself.
 
-Phase 33 and Phases 34A through 34C are approved. Every 34-series phase stops
+Phase 33 and Phases 34A through 34D are approved. Every 34-series phase stops
 for owner review before the next one begins.
 
 ## Small review phases

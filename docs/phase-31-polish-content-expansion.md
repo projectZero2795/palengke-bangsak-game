@@ -71,6 +71,11 @@ result-integrity, moderation, and operational gates pass.
 | 39 | Random role power-ups | Implement the existing power-up proposal with authoritative randomized valid spawn cells, role validation, rarity/duration/respawn configuration, synchronized pickup state, and visible HUD feedback. | Every pickup is fair, bounded, synchronized, tested, and available without purchase; core play remains viable without a pickup. |
 | 40 | Seasonal events | Server-configured start/end times, seasonal map/object/cosmetic variants, opt-safe fallback content, version compatibility, and rollback/expiry behavior. | An event can start and end without a client rebuild, expired content falls back safely, and core queues remain playable. |
 | 41 | Tournaments | Server-owned eligibility, bracket/round lifecycle, result verification, disconnect policy, moderation/admin tools, privacy limits, and operational runbook. | A staged tournament completes without accepting client-authored results, duplicate rewards, or unresolved disconnect outcomes. |
+| 42A | Closer perspective camera framing | Move the 2D gameplay camera slightly closer and tune framing only. | One local route remains readable and playable while the scene has a stronger depth impression. |
+| 42B | Dark ambient visibility | Dim the map and every player while preserving accessible HUD/action readability. | All actors feel placed in darkness without losing essential role/action feedback. |
+| 42C | Local cone-only visibility | Add a local-facing vision mask with a small safe near-player area. | Each client sees actors/world only inside its own cone; HUD stays visible. |
+| 42D | Safe-area minimap shell | Add only the top-right minimap frame, map bounds, and static landmarks. | The empty marker-free map fits mobile safe areas without HUD overlap. |
+| 42E | Self-only minimap marker | Add only the local player position/facing marker. | Each client sees itself and never sees another player on its minimap. |
 
 Phase numbers become implementation commitments only after this Phase 31 plan
 is approved. Phase 34A–34K is expanded in the
@@ -149,6 +154,11 @@ lock the reference devices and exact budgets; until then, the minimum gates are:
 - Phase 40: first event theme, schedule/time zone, and reward set.
 - Phase 41: tournament size, eligibility, disconnect policy, moderation owner,
   and reward rules.
+- Phase 42A: exact closer camera framing approved on the reference phone.
+- Phase 42B: darkness strength and minimum accessible contrast.
+- Phase 42C: cone angle/range and the near-player safe visibility radius.
+- Phase 42D: minimap size and top-right safe-area placement.
+- Phase 42E: self-marker appearance; other-player markers remain prohibited.
 
 ## Phase 31 review
 

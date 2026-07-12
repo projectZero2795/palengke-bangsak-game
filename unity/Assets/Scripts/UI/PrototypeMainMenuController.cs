@@ -604,12 +604,12 @@ namespace Palengke.BangSak.UI
             CreateText(panel, "ROOM", new Vector2(0f, 165f), new Vector2(500f, 44f), 30, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
             CreateText(panel, "Create or join a real Photon Fusion Shared room.", new Vector2(0f, 126f), new Vector2(470f, 28f), 13, FontStyle.Bold, new Color(0.72f, 0.82f, 1f, 1f));
 
-            var statusCard = CreatePanel(panel, "Room Status Card", new Vector2(0f, 42f), new Vector2(470f, 138f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
-            networkStatusLabel = CreateText(statusCard, string.Empty, Vector2.zero, new Vector2(424f, 104f), 15, FontStyle.Bold, new Color(0.86f, 0.93f, 1f, 1f));
+            var statusCard = CreatePanel(panel, "Room Status Card", new Vector2(0f, 42f), new Vector2(470f, 168f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
+            networkStatusLabel = CreateText(statusCard, "ROOM STATUS", Vector2.zero, new Vector2(430f, 142f), 14, FontStyle.Bold, new Color(0.86f, 0.93f, 1f, 1f));
 
-            CreateButton(panel, "CREATE", new Vector2(-170f, -72f), new Vector2(140f, 42f), new Color(0.94f, 0.3f, 0.12f, 1f), OnCreateRoomClicked);
-            CreateButton(panel, "JOIN 1234", new Vector2(0f, -72f), new Vector2(150f, 42f), new Color(0.22f, 0.42f, 0.92f, 1f), OnJoinDefaultRoomClicked);
-            CreateButton(panel, "LEAVE", new Vector2(170f, -72f), new Vector2(140f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), OnLeaveRoomClicked);
+            CreateButton(panel, "CREATE", new Vector2(-170f, -82f), new Vector2(140f, 42f), new Color(0.94f, 0.3f, 0.12f, 1f), OnCreateRoomClicked);
+            CreateButton(panel, "JOIN 1234", new Vector2(0f, -82f), new Vector2(150f, 42f), new Color(0.22f, 0.42f, 0.92f, 1f), OnJoinDefaultRoomClicked);
+            CreateButton(panel, "LEAVE", new Vector2(170f, -82f), new Vector2(140f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), OnLeaveRoomClicked);
 
             CreateButton(panel, "BACK", new Vector2(0f, -156f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
             RefreshNetworkPanel();
@@ -748,8 +748,9 @@ namespace Palengke.BangSak.UI
             networkStatusLabel.text =
                 $"{sdkStatus}\n" +
                 $"Provider: {roomController.ProviderName}\n" +
-                $"State: {roomController.State}\n" +
-                $"Room: {room}\n" +
+                $"State: {roomController.State} · Room: {room}\n" +
+                $"Players: {roomController.RosterSummary}\n" +
+                $"You: {roomController.LocalRosterName}\n" +
                 roomController.StatusMessage;
         }
 

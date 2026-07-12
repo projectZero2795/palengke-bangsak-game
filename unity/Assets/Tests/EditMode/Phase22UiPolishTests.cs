@@ -34,6 +34,8 @@ public sealed class Phase22UiPolishTests
         Assert.That(menu.transform.Find($"{safeAreaPath}/Main Menu Dashboard/PLAY Dashboard Tile"), Is.Not.Null);
         Assert.That(menu.transform.Find($"{safeAreaPath}/Main Menu Dashboard/HOW Dashboard Tile"), Is.Not.Null);
         Assert.That(menu.transform.Find($"{safeAreaPath}/Main Menu Dashboard/SET Dashboard Tile"), Is.Not.Null);
+        Assert.That(menu.transform.Find($"{safeAreaPath}/Network Room Panel/Room Status Card/ROOM STATUS Text"), Is.Not.Null);
+        Assert.That(menu.transform.Find($"{safeAreaPath}/Network Room Panel/JOIN 1234 Button"), Is.Not.Null);
     }
 
     [Test]

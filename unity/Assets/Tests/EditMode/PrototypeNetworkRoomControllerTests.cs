@@ -47,6 +47,17 @@ public sealed class PrototypeNetworkRoomControllerTests
     }
 
     [Test]
+    public void RoomRoster_UsesStableNamesForBothClients()
+    {
+        Assert.That(FusionNetworkSession.FormatRosterSummary(0), Is.EqualTo("none"));
+        Assert.That(FusionNetworkSession.FormatRosterSummary(2), Is.EqualTo("JuanP · Maria"));
+        Assert.That(FusionNetworkSession.FormatRosterSummary(8), Is.EqualTo("JuanP · Maria · Pedro · Ana"));
+        Assert.That(FusionNetworkSession.RosterNameForSlot(0), Is.EqualTo("JuanP"));
+        Assert.That(FusionNetworkSession.RosterNameForSlot(1), Is.EqualTo("Maria"));
+        Assert.That(FusionNetworkSession.RosterNameForSlot(4), Is.EqualTo("none"));
+    }
+
+    [Test]
     public void CreateRoom_PreparesPhotonConnection()
     {
         Assert.That(controller.CreateRoom(), Is.True);

@@ -8,13 +8,14 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 34D: Mobile accessibility**.
-Phase 34C was owner-approved after installing and reviewing Android build
-`0.34.1`. Phase 34D adds four persistent, touch-checkable settings: readable
-text, high contrast, reduced motion, and visual Bang/SAK action cues. Android
-debug version `0.34.2` is installed on the reference emulator and ready for
-owner review; 225 tests pass. Phase 34E1 and later work remain blocked until
-the Phase 34D owner review is approved.
+This repository is currently in **Phase 34E1: Android Photon create/join**.
+Phase 34D was owner-approved after reviewing Android accessibility build
+`0.34.2`. Phase 34E1 adds a visible stable roster to the room panel and uses
+Android debug version `0.34.3` for the focused two-client create/join check.
+Two Android 15 clients now pass room `1234` with the matching `JuanP · Maria`
+roster; 226 tests pass. Phase 34E1 is ready for owner review.
+Voluntary leave, background/resume, reconnect, performance, and later visual
+work remain blocked until the Phase 34E1 owner review is approved.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -110,6 +111,9 @@ The former broad Android Photon lifecycle phase is split into Phase 34E1–34E5
 so create/join, voluntary leave confirmation, remaining-room leave rules,
 pause/resume, and reconnect can each be reviewed separately. Release signing,
 Play Console creation, and store upload remain later owner-gated phases.
+The requested closer perspective, dark ambient visibility, cone-only local
+vision, and self-only minimap are recorded separately as future Phases
+42A–42E; none is implemented in the current phase.
 
 ## Safety and branding rules
 
@@ -213,6 +217,7 @@ Do not skip ahead.
 - [Phase 34B Android debug build](docs/phase-34b-android-debug-build.md)
 - [Phase 34C Android touch layout](docs/phase-34c-android-touch-layout.md)
 - [Phase 34D mobile accessibility](docs/phase-34d-mobile-accessibility.md)
+- [Phase 34E1 Android Photon create/join](docs/phase-34e1-android-photon-create-join.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)
 - [Release 0.28.2](docs/releases/0.28.2.md)

@@ -44,8 +44,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 34A | Android release decisions | Lock the package ID, minimum Android version, orientation, reference device, Play Console account type, and privacy/support contacts. | Done and owner-approved on 2026-07-12. No build or Play Console mutation was made. |
 | 34B | Android debug build | Add a reproducible Unity Android debug-APK build without signing or store work. | Done and owner-approved on 2026-07-12 after the acceptance-criteria audit. |
 | 34C | Android touch layout | Make the existing HUD and controls fit touch screens and safe areas. | Done and owner-approved on 2026-07-12 after installing and reviewing Android build `0.34.1`. |
-| 34D | Mobile accessibility | Add readable text/contrast, reduced-motion behavior, and visual alternatives for important audio cues. | Ready for review: all four toggles visibly pass on Android build `0.34.2`; 225 tests pass. |
-| 34E1 | Android Photon create/join | Verify room creation and joining between two Android clients only. | Both Android clients show the same room roster before play. |
+| 34D | Mobile accessibility | Add readable text/contrast, reduced-motion behavior, and visual alternatives for important audio cues. | Done and owner-approved on 2026-07-12 after reviewing Android build `0.34.2`. |
+| 34E1 | Android Photon create/join | Verify room creation and joining between two Android clients only. | Ready for review: two Android 15 clients show room `1234`, roster `JuanP · Maria`, and distinct local names on build `0.34.3`. |
 | 34E2 | In-game leave confirmation | Add an accessible Leave Game control and confirmation during active multiplayer play. | Cancel keeps the player in-game; confirm returns that player to the menu. |
 | 34E3 | Photon leave cleanup and room rules | Remove a voluntary leaver, free the slot, update counts, and apply deterministic Taya/authority/last-player rules. | Remaining clients agree on roster and round state with no ghost player. |
 | 34E4 | Android pause/resume | Handle Android pause, background, and resume only. | A backgrounded client resumes into the same coherent room and round. |
@@ -61,8 +61,13 @@ Phases 32–41, including the small Phase 34A–34K Android/Google Play track, a
 ordered in the [Phase 31 expansion plan](phase-31-polish-content-expansion.md).
 The detailed Android gates are in the
 [Phase 34 Android and Google Play roadmap](phase-34-android-play-roadmap.md).
-Phase 34D is the current implementation checkpoint. Phase 34E1 and later remain
-blocked by the mandatory stop rule.
+Phase 34E1 is the current implementation checkpoint. Phase 34E2 and later
+remain blocked by the mandatory stop rule.
+
+The requested closer camera, darkness, cone-only vision, and self-only minimap
+are split into future Phases 42A–42E in the
+[Phase 31 expansion plan](phase-31-polish-content-expansion.md). They are
+planning only and are not part of the current Android Photon phase.
 
 ## Mandatory stop rule
 

@@ -59,6 +59,12 @@ namespace Palengke.BangSak.Network
 
         public bool IsConnected => session != null && session.IsConnected;
 
+        public int ActivePlayerCount => session != null ? session.ActivePlayerCount : 0;
+
+        public string RosterSummary => session != null ? session.RosterSummary : "none";
+
+        public string LocalRosterName => session != null ? session.LocalRosterName : "none";
+
         private void OnEnable()
         {
             ResolveSession();

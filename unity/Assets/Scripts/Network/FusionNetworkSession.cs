@@ -90,6 +90,10 @@ namespace Palengke.BangSak.Network
 
         public int ActivePlayerCount => IsConnected ? GetRosterSize() : 0;
 
+        public string RosterSummary => FormatRosterSummary(ActivePlayerCount);
+
+        public string LocalRosterName => IsConnected ? RosterNameForSlot(LocalPlayerIndex) : "none";
+
         public bool CanSubmitAuthoritativeScore => IsConnected && IsMasterClient;
 
         public string AuthorityRoundId => authorityRoundId;
@@ -522,6 +526,29 @@ namespace Palengke.BangSak.Network
             return new[] { "JuanP", "Maria", "Pedro", "Ana" };
         }
 
+        public static string RosterNameForSlot(int playerSlot)
+        {
+            var names = new[] { "JuanP", "Maria", "Pedro", "Ana" };
+            return playerSlot >= 0 && playerSlot < names.Length ? names[playerSlot] : "none";
+        }
+
+        public static string FormatRosterSummary(int activePlayerCount)
+        {
+            var safeCount = Mathf.Clamp(activePlayerCount, 0, MaximumPlayers);
+            if (safeCount == 0)
+            {
+                return "none";
+            }
+
+            var names = new string[safeCount];
+            for (var index = 0; index < safeCount; index += 1)
+            {
+                names[index] = RosterNameForSlot(index);
+            }
+
+            return string.Join(" · ", names);
+        }
+
         private int GetRosterSize()
         {
             var playerCount = 0;
@@ -791,7 +818,7 @@ namespace Palengke.BangSak.Network
             authorityEpoch = grant.authorityEpoch;
             localAuthorityToken = grant.authorityToken;
             lastAuthoritySequence = envelope.sequence;
-            StatusMessage = $"Playing room {ActiveRoomCode} · authority credential active.";
+            StatusMessage = $"Room {ActiveRoomCode} ready · authority credential active.";
         }
 
         private void ProcessMovementRequest(int senderSlot, FusionMovementPayload payload)
