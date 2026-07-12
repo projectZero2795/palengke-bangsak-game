@@ -76,13 +76,13 @@ namespace Palengke.BangSak.UI
             canvas.sortingOrder = 19;
 
             var scaler = canvasObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(800f, 600f);
+            SafeAreaCanvasLayout.ConfigureScaler(scaler);
 
             canvasObject.AddComponent<GraphicRaycaster>();
+            var safeAreaRoot = SafeAreaCanvasLayout.GetOrCreateSafeAreaRoot(canvasObject.transform);
 
             var panelObject = new GameObject("Bang Name Panel");
-            panelObject.transform.SetParent(canvasObject.transform, false);
+            panelObject.transform.SetParent(safeAreaRoot, false);
             var panelRect = panelObject.AddComponent<RectTransform>();
             panelRect.anchorMin = new Vector2(1f, 0f);
             panelRect.anchorMax = new Vector2(1f, 0f);

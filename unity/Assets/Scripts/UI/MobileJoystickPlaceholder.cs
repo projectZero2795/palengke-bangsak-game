@@ -28,6 +28,11 @@ namespace Palengke.BangSak.UI
             CenterHandle();
         }
 
+        private void Start()
+        {
+            SafeAreaCanvasLayout.MoveIntoSafeArea(baseTransform);
+        }
+
 #if UNITY_EDITOR
         private void OnValidate()
         {

@@ -11,7 +11,7 @@ Play Console app, or upload anything.
 
 `Phase34BAndroidBuild` is available from both:
 
-- Unity menu: `Bang-Sak > Build > Phase 34B Android Debug APK`;
+- Unity menu: `Bang-Sak > Build > Android Debug APK`;
 - command line method:
   `Palengke.BangSak.Editor.Phase34BAndroidBuild.BuildCommandLine`.
 

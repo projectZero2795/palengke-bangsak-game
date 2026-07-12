@@ -11,14 +11,14 @@ namespace Palengke.BangSak.Editor
 {
     public static class Phase34BAndroidBuild
     {
-        public const string MenuPath = "Bang-Sak/Build/Phase 34B Android Debug APK";
+        public const string MenuPath = "Bang-Sak/Build/Android Debug APK";
         public const string RelativeOutputPath = "Build/Android/BangSak-debug.apk";
         public const string PackageId = "es.palengke.bangsak";
-        public const string PhaseVersion = "0.34.0";
+        public const string PhaseVersion = "0.34.1";
         public const int VersionCode = 1;
         public const int MinimumApiLevel = 29;
         public const int TargetApiLevel = 35;
-        public const string CurrentPhase = "34B";
+        public const string CurrentPhase = "34C";
 
         [MenuItem(MenuPath)]
         public static void BuildFromMenu()
@@ -69,12 +69,12 @@ namespace Palengke.BangSak.Editor
             if (report.summary.result != BuildResult.Succeeded)
             {
                 throw new BuildFailedException(
-                    $"Phase 34B Android build failed: {report.summary.result} ({report.summary.totalErrors} errors)."
+                    $"Phase {CurrentPhase} Android build failed: {report.summary.result} ({report.summary.totalErrors} errors)."
                 );
             }
 
             WriteBuildMetadata(apkPath, report);
-            Debug.Log($"Phase 34B Android debug APK completed at {apkPath}");
+            Debug.Log($"Phase {CurrentPhase} Android debug APK completed at {apkPath}");
         }
 
         private static void ConfigurePlayerSettings()

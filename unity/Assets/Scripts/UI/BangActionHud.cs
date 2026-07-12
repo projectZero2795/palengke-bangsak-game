@@ -71,13 +71,13 @@ namespace Palengke.BangSak.UI
             canvas.sortingOrder = 20;
 
             var scaler = canvasObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(800f, 600f);
+            SafeAreaCanvasLayout.ConfigureScaler(scaler);
 
             canvasObject.AddComponent<GraphicRaycaster>();
+            var safeAreaRoot = SafeAreaCanvasLayout.GetOrCreateSafeAreaRoot(canvasObject.transform);
 
             var buttonObject = new GameObject("Bang Button");
-            buttonObject.transform.SetParent(canvasObject.transform, false);
+            buttonObject.transform.SetParent(safeAreaRoot, false);
 
             var rect = buttonObject.AddComponent<RectTransform>();
             rect.anchorMin = new Vector2(1f, 0f);

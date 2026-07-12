@@ -30,9 +30,10 @@ public sealed class Phase22UiPolishTests
         Assert.That(menuEventSystem, Is.Not.Null);
         Assert.That(menuEventSystem.GetComponent<EventSystem>(), Is.Not.Null);
         Assert.That(menu.HasRuntimeMenu, Is.True);
-        Assert.That(menu.transform.Find("Phase 22 Main Menu UI/Main Menu Dashboard/PLAY Dashboard Tile"), Is.Not.Null);
-        Assert.That(menu.transform.Find("Phase 22 Main Menu UI/Main Menu Dashboard/HOW Dashboard Tile"), Is.Not.Null);
-        Assert.That(menu.transform.Find("Phase 22 Main Menu UI/Main Menu Dashboard/SET Dashboard Tile"), Is.Not.Null);
+        var safeAreaPath = $"Phase 22 Main Menu UI/{SafeAreaCanvasLayout.SafeAreaRootName}";
+        Assert.That(menu.transform.Find($"{safeAreaPath}/Main Menu Dashboard/PLAY Dashboard Tile"), Is.Not.Null);
+        Assert.That(menu.transform.Find($"{safeAreaPath}/Main Menu Dashboard/HOW Dashboard Tile"), Is.Not.Null);
+        Assert.That(menu.transform.Find($"{safeAreaPath}/Main Menu Dashboard/SET Dashboard Tile"), Is.Not.Null);
     }
 
     [Test]

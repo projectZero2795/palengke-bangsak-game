@@ -18,7 +18,8 @@ public sealed class Phase27PalengkeApiTests
         Assert.That(client, Is.Not.Null);
         Assert.That(client.UseMockData, Is.False);
         Assert.That(client.IsProductionApiEnabled, Is.True);
-        Assert.That(root.transform.Find("Phase 22 Main Menu UI/Main Menu Dashboard/SCORES Dashboard Tile"), Is.Not.Null);
-        Assert.That(root.transform.Find("Phase 22 Main Menu UI/Palengke Leaderboard Panel"), Is.Not.Null);
+        var safeAreaPath = $"Phase 22 Main Menu UI/{SafeAreaCanvasLayout.SafeAreaRootName}";
+        Assert.That(root.transform.Find($"{safeAreaPath}/Main Menu Dashboard/SCORES Dashboard Tile"), Is.Not.Null);
+        Assert.That(root.transform.Find($"{safeAreaPath}/Palengke Leaderboard Panel"), Is.Not.Null);
     }
 }

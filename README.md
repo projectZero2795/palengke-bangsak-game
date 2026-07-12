@@ -8,12 +8,13 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **Phase 34B: Android debug build**.
-Phase 34A was approved with the package, compatibility, orientation, reference
-device, account gate, and support/privacy decisions locked. Phase 34B now has a
-reproducible `0.34.0` ARM64 debug APK that installs and opens the main menu on
-the Pixel 6 Android 15 reference emulator. It is ready for project-owner review;
-touch-layout work remains blocked until that review is approved.
+This repository is currently in **Phase 34C: Android touch layout**.
+Phase 34B was approved after its debug APK acceptance audit. Phase 34C now has
+safe-area-aware, balanced wide-screen menu and round HUD layouts plus a
+`0.34.1` ARM64 debug APK. One complete local round was played by touch on the
+Pixel 6 Android 15 reference emulator with the hole-punch simulation enabled.
+It is ready for project-owner review; accessibility work remains blocked until
+that review is approved.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -102,9 +103,11 @@ is a practical baseline rather than dedicated-server competitive security.
 Phase 34A records the approved Android release decisions without creating a
 build or changing Play Console. Phase 34B installs the Unity Android toolchain
 and adds a reproducible IL2CPP ARM64 debug APK for `es.palengke.bangsak`. The
-APK targets API 35, supports API 29 and newer, and has been installed and opened
-on the Pixel 6 Android 15 reference emulator. Touch layout, release signing,
-Play Console creation, and store upload remain later owner-gated phases.
+APK targets API 35 and supports API 29 and newer. Phase 34C adds safe-area and
+balanced wide-screen layout across the menu and round controls; joystick,
+named-Bang, result, and Restart touch paths pass on the Pixel 6 Android 15
+reference emulator. Accessibility, release signing, Play Console creation, and
+store upload remain later owner-gated phases.
 
 ## Safety and branding rules
 
@@ -206,6 +209,7 @@ Do not skip ahead.
 - [Phase 34 Android and Google Play roadmap](docs/phase-34-android-play-roadmap.md)
 - [Phase 34A Android release decisions](docs/phase-34a-android-release-decisions.md)
 - [Phase 34B Android debug build](docs/phase-34b-android-debug-build.md)
+- [Phase 34C Android touch layout](docs/phase-34c-android-touch-layout.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)
 - [Release 0.28.2](docs/releases/0.28.2.md)

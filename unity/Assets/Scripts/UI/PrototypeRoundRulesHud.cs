@@ -153,13 +153,13 @@ namespace Palengke.BangSak.UI
             canvas.sortingOrder = sortingOrder;
 
             var scaler = canvasObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(800f, 600f);
+            SafeAreaCanvasLayout.ConfigureScaler(scaler);
 
             canvasObject.AddComponent<GraphicRaycaster>();
+            var safeAreaRoot = SafeAreaCanvasLayout.GetOrCreateSafeAreaRoot(canvasObject.transform);
 
-            CreateStatusPanel(canvasObject.transform);
-            CreateResultPanel(canvasObject.transform);
+            CreateStatusPanel(safeAreaRoot);
+            CreateResultPanel(safeAreaRoot);
         }
 
         private void CreateStatusPanel(Transform parent)

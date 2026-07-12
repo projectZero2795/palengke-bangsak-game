@@ -160,7 +160,7 @@ PlayerSettings:
   resolutionScalingMode: 0
   resetResolutionOnWindowResize: 0
   androidSupportedAspectRatio: 1
-  androidMaxAspectRatio: 2.1
+  androidMaxAspectRatio: 2.4
   applicationIdentifier:
     WebGL: es.palengke.bangsak
   buildNumber:

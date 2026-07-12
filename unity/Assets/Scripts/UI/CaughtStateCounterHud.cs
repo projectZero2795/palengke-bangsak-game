@@ -105,11 +105,11 @@ namespace Palengke.BangSak.UI
             canvas.sortingOrder = 19;
 
             var scaler = canvasObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(800f, 600f);
+            SafeAreaCanvasLayout.ConfigureScaler(scaler);
+            var safeAreaRoot = SafeAreaCanvasLayout.GetOrCreateSafeAreaRoot(canvasObject.transform);
 
             var labelObject = new GameObject("Hiders Left Label");
-            labelObject.transform.SetParent(canvasObject.transform, false);
+            labelObject.transform.SetParent(safeAreaRoot, false);
 
             var rect = labelObject.AddComponent<RectTransform>();
             rect.anchorMin = new Vector2(1f, 1f);

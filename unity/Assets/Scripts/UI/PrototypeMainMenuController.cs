@@ -208,18 +208,18 @@ namespace Palengke.BangSak.UI
             canvas.sortingOrder = sortingOrder;
 
             var scaler = canvasObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(800f, 600f);
+            SafeAreaCanvasLayout.ConfigureScaler(scaler);
 
             canvasObject.AddComponent<GraphicRaycaster>();
             EnsureEventSystem();
 
             CreateBackdrop(canvasObject.transform);
-            CreateMainCard(canvasObject.transform);
-            CreateHowToPanel(canvasObject.transform);
-            CreateSettingsPanel(canvasObject.transform);
-            CreateNetworkPanel(canvasObject.transform);
-            CreateLeaderboardPanel(canvasObject.transform);
+            var safeAreaRoot = SafeAreaCanvasLayout.GetOrCreateSafeAreaRoot(canvasObject.transform);
+            CreateMainCard(safeAreaRoot);
+            CreateHowToPanel(safeAreaRoot);
+            CreateSettingsPanel(safeAreaRoot);
+            CreateNetworkPanel(safeAreaRoot);
+            CreateLeaderboardPanel(safeAreaRoot);
             HidePanels();
         }
 
