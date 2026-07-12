@@ -1,6 +1,6 @@
 # Bang-Sak for Palengke
 
-Bang-Sak is a safe Filipino community hide-and-seek game planned for Unity 2D WebGL at `games.palengke.es`.
+Bang-Sak is a safe Filipino community hide-and-seek game built with Unity 2D WebGL at `bangsak.palengke.es`.
 
 The target experience is the reference image provided by the project owner: a polished 2D top-down barangay/palengke game with menu, lobby, round gameplay, result screen, leaderboard, mobile controls, and later Photon multiplayer.
 
@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **urgent Phase 29B: dual-host domain migration**.
+This repository is currently in **urgent Phase 29C: canonical domain cutover**.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
@@ -16,8 +16,11 @@ clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
 approved the revised icon on 2026-07-12 after Android build `0.34.4` passed the
 focused behavior check and 227 tests. Urgent Phase 29A then audited the exact
 DNS, edge, certificate, GitOps, verification, redirect, and rollback boundary
-without changing production. Phase 29B now adds `bangsak.palengke.es` alongside
-the unchanged `games.palengke.es` endpoint.
+without changing production. Phase 29B added `bangsak.palengke.es` alongside
+the unchanged `games.palengke.es` endpoint and passed the complete guest,
+authenticated reward, leaderboard, and two-client Photon acceptance matrix.
+Phase 29C now makes the new hostname canonical while preserving old paths and
+queries through a temporary redirect.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -225,6 +228,7 @@ Do not skip ahead.
 - [Phase 34E2 in-game leave confirmation](docs/phase-34e2-in-game-leave-confirmation.md)
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
+- [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)
 - [Urgent domain migration roadmap](docs/urgent-domain-migration-roadmap.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)
@@ -232,3 +236,4 @@ Do not skip ahead.
 - [Release 0.33.0](docs/releases/0.33.0.md)
 - [Release 0.33.1](docs/releases/0.33.1.md)
 - [Release 0.33.2](docs/releases/0.33.2.md)
+- [Release 0.33.3](docs/releases/0.33.3.md)

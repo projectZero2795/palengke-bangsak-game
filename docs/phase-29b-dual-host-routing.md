@@ -29,7 +29,7 @@ or change canonical documentation/tool defaults.
 - Verified TLS uses `CN=bangsak.palengke.es` with a matching SAN.
 - Both hosts return `200` and `ok` from `/healthz`.
 - `tools/verify-production.sh` passes independently against both origins for
-  build `0.33.2`, request IDs, WebAssembly/data MIME types, CORS, and the live
+  build `0.33.3`, request IDs, WebAssembly/data MIME types, CORS, and the live
   leaderboard API.
 - `build-info.json`, `WebGL.wasm`, and `WebGL.data` have identical SHA-256
   values through both hostnames.
@@ -45,18 +45,21 @@ or change canonical documentation/tool defaults.
   zero restarts; the service and PDB remain healthy; no recent pod 5xx or target
   edge error-log entry was found.
 - The old hostname still proxies the game directly and has not been redirected.
+- The signed-in Palengke bridge identifies the existing account as
+  `Palengke Spain` without persisting its access token on the game origin.
+- Two target-host Chrome clients joined Photon room `1234` as `JuanP` and
+  `Maria`. The authoritative signed-in round saved score `500`, increased the
+  account balance from `0` to `5` coins using the server reward calculation,
+  and displayed `Palengke Spain` at rank `#2` in the live leaderboard.
+- Both final Chrome clients reported zero console warnings or errors.
 
-## Remaining acceptance gate
+## Acceptance result
 
-The selected Chrome profile is currently signed out of Palengke: its account
-menu explicitly offers **Sign in**, and the game correctly reports
-`Guest Player`. Therefore authenticated identity, reward, coins, persisted
-score, and authenticated leaderboard have not been claimed as passed.
-
-The owner must sign in to `https://palengke.es` in the retained Chrome tab.
-Codex can then reload `https://bangsak.palengke.es`, complete one authenticated
-round, and inspect the persisted result without reading or copying cookies or
-tokens. Phase 29B and issue #66 remain open until that evidence passes.
+Phase 29B passed every acceptance criterion on 2026-07-12. The signed-in
+verification used the owner's existing Chrome session without reading or
+copying cookies or tokens. Phase 29C may now make `bangsak.palengke.es`
+canonical while the dual-host application route remains available for
+rollback and observation.
 
 ## Rollback boundary
 
