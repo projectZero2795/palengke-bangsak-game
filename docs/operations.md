@@ -8,10 +8,15 @@
 - Immutable images: `registry.renzlab.com/palengke/bang-sak:<git-commit>`.
 - Canonical public endpoint: `https://bangsak.palengke.es`.
 - Legacy redirect: `https://games.palengke.es` preserves the path and query
-  during the migration observation window.
+  through at least 2026-10-10. Its certificate remains in the automatic
+  renewal inventory during that retention period.
 
 Do not edit a running Deployment as a release mechanism. Update GitOps and let
 Argo CD reconcile it.
+
+The application IngressRoute accepts only `bangsak.palengke.es`. The old host
+exists only at the public edge as a redirect; a direct old-host cluster request
+should return `404`.
 
 ## Fast health check
 

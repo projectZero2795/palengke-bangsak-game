@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently in **urgent Phase 29D: old-host observation and cleanup**.
+This repository is currently at **Phase 34E3: Photon leave cleanup and room rules**.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
@@ -20,9 +20,10 @@ without changing production. Phase 29B added `bangsak.palengke.es` alongside
 the unchanged `games.palengke.es` endpoint and passed the complete guest,
 authenticated reward, leaderboard, and two-client Photon acceptance matrix.
 Phase 29C made the new hostname canonical while preserving old paths and
-queries through a temporary redirect. Phase 29D is now in its required
-observation window before any old-host application route or reference is
-removed.
+queries through a temporary redirect. At the owner's explicit direction,
+Phase 29D used live traffic evidence to complete the application cleanup on
+2026-07-12. The legacy redirect and renewable certificate remain retained
+through at least 2026-10-10.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -232,6 +233,7 @@ Do not skip ahead.
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)
 - [Phase 29C canonical hostname cutover](docs/phase-29c-canonical-cutover.md)
+- [Phase 29D old-host application cleanup](docs/phase-29d-old-host-cleanup.md)
 - [Urgent domain migration roadmap](docs/urgent-domain-migration-roadmap.md)
 - [Production operations](docs/operations.md)
 - [Known issues](docs/known-issues.md)

@@ -40,7 +40,7 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 29A | Urgent Bang-Sak domain audit | Inventory DNS, edge TLS/proxy, GitOps route, CORS/CSP, docs/tools, smoke checks, redirect, rollback, and cleanup ownership. | Done by authorized self-review on 2026-07-12; every dependency, command, policy, and rollback boundary is recorded with no live mutation. |
 | 29B | Urgent dual-host migration | Add `bangsak.palengke.es` TLS/edge/GitOps routing while leaving `games.palengke.es` unchanged. | Done by authorized self-review on 2026-07-12; TLS, routing, both public verifiers, signed-in identity, authoritative reward/coins, persisted leaderboard score, and two-client Photon all passed. |
 | 29C | Urgent canonical cutover | Make `bangsak` canonical and redirect old `games` paths to it. | Done by authorized self-review on 2026-07-12; canonical guest/auth/reward/leaderboard/Photon checks passed and the old host preserves exact paths and queries with a 308. |
-| 29D | Urgent old-host cleanup | Remove obsolete old-host application routing/references after the observation window and record redirect retirement policy. | Observation started 2026-07-12; do not remove the old application route before 2026-07-19, and retain its redirect/certificate for at least 90 days. |
+| 29D | Urgent old-host cleanup | Remove obsolete old-host application routing/references after the observation window and record redirect retirement policy. | Done by authorized self-review on 2026-07-12 after the owner explicitly waived the planned wait; live traffic, routing, auth allowlist, Certbot, Nginx, GitOps, logs, links, and rollback all passed. The redirect/certificate remain through at least 2026-10-10. |
 | 30 | Monitoring and maintenance | Structured logs, request correlation, production verification, release/version records, operations, rollback, backup/config, and known issues. | Done. |
 | 31 | Polish and content expansion | Plan maps, art, skins, badges, events, sound, mobile, anti-cheat, tournaments, power-ups, and selectable components after production foundations. | Ready for review; implementation order, dependencies, gates, and owner decisions are documented. |
 | 32 | Photon Fusion Shared multiplayer vertical slice | Replace the room/movement/action scaffolds with a real two-client WebGL Photon path. | Done; owner approved the two-client Photon vertical slice. |
@@ -65,7 +65,7 @@ Phases 32–41, including the small Phase 34A–34K Android/Google Play track, a
 ordered in the [Phase 31 expansion plan](phase-31-polish-content-expansion.md).
 The detailed Android gates are in the
 [Phase 34 Android and Google Play roadmap](phase-34-android-play-roadmap.md).
-Phase 34E2 is the current implementation checkpoint. Phase 34E3 and later
+Phase 34E3 is the current implementation checkpoint. Phase 34E4 and later
 remain blocked by the review rule.
 
 The requested closer camera, darkness, cone-only vision, and self-only minimap
@@ -75,7 +75,7 @@ planning only and are not part of the current Android Photon phase.
 
 The urgent hostname track is documented in the
 [domain migration roadmap](urgent-domain-migration-roadmap.md). After the
-current Phase 34E2 visual review, Phases 29A–29D take priority over Phase 34E3.
+Phases 29A–29D are complete, so implementation returns to Phase 34E3.
 
 ## Review rule
 

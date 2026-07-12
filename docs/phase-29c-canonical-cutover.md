@@ -45,12 +45,14 @@ host must preserve each path and query in a permanent redirect.
 
 ## Observation and rollback
 
-Phase 29D observation begins 2026-07-12. Do not remove `games.palengke.es`
-from the cluster application route before 2026-07-19. Keep the edge redirect
-and its renewable certificate for at least 90 days unless the owner explicitly
-changes that policy.
+Phase 29D observation began 2026-07-12. The owner explicitly directed Codex to
+run the dependency checks and continue that day, waiving the planned seven-day
+wait after the live logs showed no old-host application traffic. The edge
+redirect and its renewable certificate remain through at least 2026-10-10.
 
 To roll back during observation, restore the recorded edge backup to
 `/etc/nginx/sites-available/games.palengke.es`, run `nginx -t`, reload Nginx,
 restore active docs/tool defaults, and rerun verification. No cluster change is
-required because the dual-host IngressRoute remains live.
+was initially unnecessary while the dual-host IngressRoute remained live.
+After Phase 29D, full rollback also restores the old GitOps host and Palengke
+auth-bridge origin from their recorded commits.
