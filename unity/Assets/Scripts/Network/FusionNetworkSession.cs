@@ -52,6 +52,7 @@ namespace Palengke.BangSak.Network
         private int integrityDiagnostics;
         private int reliableSendDiagnostics;
         private int reliableReceiveDiagnostics;
+        private bool restartRoundAfterRosterChange;
 
         public static FusionNetworkSession Active => instance;
 
@@ -495,9 +496,17 @@ namespace Palengke.BangSak.Network
             controller.RefreshNetworkActors();
             if (IsMasterClient)
             {
+                if (restartRoundAfterRosterChange)
+                {
+                    controller.RestartRound();
+                    authorityRoundId = BuildAuthorityRoundId(controller.RoundNumber);
+                }
+
                 ResetMovementBaselineForSpawn();
                 SendRoundState(controller.CaptureNetworkSnapshot());
             }
+
+            restartRoundAfterRosterChange = false;
         }
 
         private void ResetGameplayBindings()
@@ -1361,19 +1370,60 @@ namespace Palengke.BangSak.Network
                 activePlayerIndices.Add(activePlayer.AsIndex);
             }
 
-            return ResolveRosterSlot(activePlayerIndices.ToArray(), player.AsIndex);
+            var masterClient = runner.GetMasterClient();
+            var masterPlayerIndex = masterClient.IsRealPlayer ? masterClient.AsIndex : int.MinValue;
+            return ResolveRosterSlot(activePlayerIndices.ToArray(), player.AsIndex, masterPlayerIndex);
         }
 
         public static int ResolveRosterSlot(int[] activePlayerIndices, int playerIndex)
         {
+            return ResolveRosterSlot(activePlayerIndices, playerIndex, int.MinValue);
+        }
+
+        public static int ResolveRosterSlot(
+            int[] activePlayerIndices,
+            int playerIndex,
+            int authorityPlayerIndex)
+        {
+            var orderedIndices = BuildDeterministicRoster(activePlayerIndices, authorityPlayerIndex);
+            return Array.IndexOf(orderedIndices, playerIndex);
+        }
+
+        public static int[] BuildDeterministicRoster(int[] activePlayerIndices, int authorityPlayerIndex)
+        {
             if (activePlayerIndices == null || activePlayerIndices.Length == 0)
             {
-                return -1;
+                return new int[0];
             }
 
-            var sortedIndices = (int[])activePlayerIndices.Clone();
-            Array.Sort(sortedIndices);
-            return Array.IndexOf(sortedIndices, playerIndex);
+            var orderedIndices = new List<int>();
+            for (var index = 0; index < activePlayerIndices.Length; index += 1)
+            {
+                if (!orderedIndices.Contains(activePlayerIndices[index]))
+                {
+                    orderedIndices.Add(activePlayerIndices[index]);
+                }
+            }
+
+            orderedIndices.Sort();
+            var authorityPosition = orderedIndices.IndexOf(authorityPlayerIndex);
+            if (authorityPosition > 0)
+            {
+                orderedIndices.RemoveAt(authorityPosition);
+                orderedIndices.Insert(0, authorityPlayerIndex);
+            }
+
+            return orderedIndices.ToArray();
+        }
+
+        public static bool ShouldReturnLastPlayerToLobby(int activePlayerCount)
+        {
+            return activePlayerCount == 1;
+        }
+
+        public static bool CanAcceptReplacement(int activePlayerCount)
+        {
+            return activePlayerCount >= 1 && activePlayerCount < MaximumPlayers;
         }
 
         public static int ResolveEnvelopeSenderSlot(
@@ -1397,30 +1447,96 @@ namespace Palengke.BangSak.Network
         public void OnPlayerJoined(NetworkRunner networkRunner, PlayerRef player)
         {
             StatusMessage = $"Connected to {ActiveRoomCode} · {GetRosterSize()}/{MaximumPlayers} players · {FixedRegion.ToUpperInvariant()}.";
+            localAuthorityToken = string.Empty;
             credentialsRosterFingerprint = string.Empty;
+            lastAuthoritySequence = 0;
             if (IsMasterClient)
             {
                 EnsureAuthorityCredentials();
             }
             if (SceneManager.GetActiveScene().name == GameplaySceneName)
             {
-                BindGameplayScene();
+                StartCoroutine(RebindGameplayAfterRosterChange());
             }
         }
 
         public void OnPlayerLeft(NetworkRunner networkRunner, PlayerRef player)
         {
-            StatusMessage = $"Player left · {GetRosterSize()}/{MaximumPlayers} remain. Room stays available for manual rejoin.";
+            var remainingPlayers = GetRosterSize();
+            StatusMessage = ShouldReturnLastPlayerToLobby(remainingPlayers)
+                ? $"Only one player remains · room {ActiveRoomCode} stays open for a replacement."
+                : $"Player left · {remainingPlayers}/{MaximumPlayers} remain. Room stays available for manual rejoin.";
             localAuthorityToken = string.Empty;
             credentialsRosterFingerprint = string.Empty;
+            lastAuthoritySequence = 0;
             if (IsMasterClient)
             {
                 EnsureAuthorityCredentials();
             }
             if (SceneManager.GetActiveScene().name == GameplaySceneName)
             {
-                BindGameplayScene();
+                if (ShouldReturnLastPlayerToLobby(remainingPlayers))
+                {
+                    StartCoroutine(ReturnLastPlayerToLobbyAfterAuthorityTransfer());
+                }
+                else
+                {
+                    StartCoroutine(RebindGameplayAfterRosterChange());
+                }
             }
+        }
+
+        private IEnumerator RebindGameplayAfterRosterChange()
+        {
+            for (var frame = 0; frame < 60; frame += 1)
+            {
+                if (!IsConnected || SceneManager.GetActiveScene().name != GameplaySceneName)
+                {
+                    yield break;
+                }
+
+                var masterClient = runner.GetMasterClient();
+                if (masterClient.IsRealPlayer && PlayerSlotFor(masterClient) == 0)
+                {
+                    restartRoundAfterRosterChange = true;
+                    BindGameplayScene();
+                    yield break;
+                }
+
+                yield return null;
+            }
+
+            StatusMessage = "Roster changed, but Photon has not assigned the next round authority yet.";
+        }
+
+        private IEnumerator ReturnLastPlayerToLobbyAfterAuthorityTransfer()
+        {
+            for (var frame = 0; frame < 60; frame += 1)
+            {
+                if (!IsConnected || !ShouldReturnLastPlayerToLobby(GetRosterSize()))
+                {
+                    yield break;
+                }
+
+                if (IsMasterClient)
+                {
+                    EnsureAuthorityCredentials();
+                }
+
+                if (runner.IsSceneAuthority)
+                {
+                    runner.LoadScene(
+                        "MainMenu",
+                        LoadSceneMode.Single,
+                        LocalPhysicsMode.None,
+                        true);
+                    yield break;
+                }
+
+                yield return null;
+            }
+
+            StatusMessage = "Only one player remains, but Photon has not transferred scene authority yet.";
         }
 
         public void OnShutdown(NetworkRunner networkRunner, ShutdownReason shutdownReason)

@@ -72,6 +72,19 @@ public sealed class PrototypeNetworkPlayerSpawnerTests
     }
 
     [Test]
+    public void BuildPreviewRoster_LastPlayerHasNoGhostHider()
+    {
+        spawner.ConfigurePreview(new[] { "JuanP", "Maria", "Pedro", "Ana" }, 1, 0);
+
+        var roster = spawner.BuildPreviewRoster();
+
+        Assert.That(roster, Has.Length.EqualTo(1));
+        Assert.That(roster[0].DisplayName, Is.EqualTo("JuanP"));
+        Assert.That(roster[0].Role, Is.EqualTo(PlayerRole.Taya));
+        Assert.That(roster[0].IsLocalPlayer, Is.True);
+    }
+
+    [Test]
     public void SpawnPreviewPlayers_AddsNetworkIdentityAndOwnershipControl()
     {
         var count = spawner.SpawnPreviewPlayers();

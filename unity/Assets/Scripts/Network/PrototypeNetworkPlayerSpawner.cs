@@ -135,7 +135,7 @@ namespace Palengke.BangSak.Network
         public void ConfigurePreview(string[] playerNames, int playerCount, int localIndex)
         {
             previewPlayerNames = playerNames ?? previewPlayerNames;
-            previewPlayerCount = Mathf.Max(2, playerCount);
+            previewPlayerCount = Mathf.Max(1, playerCount);
             localPlayerIndex = Mathf.Clamp(localIndex, 0, previewPlayerCount - 1);
         }
 
@@ -149,7 +149,7 @@ namespace Palengke.BangSak.Network
         {
             ResolveReferences();
 
-            var totalPlayers = Mathf.Max(2, previewPlayerCount);
+            var totalPlayers = Mathf.Max(1, previewPlayerCount);
             var descriptors = new PrototypeNetworkPlayerDescriptor[totalPlayers];
             var tayaSpawn = mapLayout != null
                 ? mapLayout.GetTayaSpawnPoint()

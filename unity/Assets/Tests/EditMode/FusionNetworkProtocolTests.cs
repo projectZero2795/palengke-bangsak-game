@@ -63,6 +63,42 @@ public sealed class FusionNetworkProtocolTests
     }
 
     [Test]
+    public void BuildDeterministicRoster_PutsSharedAuthorityFirstAndCompactsSurvivors()
+    {
+        Assert.That(
+            FusionNetworkSession.BuildDeterministicRoster(new[] { 9, 3, 7 }, 7),
+            Is.EqualTo(new[] { 7, 3, 9 }));
+        Assert.That(
+            FusionNetworkSession.ResolveRosterSlot(new[] { 9, 3, 7 }, 7, 7),
+            Is.EqualTo(0));
+        Assert.That(
+            FusionNetworkSession.ResolveRosterSlot(new[] { 9, 3, 7 }, 3, 7),
+            Is.EqualTo(1));
+        Assert.That(
+            FusionNetworkSession.BuildDeterministicRoster(new[] { 9, 3 }, 9),
+            Is.EqualTo(new[] { 9, 3 }),
+            "A promoted Shared authority must become Taya after the old authority leaves.");
+        Assert.That(
+            FusionNetworkSession.BuildDeterministicRoster(new[] { 11, 3, 9 }, 9),
+            Is.EqualTo(new[] { 9, 3, 11 }),
+            "A replacement must reuse compact capacity without changing the current Taya.");
+        Assert.That(
+            FusionNetworkSession.BuildDeterministicRoster(new[] { 9 }, 9),
+            Is.EqualTo(new[] { 9 }),
+            "The sole survivor must not retain a ghost roster entry.");
+    }
+
+    [Test]
+    public void LeaveRules_ReturnLastPlayerToLobbyAndKeepFreedCapacityReusable()
+    {
+        Assert.That(FusionNetworkSession.ShouldReturnLastPlayerToLobby(1), Is.True);
+        Assert.That(FusionNetworkSession.ShouldReturnLastPlayerToLobby(2), Is.False);
+        Assert.That(FusionNetworkSession.CanAcceptReplacement(1), Is.True);
+        Assert.That(FusionNetworkSession.CanAcceptReplacement(3), Is.True);
+        Assert.That(FusionNetworkSession.CanAcceptReplacement(4), Is.False);
+    }
+
+    [Test]
     public void ResolveEnvelopeSenderSlot_AcceptsProxySourceButRejectsKnownMismatch()
     {
         Assert.That(FusionNetworkSession.ResolveEnvelopeSenderSlot(-1, 1, 2), Is.EqualTo(1));

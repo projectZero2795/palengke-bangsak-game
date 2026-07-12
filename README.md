@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently at **Phase 34E3: Photon leave cleanup and room rules**.
+This repository is currently at **Phase 34E4: Android pause/resume**.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
@@ -23,7 +23,10 @@ Phase 29C made the new hostname canonical while preserving old paths and
 queries through a temporary redirect. At the owner's explicit direction,
 Phase 29D used live traffic evidence to complete the application cleanup on
 2026-07-12. The legacy redirect and renewable certificate remain retained
-through at least 2026-10-10.
+through at least 2026-10-10. Phase 34E3 then passed the authorized nonvisual
+self-review: deterministic roster compaction, Taya/authority transfer,
+last-player lobby return, freed capacity, and no-ghost behavior are covered by
+231 passing tests and Android build `0.34.5`.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -229,6 +232,7 @@ Do not skip ahead.
 - [Phase 34D mobile accessibility](docs/phase-34d-mobile-accessibility.md)
 - [Phase 34E1 Android Photon create/join](docs/phase-34e1-android-photon-create-join.md)
 - [Phase 34E2 in-game leave confirmation](docs/phase-34e2-in-game-leave-confirmation.md)
+- [Phase 34E3 Photon leave cleanup](docs/phase-34e3-photon-leave-cleanup.md)
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)
