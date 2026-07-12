@@ -66,8 +66,39 @@ namespace Palengke.BangSak.Editor
                     $"Phase 28B WebGL build failed: {report.summary.result} ({report.summary.totalErrors} errors).");
             }
 
+            AddVersionedAssetUrls(outputPath);
             WriteBuildMetadata(outputPath, report);
             Debug.Log($"Phase 28B WebGL build completed at {outputPath}");
+        }
+
+        private static void AddVersionedAssetUrls(string outputPath)
+        {
+            var indexPath = Path.Combine(outputPath, "index.html");
+            var html = File.ReadAllText(indexPath);
+            var replacements = new[]
+            {
+                ("var loaderUrl = buildUrl + \"/WebGL.loader.js\";",
+                    $"var loaderUrl = buildUrl + \"/WebGL.loader.js?v={PhaseVersion}\";"),
+                ("dataUrl: buildUrl + \"/WebGL.data\",",
+                    $"dataUrl: buildUrl + \"/WebGL.data?v={PhaseVersion}\","),
+                ("frameworkUrl: buildUrl + \"/WebGL.framework.js\",",
+                    $"frameworkUrl: buildUrl + \"/WebGL.framework.js?v={PhaseVersion}\","),
+                ("codeUrl: buildUrl + \"/WebGL.wasm\",",
+                    $"codeUrl: buildUrl + \"/WebGL.wasm?v={PhaseVersion}\",")
+            };
+
+            foreach (var replacement in replacements)
+            {
+                if (!html.Contains(replacement.Item1))
+                {
+                    throw new BuildFailedException(
+                        $"Could not add the WebGL cache-buster because index.html is missing: {replacement.Item1}");
+                }
+
+                html = html.Replace(replacement.Item1, replacement.Item2);
+            }
+
+            File.WriteAllText(indexPath, html);
         }
 
         private static void ConfigurePlayerSettings()
