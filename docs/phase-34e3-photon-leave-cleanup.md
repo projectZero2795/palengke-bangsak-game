@@ -32,12 +32,12 @@ release signing, and Play Console work remain outside this phase.
 
 | Criterion | Evidence | Result |
 | --- | --- | --- |
-| Remove the voluntary leaver and update counts | All roster slots are rebuilt from current `ActivePlayers`; tests cover gapped, removed, and compacted refs. | Pass |
-| No ghost player remains | The spawner accepts a one-player roster, and `BuildPreviewRoster_LastPlayerHasNoGhostHider` requires exactly one Taya descriptor. | Pass |
+| Remove the voluntary leaver and update counts | All roster slots are rebuilt from current `ActivePlayers`; in the live room Maria left and JuanP immediately became the only `1/4` player. | Pass |
+| No ghost player remains | The live survivor roster contained only JuanP; the spawner test also requires exactly one Taya descriptor for a one-player roster. | Pass |
 | Taya and authority are deterministic | The current Shared master is moved to slot `0`; tests cover old-authority departure, promoted authority, and sole-survivor cases. | Pass |
-| Remaining clients use one round state | Gameplay rebinding waits for the agreed master; only that master restarts and sends the authoritative snapshot. | Pass |
-| Freed capacity is reusable | Photon starts the room with `IsOpen = true`, `PlayerCount = 4`; tests cover capacity at one, three, and four players and a replacement roster. | Pass |
-| Last-player behavior is deterministic | The survivor waits up to 60 frames for scene authority, returns to MainMenu, retains the room, and exposes an explicit timeout status instead of silently diverging. | Pass |
+| Remaining clients use one round state | After replacement rejoin, both live clients entered Round 1 with `HIDERS 1/1`; gameplay rebinding permits only the agreed master to broadcast the snapshot. | Pass |
+| Freed capacity is reusable | Maria manually rejoined the same live room and both clients restored the compact `JuanP · Maria` `2/4` roster. | Pass |
+| Last-player behavior is deterministic | JuanP returned to MainMenu still connected to room `1234`; the room status explicitly reported that it remained open for a replacement. | Pass |
 | No later-phase work leaked in | No pause/resume, reconnect, performance, signing, bundle, or Play Console behavior changed. | Pass |
 
 ## Verification evidence
@@ -52,8 +52,20 @@ release signing, and Play Console work remain outside this phase.
   emulators, both reporting version `0.34.5`;
 - neither emulator recorded a fatal Android exception, null/argument exception,
   or Bang-Sak Photon leave warning during the install/launch smoke check;
-- Phase 34E1 and 34E2 already established the real two-client create/join,
-  synchronized round, Cancel, and confirmed-leave path that feeds these rules.
+- a clean current-source WebGL validation build ran two independent live Photon
+  clients in room `1234`;
+- both clients began the synchronized round with roster `JuanP · Maria` and
+  `HIDERS 1/1`;
+- Maria confirmed **LEAVE GAME** and returned to MainMenu; JuanP also returned
+  to MainMenu as the sole survivor while remaining connected as `1/4`;
+- JuanP's room status contained only `JuanP` and explicitly kept room `1234`
+  open for a replacement, proving there was no ghost Maria slot;
+- Maria manually rejoined the freed slot; both clients showed
+  `JuanP · Maria`, `2/4`, and then began a new synchronized Round 1 with
+  `HIDERS 1/1`;
+- browser console capture contained no errors or leave warnings on either
+  client. Photon emitted only its expected startup warning that `StartGameArgs`
+  initially carries no scene before the room authority loads gameplay.
 
 ## Next boundary
 
