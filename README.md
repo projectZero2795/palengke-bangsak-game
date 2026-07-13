@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently at **Phase 34G: signed Play bundle**.
+This repository is currently at **Phase 34H: Play internal test**.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
@@ -42,8 +42,14 @@ Phase 34F then removed the owner-waived thermal criterion and passed the
 approved emulator performance budgets on Android build `0.34.8`: measured
 gameplay held `59.53–60.00 FPS`, worst P95 frame time was `17.711 ms`, peak PSS
 was `276,387 KB`, and the APK was `52,962,378` bytes. The complete suite now
-has 236 passing tests. Phase 34G is limited to producing and validating the
-first signed Play bundle while keeping signing secrets outside Git.
+has 236 passing tests.
+
+Phase 34G then produced and locally validated the first release-signed Play
+bundle, version `0.34.9` / code `1`. The upload key and passwords remain
+outside Git, Bundletool and `jarsigner` passed, and the bundle certificate
+matches the recorded upload certificate fingerprint. Phase 34H is limited to
+creating the Play Console app and distributing this exact bundle through the
+internal testing track only.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -255,6 +261,7 @@ Do not skip ahead.
 - [Phase 34E4 Android pause and resume](docs/phase-34e4-android-pause-resume.md)
 - [Phase 34E5 Android disconnect and reconnect](docs/phase-34e5-android-disconnect-reconnect.md)
 - [Phase 34F Android performance](docs/phase-34f-android-performance.md)
+- [Phase 34G signed Play bundle](docs/phase-34g-signed-play-bundle.md)
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)
