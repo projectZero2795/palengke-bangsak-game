@@ -99,6 +99,57 @@ public sealed class FusionNetworkProtocolTests
     }
 
     [Test]
+    public void ResumeRules_ReconcileOnlyTheSameConnectedRoom()
+    {
+        Assert.That(
+            FusionNetworkSession.ShouldReconcileAfterResume(true, true, "1234", "1234"),
+            Is.True);
+        Assert.That(
+            FusionNetworkSession.ShouldReconcileAfterResume(false, true, "1234", "1234"),
+            Is.False);
+        Assert.That(
+            FusionNetworkSession.ShouldReconcileAfterResume(true, false, "1234", "1234"),
+            Is.False);
+        Assert.That(
+            FusionNetworkSession.ShouldReconcileAfterResume(true, true, "1234", "5678"),
+            Is.False);
+    }
+
+    [Test]
+    public void ResumeStateRequest_RoundTripsThroughProtocol()
+    {
+        const string requestId = "0123456789abcdef0123456789abcdef";
+        var data = FusionNetworkProtocol.Encode(
+            FusionNetworkMessageKind.ResumeStateRequest,
+            1,
+            8,
+            new FusionCommandPayload { command = "resume-state", requestId = requestId },
+            "authority-token");
+
+        Assert.That(FusionNetworkProtocol.TryDecode(data, out var envelope), Is.True);
+        Assert.That(envelope.kind, Is.EqualTo((int)FusionNetworkMessageKind.ResumeStateRequest));
+        Assert.That(
+            FusionNetworkProtocol.TryDecodePayload(envelope, out FusionCommandPayload payload),
+            Is.True);
+        Assert.That(payload.command, Is.EqualTo("resume-state"));
+        Assert.That(payload.requestId, Is.EqualTo(requestId));
+    }
+
+    [Test]
+    public void ResumeResponse_AcceptsOnlyTheRequestedCorrelationId()
+    {
+        const string requestId = "0123456789abcdef0123456789abcdef";
+
+        Assert.That(FusionNetworkSession.IsMatchingResumeResponse(requestId, requestId), Is.True);
+        Assert.That(FusionNetworkSession.IsMatchingResumeResponse(requestId, string.Empty), Is.False);
+        Assert.That(
+            FusionNetworkSession.IsMatchingResumeResponse(
+                requestId,
+                "fedcba9876543210fedcba9876543210"),
+            Is.False);
+    }
+
+    [Test]
     public void ResolveEnvelopeSenderSlot_AcceptsProxySourceButRejectsKnownMismatch()
     {
         Assert.That(FusionNetworkSession.ResolveEnvelopeSenderSlot(-1, 1, 2), Is.EqualTo(1));

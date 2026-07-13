@@ -12,7 +12,8 @@ namespace Palengke.BangSak.Network
         RoundState = 5,
         RestartRequest = 6,
         MovementState = 7,
-        ActionState = 8
+        ActionState = 8,
+        ResumeStateRequest = 9
     }
 
     [Serializable]
@@ -38,6 +39,7 @@ namespace Palengke.BangSak.Network
     public sealed class FusionCommandPayload
     {
         public string command;
+        public string requestId;
     }
 
     [Serializable]
@@ -87,6 +89,7 @@ namespace Palengke.BangSak.Network
         public int caughtPlayerMask;
         public bool tayaCountered;
         public string authorityRoundId;
+        public string resumeRequestId;
     }
 
     public static class FusionNetworkProtocol

@@ -80,6 +80,30 @@ namespace Palengke.BangSak.UI
                 return;
             }
 
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+            // Nonvisual automation affordances for repeatable debug-build room tests.
+            if (networkPanel != null && networkPanel.activeSelf)
+            {
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    OnCreateRoomClicked();
+                    return;
+                }
+
+                if (Input.GetKeyDown(KeyCode.J))
+                {
+                    OnJoinDefaultRoomClicked();
+                    return;
+                }
+
+                if (Input.GetKeyDown(KeyCode.B))
+                {
+                    HidePanels();
+                    return;
+                }
+            }
+#endif
+
             if (Input.GetKeyDown(KeyCode.P))
             {
                 PlayLocal();

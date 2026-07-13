@@ -21,8 +21,11 @@ namespace Palengke.BangSak.Network
         public const string GameplaySceneName = "PrototypeMap";
         public const int MaximumConnectionAttempts = 2;
         private const float ConnectionRetryDelaySeconds = 0.75f;
-        private const float MovementSendIntervalSeconds = 0.1f;
-        private const float RoundSendIntervalSeconds = 0.25f;
+        // These snapshots use Fusion reliable data. Keep their combined rate below
+        // the receiver's frame budget so a short Android pause cannot create a
+        // growing reliable backlog ahead of the explicit resume response.
+        private const float MovementSendIntervalSeconds = 0.25f;
+        private const float RoundSendIntervalSeconds = 1f;
         private const float CredentialRefreshIntervalSeconds = 5f;
         private const float MovementSpawnGraceSeconds = 0.75f;
         private const int ReliableMagic = 0x4253414B;
@@ -33,6 +36,9 @@ namespace Palengke.BangSak.Network
         private NetworkRunner runner;
         private GameObject runnerObject;
         private bool intentionalShutdown;
+        private bool pausedWhileConnected;
+        private string pausedRoomCode = string.Empty;
+        private string pendingResumeRequestId = string.Empty;
         private int outgoingSequence;
         private int localRequestSequence;
         private float nextMovementSendAt;
@@ -112,6 +118,9 @@ namespace Palengke.BangSak.Network
             instance = this;
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnUnitySceneLoaded;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            Application.runInBackground = true;
+#endif
         }
 
         private void OnDestroy()
@@ -156,6 +165,56 @@ namespace Palengke.BangSak.Network
                 SendRoundState(roundRules.CaptureNetworkSnapshot());
                 nextRoundSendAt = Time.unscaledTime + RoundSendIntervalSeconds;
             }
+        }
+
+        private void OnApplicationPause(bool paused)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (paused)
+            {
+                pausedWhileConnected = IsConnected;
+                pausedRoomCode = pausedWhileConnected ? ActiveRoomCode : string.Empty;
+                if (pausedWhileConnected)
+                {
+                    Debug.Log($"Bang-Sak Android paused while connected to room {pausedRoomCode}.");
+                }
+                return;
+            }
+
+            if (!ShouldReconcileAfterResume(
+                    pausedWhileConnected,
+                    IsConnected,
+                    pausedRoomCode,
+                    ActiveRoomCode))
+            {
+                pausedWhileConnected = false;
+                pausedRoomCode = string.Empty;
+                return;
+            }
+
+            pausedWhileConnected = false;
+            pausedRoomCode = string.Empty;
+            Debug.Log($"Bang-Sak Android resumed in room {ActiveRoomCode}; reconciling live state.");
+            StartCoroutine(ReconcileAfterApplicationResume());
+#endif
+        }
+
+        public static bool ShouldReconcileAfterResume(
+            bool wasPausedWhileConnected,
+            bool isConnected,
+            string roomBeforePause,
+            string activeRoom)
+        {
+            return wasPausedWhileConnected
+                && isConnected
+                && !string.IsNullOrWhiteSpace(roomBeforePause)
+                && string.Equals(roomBeforePause, activeRoom, StringComparison.Ordinal);
+        }
+
+        public static bool IsMatchingResumeResponse(string pendingRequestId, string responseRequestId)
+        {
+            return !string.IsNullOrWhiteSpace(pendingRequestId)
+                && string.Equals(pendingRequestId, responseRequestId, StringComparison.Ordinal);
         }
 
         public bool BeginConnect(string roomCode, bool allowCreate)
@@ -423,6 +482,9 @@ namespace Palengke.BangSak.Network
         private void CleanupRunnerObject()
         {
             runner = null;
+            pausedWhileConnected = false;
+            pausedRoomCode = string.Empty;
+            pendingResumeRequestId = string.Empty;
             if (runnerObject != null)
             {
                 Destroy(runnerObject);
@@ -509,6 +571,94 @@ namespace Palengke.BangSak.Network
             restartRoundAfterRosterChange = false;
         }
 
+        private IEnumerator ReconcileAfterApplicationResume()
+        {
+            yield return null;
+            if (!IsConnected)
+            {
+                yield break;
+            }
+
+            if (SceneManager.GetActiveScene().name != GameplaySceneName)
+            {
+                StatusMessage = $"Resumed room {ActiveRoomCode} · {GetRosterSize()}/{MaximumPlayers} players.";
+                yield break;
+            }
+
+            if (roundRules == null)
+            {
+                BindGameplayScene();
+            }
+
+            var requestSent = false;
+            var requestId = Guid.NewGuid().ToString("N");
+            for (var frame = 0; frame < 60; frame += 1)
+            {
+                if (!IsConnected || SceneManager.GetActiveScene().name != GameplaySceneName)
+                {
+                    yield break;
+                }
+
+                if (roundRules == null)
+                {
+                    yield return null;
+                    continue;
+                }
+
+                if (IsMasterClient)
+                {
+                    EnsureAuthorityCredentials();
+                    SendRoundState(roundRules.CaptureNetworkSnapshot());
+                    StatusMessage = $"Resumed room {ActiveRoomCode} · authoritative round state restored.";
+                    yield break;
+                }
+
+                pendingResumeRequestId = requestId;
+                if (SendRequestToAuthority(
+                        FusionNetworkMessageKind.ResumeStateRequest,
+                        new FusionCommandPayload
+                        {
+                            command = "resume-state",
+                            requestId = requestId
+                        }))
+                {
+                    requestSent = true;
+                    StatusMessage = $"Resumed room {ActiveRoomCode} · waiting for authoritative round state.";
+                    break;
+                }
+
+                pendingResumeRequestId = string.Empty;
+                yield return null;
+            }
+
+            if (!requestSent)
+            {
+                StatusMessage = $"Resumed room {ActiveRoomCode}, but the round-state request could not be sent.";
+                Debug.LogWarning($"Bang-Sak Android could not request resume state in room {ActiveRoomCode}.");
+                yield break;
+            }
+
+            var synchronizationDeadline = Time.unscaledTime + 30f;
+            while (!string.IsNullOrWhiteSpace(pendingResumeRequestId)
+                && Time.unscaledTime < synchronizationDeadline)
+            {
+                if (!IsConnected || SceneManager.GetActiveScene().name != GameplaySceneName)
+                {
+                    pendingResumeRequestId = string.Empty;
+                    yield break;
+                }
+
+                yield return null;
+            }
+
+            if (!string.IsNullOrWhiteSpace(pendingResumeRequestId))
+            {
+                pendingResumeRequestId = string.Empty;
+                StatusMessage = $"Resumed room {ActiveRoomCode}, but round-state synchronization timed out.";
+                Debug.LogWarning($"Bang-Sak Android resume synchronization timed out in room {ActiveRoomCode}.");
+            }
+        }
+
         private void ResetGameplayBindings()
         {
             localMovement = null;
@@ -526,6 +676,7 @@ namespace Palengke.BangSak.Network
             authorityEpoch = 0;
             lastAuthoritySequence = 0;
             localRequestSequence = 0;
+            pendingResumeRequestId = string.Empty;
             nextCredentialRefreshAt = 0f;
             integrityDiagnostics = 0;
         }
@@ -629,7 +780,16 @@ namespace Palengke.BangSak.Network
 
         private void SendRoundState(PrototypeRoundNetworkSnapshot snapshot)
         {
-            var payload = new FusionRoundPayload
+            BroadcastAuthoritative(
+                FusionNetworkMessageKind.RoundState,
+                BuildRoundPayload(snapshot, string.Empty));
+        }
+
+        private FusionRoundPayload BuildRoundPayload(
+            PrototypeRoundNetworkSnapshot snapshot,
+            string resumeRequestId)
+        {
+            return new FusionRoundPayload
             {
                 state = (int)snapshot.State,
                 result = (int)snapshot.Result,
@@ -641,9 +801,9 @@ namespace Palengke.BangSak.Network
                 roundNumber = snapshot.RoundNumber,
                 caughtPlayerMask = BuildCaughtPlayerMask(),
                 tayaCountered = IsTayaCountered(),
-                authorityRoundId = authorityRoundId
+                authorityRoundId = authorityRoundId,
+                resumeRequestId = resumeRequestId ?? string.Empty
             };
-            BroadcastAuthoritative(FusionNetworkMessageKind.RoundState, payload);
         }
 
         private bool BroadcastAuthoritative<T>(FusionNetworkMessageKind kind, T payload)
@@ -760,6 +920,9 @@ namespace Palengke.BangSak.Network
                         return;
                     case FusionNetworkMessageKind.RestartRequest:
                         ProcessRestartRequest(senderSlot, envelope);
+                        return;
+                    case FusionNetworkMessageKind.ResumeStateRequest:
+                        ProcessResumeStateRequest(senderSlot, envelope);
                         return;
                     default:
                         LogIntegrityRejection(kind, senderSlot, FusionIntegrityRejection.InvalidRole);
@@ -942,6 +1105,37 @@ namespace Palengke.BangSak.Network
             ResetMovementBaselineForSpawn();
             authorityRoundId = BuildAuthorityRoundId(roundRules.RoundNumber);
             SendRoundState(roundRules.CaptureNetworkSnapshot());
+        }
+
+        private void ProcessResumeStateRequest(int senderSlot, FusionNetworkEnvelope envelope)
+        {
+            if (roundRules == null
+                || !FusionNetworkProtocol.TryDecodePayload(envelope, out FusionCommandPayload command)
+                || command.command != "resume-state"
+                || string.IsNullOrWhiteSpace(command.requestId)
+                || command.requestId.Length != 32)
+            {
+                LogIntegrityRejection(
+                    FusionNetworkMessageKind.ResumeStateRequest,
+                    senderSlot,
+                    FusionIntegrityRejection.InvalidPayload);
+                return;
+            }
+
+            var snapshot = roundRules.CaptureNetworkSnapshot();
+            Debug.Log(
+                $"Bang-Sak resume state requested by player {senderSlot}; "
+                + $"sending round {snapshot.RoundNumber} with {snapshot.RemainingSeconds:F1}s remaining.");
+            if (!TryFindPlayerForSlot(senderSlot, out var player)
+                || !authorityCredentials.TryGetValue(senderSlot, out var token)
+                || !SendToPlayer(
+                    player,
+                    FusionNetworkMessageKind.RoundState,
+                    BuildRoundPayload(snapshot, command.requestId),
+                    token))
+            {
+                Debug.LogWarning($"Bang-Sak could not send resume state to player {senderSlot}.");
+            }
         }
 
         private void EnsureAuthorityCredentials()
@@ -1311,7 +1505,7 @@ namespace Palengke.BangSak.Network
                 return;
             }
 
-            roundRules.ApplyNetworkSnapshot(new PrototypeRoundNetworkSnapshot(
+            var applied = roundRules.ApplyNetworkSnapshot(new PrototypeRoundNetworkSnapshot(
                 (PrototypeRoundState)payload.state,
                 (PrototypeRoundResult)payload.result,
                 payload.resultTitle,
@@ -1322,6 +1516,16 @@ namespace Palengke.BangSak.Network
                 payload.roundNumber));
             authorityRoundId = payload.authorityRoundId ?? string.Empty;
             ApplyAuthoritativeActorState(payload.caughtPlayerMask, payload.tayaCountered, payload.roundNumber);
+
+            if (applied
+                && IsMatchingResumeResponse(pendingResumeRequestId, payload.resumeRequestId))
+            {
+                pendingResumeRequestId = string.Empty;
+                StatusMessage = $"Resumed room {ActiveRoomCode} · authoritative round state restored.";
+                Debug.Log(
+                    $"Bang-Sak Android resume applied round {payload.roundNumber} "
+                    + $"with {payload.remainingSeconds:F1}s remaining in room {ActiveRoomCode}.");
+            }
         }
 
         private static PrototypeNetworkMovementSyncController FindMovementSync(string networkPlayerId)
@@ -1373,6 +1577,24 @@ namespace Palengke.BangSak.Network
             var masterClient = runner.GetMasterClient();
             var masterPlayerIndex = masterClient.IsRealPlayer ? masterClient.AsIndex : int.MinValue;
             return ResolveRosterSlot(activePlayerIndices.ToArray(), player.AsIndex, masterPlayerIndex);
+        }
+
+        private bool TryFindPlayerForSlot(int playerSlot, out PlayerRef player)
+        {
+            if (runner != null)
+            {
+                foreach (var activePlayer in runner.ActivePlayers)
+                {
+                    if (PlayerSlotFor(activePlayer) == playerSlot)
+                    {
+                        player = activePlayer;
+                        return true;
+                    }
+                }
+            }
+
+            player = default;
+            return false;
         }
 
         public static int ResolveRosterSlot(int[] activePlayerIndices, int playerIndex)
