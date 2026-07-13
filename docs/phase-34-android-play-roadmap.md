@@ -7,7 +7,7 @@ owner-reviewable checkpoints. Phase 34A records decisions and Phase 34B adds a
 local debug APK; later phases remain gated and this roadmap never authorizes a
 Play Console upload or publication by itself.
 
-Phase 33 and Phases 34A through 34E5 are approved. Phase 34F is current.
+Phase 33 and Phases 34A through 34F are approved. Phase 34G is current.
 Nonvisual phases may proceed after a complete evidence-backed self-review;
 visible phases still stop with screenshots for explicit owner approval.
 
@@ -24,7 +24,7 @@ visible phases still stop with screenshots for explicit owner approval.
 | 34E3 | Apply only Photon roster cleanup, freed-slot behavior, and deterministic Taya/authority/last-player rules after a confirmed leave. | One client leaves; the remaining clients agree on roster/round state and no ghost player remains. | Background/resume, involuntary reconnect, performance. |
 | 34E4 | Handle only Android pause, background, and resume for a joined room. | Background and resume one client; both clients still agree on room and round. | Real disconnect/reconnect, performance, signing. |
 | 34E5 | Handle only involuntary Android disconnect and room-code reconnect. | Disconnect and reconnect one client, then finish one agreed round. | Performance tuning, signing, Play upload. |
-| 34F | Measure and tune only the agreed reference-device FPS/frame time, memory, temperature, and package/download-size budgets. | Play one measured round and compare the recorded result with the budget. | Signing, listing, publishing. |
+| 34F | Measure and tune only the agreed reference-profile FPS/frame time, memory, and package/download-size budgets; thermal was removed by the owner. | Play one measured round and compare the recorded result with the budget. | Signing, listing, publishing. |
 | 34G | Produce one versioned signed `.aab`; configure Play App Signing/upload-key handling without committing keys or passwords. | Validate the bundle and compare the recorded certificate fingerprint/version. | Play upload or tester distribution. |
 | 34H | Create the Play Console app and publish the approved bundle to internal testing only. | Use the Play tester link to install the game from Google Play. | Public listing, closed test, production release. |
 | 34I | Complete only listing and compliance material: title/description, icon/screenshots, privacy policy, Data safety, content rating, target audience, countries, and other required app-content answers. | Confirm Play Console has no unresolved required listing/app-content task. | Production submission. |

@@ -4,6 +4,12 @@ using Palengke.BangSak.Network;
 public sealed class FusionNetworkProtocolTests
 {
     [Test]
+    public void AndroidTargetFrameRateMeetsPhase34FBudget()
+    {
+        Assert.That(FusionNetworkSession.AndroidTargetFrameRate, Is.EqualTo(60));
+    }
+
+    [Test]
     public void EncodeDecode_RoundTripsMovementEnvelope()
     {
         var payload = new FusionMovementPayload

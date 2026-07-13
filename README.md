@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently at **Phase 34F: Android performance**.
+This repository is currently at **Phase 34G: signed Play bundle**.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
@@ -37,6 +37,13 @@ Phase 34E5 then passed a real Android network-loss self-review on build
 `1234`, restored the two-player roster, and both clients naturally completed
 one synchronized timer-expiry round. The complete suite now has 235 passing
 tests.
+
+Phase 34F then removed the owner-waived thermal criterion and passed the
+approved emulator performance budgets on Android build `0.34.8`: measured
+gameplay held `59.53–60.00 FPS`, worst P95 frame time was `17.711 ms`, peak PSS
+was `276,387 KB`, and the APK was `52,962,378` bytes. The complete suite now
+has 236 passing tests. Phase 34G is limited to producing and validating the
+first signed Play bundle while keeping signing secrets outside Git.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -131,7 +138,9 @@ readable-text, high-contrast, reduced-motion, and visual-action-cue settings.
 The former broad Android Photon lifecycle phase is split into Phase 34E1–34E5
 so create/join, voluntary leave confirmation, remaining-room leave rules,
 pause/resume, and reconnect can each be reviewed separately. Release signing,
-Play Console creation, and store upload remain later owner-gated phases.
+Play Console creation, and store upload remain later owner-gated phases. Phase
+34F raises the Android runtime target to 60 FPS and records passing frame-time,
+memory, and APK-size evidence; thermal was explicitly removed by the owner.
 The requested closer perspective, dark ambient visibility, cone-only local
 vision, and self-only minimap are recorded separately as future Phases
 42A–42E; none is implemented in the current phase.
@@ -245,6 +254,7 @@ Do not skip ahead.
 - [Phase 34E3 Photon leave cleanup](docs/phase-34e3-photon-leave-cleanup.md)
 - [Phase 34E4 Android pause and resume](docs/phase-34e4-android-pause-resume.md)
 - [Phase 34E5 Android disconnect and reconnect](docs/phase-34e5-android-disconnect-reconnect.md)
+- [Phase 34F Android performance](docs/phase-34f-android-performance.md)
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)

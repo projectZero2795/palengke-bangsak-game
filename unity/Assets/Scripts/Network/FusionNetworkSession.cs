@@ -15,6 +15,8 @@ namespace Palengke.BangSak.Network
     [DisallowMultipleComponent]
     public sealed class FusionNetworkSession : MonoBehaviour, INetworkRunnerCallbacks
     {
+        public const int AndroidTargetFrameRate = 60;
+
         public const int MaximumPlayers = 4;
         public const string FixedRegion = "eu";
         public const string DirectEuNameServer = "ns-eu.photonengine.io";
@@ -121,6 +123,7 @@ namespace Palengke.BangSak.Network
             SceneManager.sceneLoaded += OnUnitySceneLoaded;
 #if UNITY_ANDROID && !UNITY_EDITOR
             Application.runInBackground = true;
+            Application.targetFrameRate = AndroidTargetFrameRate;
 #endif
         }
 
