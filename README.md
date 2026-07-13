@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently at **Phase 34E5: Android disconnect/reconnect**.
+This repository is currently at **Phase 34F: Android performance**.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
@@ -31,6 +31,12 @@ authorized nonvisual self-review on Android build `0.34.6`: after a five-second
 app switch, the resumed client stayed in room `1234` and applied the exact
 correlated authoritative Round 1 timer snapshot. The complete suite now has
 234 passing tests.
+
+Phase 34E5 then passed a real Android network-loss self-review on build
+`0.34.7`: the disconnected client returned to MainMenu, manually rejoined room
+`1234`, restored the two-player roster, and both clients naturally completed
+one synchronized timer-expiry round. The complete suite now has 235 passing
+tests.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -238,6 +244,7 @@ Do not skip ahead.
 - [Phase 34E2 in-game leave confirmation](docs/phase-34e2-in-game-leave-confirmation.md)
 - [Phase 34E3 Photon leave cleanup](docs/phase-34e3-photon-leave-cleanup.md)
 - [Phase 34E4 Android pause and resume](docs/phase-34e4-android-pause-resume.md)
+- [Phase 34E5 Android disconnect and reconnect](docs/phase-34e5-android-disconnect-reconnect.md)
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)

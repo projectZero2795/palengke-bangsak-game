@@ -36,6 +36,7 @@ namespace Palengke.BangSak.Network
         private NetworkRunner runner;
         private GameObject runnerObject;
         private bool intentionalShutdown;
+        private bool handlingUnexpectedDisconnect;
         private bool pausedWhileConnected;
         private string pausedRoomCode = string.Empty;
         private string pendingResumeRequestId = string.Empty;
@@ -217,6 +218,20 @@ namespace Palengke.BangSak.Network
                 && string.Equals(pendingRequestId, responseRequestId, StringComparison.Ordinal);
         }
 
+        public static bool ShouldRecoverUnexpectedDisconnect(
+            bool intentional,
+            bool alreadyHandling,
+            PrototypeNetworkRoomState state,
+            string roomCode)
+        {
+            return !intentional
+                && !alreadyHandling
+                && state != PrototypeNetworkRoomState.Connecting
+                && state != PrototypeNetworkRoomState.Leaving
+                && state != PrototypeNetworkRoomState.Failed
+                && !string.IsNullOrWhiteSpace(roomCode);
+        }
+
         public bool BeginConnect(string roomCode, bool allowCreate)
         {
             if (State == PrototypeNetworkRoomState.Connecting
@@ -301,6 +316,7 @@ namespace Palengke.BangSak.Network
         {
             ResetIntegrityState();
             intentionalShutdown = false;
+            handlingUnexpectedDisconnect = false;
             ActiveRoomCode = roomCode;
             State = PrototypeNetworkRoomState.Connecting;
             StatusMessage = allowCreate
@@ -476,7 +492,40 @@ namespace Palengke.BangSak.Network
             State = PrototypeNetworkRoomState.Disconnected;
             StatusMessage = message;
             intentionalShutdown = false;
+            handlingUnexpectedDisconnect = false;
             ResetIntegrityState();
+        }
+
+        private void BeginUnexpectedDisconnectRecovery(string reason)
+        {
+            if (!ShouldRecoverUnexpectedDisconnect(
+                    intentionalShutdown,
+                    handlingUnexpectedDisconnect,
+                    State,
+                    ActiveRoomCode))
+            {
+                return;
+            }
+
+            handlingUnexpectedDisconnect = true;
+            State = PrototypeNetworkRoomState.Failed;
+            StatusMessage = $"Photon connection lost ({reason}). Rejoin room {ActiveRoomCode} from the menu.";
+            Debug.LogWarning(
+                $"Bang-Sak Photon connection lost in room {ActiveRoomCode} ({reason}); returning to the menu for manual rejoin.");
+            StartCoroutine(ReturnToMenuAfterUnexpectedDisconnect());
+        }
+
+        private IEnumerator ReturnToMenuAfterUnexpectedDisconnect()
+        {
+            yield return null;
+            CleanupRunnerObject();
+            ResetGameplayBindings();
+            ResetIntegrityState();
+            handlingUnexpectedDisconnect = false;
+            if (SceneManager.GetActiveScene().name != "MainMenu")
+            {
+                SceneManager.LoadScene("MainMenu");
+            }
         }
 
         private void CleanupRunnerObject()
@@ -1769,11 +1818,7 @@ namespace Palengke.BangSak.Network
                 return;
             }
 
-            if (!intentionalShutdown && State != PrototypeNetworkRoomState.Failed)
-            {
-                State = PrototypeNetworkRoomState.Failed;
-                StatusMessage = $"Photon disconnected ({shutdownReason}). Rejoin room {ActiveRoomCode} from the menu.";
-            }
+            BeginUnexpectedDisconnectRecovery(shutdownReason.ToString());
         }
 
         public void OnDisconnectedFromServer(NetworkRunner networkRunner, NetDisconnectReason reason)
@@ -1784,11 +1829,7 @@ namespace Palengke.BangSak.Network
                 return;
             }
 
-            if (!intentionalShutdown)
-            {
-                State = PrototypeNetworkRoomState.Failed;
-                StatusMessage = $"Photon connection lost ({reason}). Rejoin room {ActiveRoomCode} from the menu.";
-            }
+            BeginUnexpectedDisconnectRecovery(reason.ToString());
         }
 
         public void OnConnectFailed(NetworkRunner networkRunner, NetAddress remoteAddress, NetConnectFailedReason reason)
@@ -1800,7 +1841,7 @@ namespace Palengke.BangSak.Network
                 return;
             }
 
-            FailConnection($"Photon connection failed: {reason}.");
+            BeginUnexpectedDisconnectRecovery(reason.ToString());
         }
 
         public void OnReliableDataReceived(

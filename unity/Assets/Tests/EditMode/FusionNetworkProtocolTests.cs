@@ -150,6 +150,46 @@ public sealed class FusionNetworkProtocolTests
     }
 
     [Test]
+    public void DisconnectRecovery_HandlesOnlyUnexpectedActiveRoomLoss()
+    {
+        Assert.That(
+            FusionNetworkSession.ShouldRecoverUnexpectedDisconnect(
+                false,
+                false,
+                PrototypeNetworkRoomState.Connected,
+                "1234"),
+            Is.True);
+        Assert.That(
+            FusionNetworkSession.ShouldRecoverUnexpectedDisconnect(
+                true,
+                false,
+                PrototypeNetworkRoomState.Connected,
+                "1234"),
+            Is.False);
+        Assert.That(
+            FusionNetworkSession.ShouldRecoverUnexpectedDisconnect(
+                false,
+                true,
+                PrototypeNetworkRoomState.Connected,
+                "1234"),
+            Is.False);
+        Assert.That(
+            FusionNetworkSession.ShouldRecoverUnexpectedDisconnect(
+                false,
+                false,
+                PrototypeNetworkRoomState.Connecting,
+                "1234"),
+            Is.False);
+        Assert.That(
+            FusionNetworkSession.ShouldRecoverUnexpectedDisconnect(
+                false,
+                false,
+                PrototypeNetworkRoomState.Connected,
+                string.Empty),
+            Is.False);
+    }
+
+    [Test]
     public void ResolveEnvelopeSenderSlot_AcceptsProxySourceButRejectsKnownMismatch()
     {
         Assert.That(FusionNetworkSession.ResolveEnvelopeSenderSlot(-1, 1, 2), Is.EqualTo(1));

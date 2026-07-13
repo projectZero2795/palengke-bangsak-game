@@ -53,7 +53,7 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 34E2 | In-game leave confirmation | Add an accessible Leave Game control and confirmation during active multiplayer play. | Done; owner approved the compact exit icon on 2026-07-12 after `0.34.4` passed Cancel/confirm behavior and 227 tests. |
 | 34E3 | Photon leave cleanup and room rules | Remove a voluntary leaver, free the slot, update counts, and apply deterministic Taya/authority/last-player rules. | Done by authorized self-review on 2026-07-12; deterministic roster/authority/round/last-player rules, reusable capacity, no ghost player, 231 tests, and Android build `0.34.5` passed. |
 | 34E4 | Android pause/resume | Handle Android pause, background, and resume only. | Done by authorized self-review on 2026-07-13; a five-second app switch retained room `1234`, applied the exact correlated Round 1 snapshot, passed 234 tests, and produced Android build `0.34.6`. |
-| 34E5 | Android disconnect/reconnect | Handle involuntary disconnect and room-code reconnect only. | A disconnected Android client rejoins and both clients finish one agreed round. |
+| 34E5 | Android disconnect/reconnect | Handle involuntary disconnect and room-code reconnect only. | Done by authorized self-review on 2026-07-13; real Android network loss returned safely to menu, manual room `1234` rejoin restored the roster, both clients completed one agreed round, 235 tests passed, and build `0.34.7` passed. |
 | 34F | Android performance | Measure and meet the agreed frame-time, memory, temperature, and download-size budgets. | The reference device completes one round within the recorded budgets. |
 | 34G | Signed Play bundle | Produce a versioned, signed Android App Bundle while keeping signing secrets outside Git. | The `.aab` validates locally and its version/signing fingerprints are recorded. |
 | 34H | Play internal test | Create the Play Console app and publish only to the internal testing track. | The owner installs Bang-Sak from its Play Store tester link. |
@@ -65,7 +65,7 @@ Phases 32–41, including the small Phase 34A–34K Android/Google Play track, a
 ordered in the [Phase 31 expansion plan](phase-31-polish-content-expansion.md).
 The detailed Android gates are in the
 [Phase 34 Android and Google Play roadmap](phase-34-android-play-roadmap.md).
-Phase 34E5 is the current implementation checkpoint. Phase 34F and later
+Phase 34F is the current implementation checkpoint. Phase 34G and later
 remain blocked by the review rule.
 
 The requested closer camera, darkness, cone-only vision, and self-only minimap
@@ -75,7 +75,7 @@ planning only and are not part of the current Android Photon phase.
 
 The urgent hostname track is documented in the
 [domain migration roadmap](urgent-domain-migration-roadmap.md). Phases
-29A–29D and Phase 34E4 are complete, so implementation advances to Phase 34E5.
+29A–29D and Phase 34E5 are complete, so implementation advances to Phase 34F.
 
 ## Review rule
 
