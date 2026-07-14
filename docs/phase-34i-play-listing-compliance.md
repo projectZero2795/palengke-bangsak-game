@@ -5,7 +5,10 @@
 Phase 34I was completed and sent to Google for review on 2026-07-14 under the
 owner's explicit authorization. Google Play Console removed the app-setup gate
 and unlocked closed testing after all required listing and app-content tasks
-were completed.
+were completed. Google rejected the first submission because the financial
+features declaration incorrectly classified non-cash game coins as a financial
+incentive. The declaration was corrected and sent for review again on the same
+date.
 
 This is listing/compliance evidence only. It does not claim a public Play Store
 release.
@@ -36,8 +39,9 @@ leaderboard because it displayed real player names.
   ID permission.
 - Government app: no.
 - Health features: none.
-- Financial features: rewards, points, frequent-flier miles, and other
-  incentives, because the game can award Palengke coins.
+- Financial features: none. Palengke coins are non-cash in-game rewards; they
+  cannot be purchased, redeemed, transferred, or exchanged for money and do
+  not make the game a financial product.
 - Target audience: ages 13–15, 16–17, and 18+.
 
 ## Content rating
@@ -83,5 +87,5 @@ ephemeral.
 - Google Play Console showed no unresolved required setup task before closed
   testing became available.
 - The listing save succeeded and appeared in Publishing overview.
-- The compliance changes were included in the 16-change review submission on
-  2026-07-14.
+- The corrected financial declaration was included in the replacement
+  16-change review submission on 2026-07-14.

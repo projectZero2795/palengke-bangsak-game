@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
-UNITY_ROOT="${UNITY_ROOT:-/Applications/Unity/Hub/Editor/2022.3.50f1}"
+UNITY_ROOT="${UNITY_ROOT:-/Applications/Unity/Hub/Editor/2022.3.67f2}"
 UNITY_BIN="$UNITY_ROOT/Unity.app/Contents/MacOS/Unity"
 ANDROID_ROOT="$UNITY_ROOT/PlaybackEngines/AndroidPlayer"
 JAVA="$ANDROID_ROOT/OpenJDK/bin/java"
@@ -11,6 +11,21 @@ JARSIGNER="$ANDROID_ROOT/OpenJDK/bin/jarsigner"
 BUNDLETOOL="$ANDROID_ROOT/Tools/bundletool-all-1.16.0.jar"
 AAB="$ROOT_DIR/unity/Build/Android/BangSak-0.34.9.aab"
 LOG_FILE="${BANGSAK_ANDROID_BUILD_LOG:-/tmp/bang-sak-phase34g-play-bundle.log}"
+
+UNITY_VERSION=$(basename "$UNITY_ROOT")
+if [[ ! "$UNITY_VERSION" =~ ^2022\.3\.([0-9]+)f([0-9]+)$ ]]; then
+  printf 'Unsupported Unity version for the Play bundle: %s\n' "$UNITY_VERSION" >&2
+  printf 'Use patched Unity 2022.3.67f2 or a later 2022.3 LTS release.\n' >&2
+  exit 1
+fi
+
+UNITY_PATCH=${BASH_REMATCH[1]}
+UNITY_REVISION=${BASH_REMATCH[2]}
+if (( UNITY_PATCH < 67 || (UNITY_PATCH == 67 && UNITY_REVISION < 2) )); then
+  printf 'Refusing vulnerable Unity editor %s (CVE-2025-59489).\n' "$UNITY_VERSION" >&2
+  printf 'Use patched Unity 2022.3.67f2 or a later 2022.3 LTS release.\n' >&2
+  exit 1
+fi
 
 export BANGSAK_ANDROID_KEYSTORE_PATH="${BANGSAK_ANDROID_KEYSTORE_PATH:-$HOME/Library/Application Support/Palengke/Signing/bangsak-upload.jks}"
 export BANGSAK_ANDROID_KEY_ALIAS="${BANGSAK_ANDROID_KEY_ALIAS:-bangsak-upload}"

@@ -52,9 +52,15 @@ uploaded to Play internal testing in Phase 34H. On 2026-07-14 the owner
 explicitly authorized the store submission: Phase 34I completed the listing,
 screenshots, privacy URL, content rating, Data safety, target audience, and all
 required app-content declarations. Phase 34J then attached the existing
-45-account tester list, selected worldwide closed-test availability, and sent
-release `0.34.9` to Google for review. The closed test remains the current gate;
-it is not a public production release.
+45-account tester list and selected worldwide closed-test availability. Google
+rejected code `1` for the Unity CVE-2025-59489 runtime issue and rejected the
+mistaken classification of non-cash game coins as a financial feature. Both
+were corrected on 2026-07-14: Unity's official patcher produced validated code
+`2`, the financial declaration now states no financial features, internal
+testing uses code `2`, and Play confirmed the replacement 16-change closed-test
+submission is in review. A public page is live to recruit up to 100 real
+volunteer testers. The closed test remains the current gate; it is not a public
+production release.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
