@@ -60,13 +60,22 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 34I | Play listing and compliance | Add the store listing, screenshots, privacy policy, Data safety declaration, content rating, audience, and required app-content answers. | Done and submitted on 2026-07-14 under the owner's explicit authorization; Play showed no unresolved setup task before closed testing unlocked. |
 | 34J | Play production access | Complete the required closed test or other account-specific production-access gate. | In progress; worldwide closed release `0.34.9`, the 45-account tester list, and 16 related changes were sent for Google review on 2026-07-14. The 14-day test/evidence gate remains. |
 | 34K | Public Play Store release | Submit a staged production release, verify the public listing/install, and record rollback/support steps. | Bang-Sak is publicly downloadable from Google Play and a clean device completes the install/open smoke test. |
+| 35A | Persistent audio settings foundation | Add stored mute and master/music/SFX levels plus deterministic volume resolution, without UI or sound assets. | Done by authorized nonvisual self-review on 2026-07-14; defaults, persistence, clamping, channel mixing, mute, and change notifications pass in the 242-test suite. |
+| 35B | Audio settings controls | Add only the visible master/music/SFX and mute controls to the existing Settings panel. | Desktop and Android screenshots show readable, touch-safe controls with no overlap; owner approval is required. |
+| 35C | Menu and interface sound cues | Add a small versioned set of friendly menu navigation/confirm/back cues. | Cues respect Phase 35A settings and remain optional, non-startling, and paired with existing visual state. |
+| 35D | Bang and SAK sound cues | Add only safe, playful action/outcome cues for Bang and SAK. | Correct confirmed outcomes play once, respect settings, and never replace visual feedback. |
+| 35E | Round and reveal sound cues | Add only round start/end, reveal, pickup-ready, and result cues. | Each cue is synchronized with confirmed state and has an equivalent visual cue. |
+| 35F | Ambient sound and audio regression | Add one restrained loop and finish accessibility, performance, Android, and WebGL audio checks. | The loop is independently controllable, no cue is exclusive, and the full platform regression passes. |
 
 Phases 32–41, including the small Phase 34A–34K Android/Google Play track, are
 ordered in the [Phase 31 expansion plan](phase-31-polish-content-expansion.md).
 The detailed Android gates are in the
 [Phase 34 Android and Google Play roadmap](phase-34-android-play-roadmap.md).
-Phase 34J is the current implementation checkpoint. Phase 34K remains blocked
-until Google grants production access and the closed-test evidence is complete.
+Phase 34J remains the current distribution checkpoint. On 2026-07-14 the owner
+authorized independent development to proceed during the external Google review
+and testing wait. Phase 35A is complete and Phase 35B is the next implementation
+checkpoint. Phase 34K remains blocked until Google grants production access and
+the closed-test evidence is complete.
 
 The requested closer camera, darkness, cone-only vision, and self-only minimap
 are split into future Phases 42A–42E in the

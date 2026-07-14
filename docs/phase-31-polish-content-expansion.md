@@ -64,7 +64,12 @@ result-integrity, moderation, and operational gates pass.
 | 34I | Play listing and compliance | Listing, privacy policy, Data safety, content rating, audience, and required app-content declarations. | Play Console has no unresolved required listing/app-content task. |
 | 34J | Play production access | Account-required closed testing or equivalent production-access gate. | Play Console grants production access. |
 | 34K | Public Play Store release | Staged production rollout, public listing/install verification, support, and rollback. | Bang-Sak is publicly downloadable and opens on a clean Android device. |
-| 35 | Sound and settings | Versioned friendly SFX for menu, movement, Bang, SAK, reveal clues, pickup, result, and ambient barangay/palengke sound; master/music/SFX controls and persistence. | Sound can be muted, never provides an exclusive clue, respects settings, and remains safe/non-startling. |
+| 35A | Persistent audio settings foundation | Stored mute and master/music/SFX levels plus deterministic channel-volume resolution only. | Defaults, persistence, clamping, mute, channel mixing, and change notifications pass without UI or audio assets. |
+| 35B | Audio settings controls | Visible mute and master/music/SFX controls only. | Desktop and Android screenshots show accessible, non-overlapping controls and receive owner approval. |
+| 35C | Menu and interface sound cues | Versioned menu navigation, confirm, and back cues only. | Cues respect settings, remain non-startling, and never replace visual state. |
+| 35D | Bang and SAK sound cues | Safe, playful Bang/SAK request and confirmed-outcome cues only. | Cues play once for correct state, respect settings, and retain visual equivalents. |
+| 35E | Round and reveal sound cues | Round, reveal, pickup-ready, and result cues only. | Every cue follows confirmed state and has an equivalent visual cue. |
+| 35F | Ambient sound and audio regression | One restrained ambient loop plus final platform/accessibility/performance checks. | Ambient and SFX controls are independent and the full WebGL/Android regression passes. |
 | 36 | Character and environment art polish | Replace selected placeholders with approved top-down Filipino barangay/palengke sprites, animation variants, readable role/action effects, and an asset import/performance budget. | Approved reference scenes remain readable at gameplay scale on desktop and mobile; colliders/game rules do not change accidentally. |
 | 37 | Map expansion and selectable components | Add one new map first; validated spawn/route/reveal cells; map metadata/versioning; minimum selectable component registry; admin defaults and compatible room map voting. | Both maps pass route, spawn, camera, collision, reveal, mobile readability, and two-client synchronization tests. |
 | 38 | Cosmetic skins and badges | Cosmetic-only character variants, badge definitions, ownership/equip API flow, fallback assets, contrast rules, and moderation-safe names. | Cosmetics never alter hitboxes, speed, cooldown, range, concealment, rewards, or map visibility; missing assets fall back safely. |
@@ -145,7 +150,9 @@ lock the reference devices and exact budgets; until then, the minimum gates are:
   content-rating answers.
 - Phase 34J: the production-access test shown by the owner's Play Console.
 - Phase 34K: rollout percentage and final public-release approval.
-- Phase 35: audio direction, language needs, and volume defaults.
+- Phase 35A: neutral full-volume defaults; no content or visible controls.
+- Phase 35B: control layout and labels.
+- Phases 35C–35F: audio direction, language needs, and final mix defaults.
 - Phase 36: first approved sprite/environment reference set.
 - Phase 37: first additional map theme and map-voting rule.
 - Phase 38: first skins/badges and whether coins can unlock cosmetics.

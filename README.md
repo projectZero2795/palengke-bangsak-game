@@ -8,7 +8,11 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently at **Phase 34J: Play production access**.
+The active development track is now at **Phase 35A: persistent audio settings
+foundation**, which passed its nonvisual self-review on 2026-07-14. The Google
+Play distribution track remains independently at **Phase 34J: Play production
+access** while Google's review and closed-test clock run. Phase 34K remains
+blocked and no public Play rollout is authorized.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
@@ -60,7 +64,10 @@ were corrected on 2026-07-14: Unity's official patcher produced validated code
 testing uses code `2`, and Play confirmed the replacement 16-change closed-test
 submission is in review. A public page is live to recruit up to 100 real
 volunteer testers. The closed test remains the current gate; it is not a public
-production release.
+production release. On 2026-07-14 the owner authorized independent development
+to continue while that external gate is pending. Phase 35A added persistent,
+clamped master/music/SFX levels, mute state, and deterministic channel-volume
+resolution without adding UI or sound assets. All 242 EditMode tests pass.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -203,6 +210,10 @@ lethal combat.
 
 Work on one phase only at a time.
 
+An external store-review or mandatory wait period may remain open as a separate
+distribution track while one independent implementation phase proceeds. This
+exception never authorizes a blocked store submission or public rollout.
+
 After each phase:
 
 1. Commit changes.
@@ -275,6 +286,7 @@ Do not skip ahead.
 - [Phase 34G signed Play bundle](docs/phase-34g-signed-play-bundle.md)
 - [Phase 34I Play listing and compliance](docs/phase-34i-play-listing-compliance.md)
 - [Phase 34J closed testing](docs/phase-34j-closed-test.md)
+- [Phase 35A audio settings foundation](docs/phase-35a-audio-settings-foundation.md)
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)
