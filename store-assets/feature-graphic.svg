@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#17223d"/>
+      <stop offset="1" stop-color="#080b13"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd768"/>
+      <stop offset="1" stop-color="#f1663c"/>
+    </linearGradient>
+    <filter id="title-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000" flood-opacity=".55"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="500" fill="url(#sky)"/>
+  <circle cx="850" cy="94" r="54" fill="#ffe48b" opacity=".88"/>
+  <circle cx="868" cy="82" r="54" fill="#17223d"/>
+  <g fill="#93acd9" opacity=".55">
+    <rect x="90" y="58" width="5" height="5"/><rect x="178" y="100" width="4" height="4"/>
+    <rect x="740" y="42" width="5" height="5"/><rect x="943" y="146" width="4" height="4"/>
+    <rect x="608" y="78" width="3" height="3"/><rect x="484" y="50" width="4" height="4"/>
+  </g>
+  <path d="M0 318h1024v182H0z" fill="#2e2419"/>
+  <path d="M0 354h1024v12H0zM0 426h1024v12H0z" fill="#3e3021"/>
+  <path d="M76 318v182M206 318v182M336 318v182M466 318v182M596 318v182M726 318v182M856 318v182M986 318v182" stroke="#3e3021" stroke-width="10"/>
+  <g stroke="#080b13" stroke-width="8">
+    <path d="M72 310l64-64 64 64v92H72z" fill="#c34f36"/>
+    <path d="M90 306h92v96H90z" fill="#dda74e"/>
+    <rect x="110" y="330" width="22" height="26" fill="#74a4c7"/>
+    <rect x="145" y="330" width="22" height="26" fill="#74a4c7"/>
+    <rect x="128" y="365" width="28" height="37" fill="#61412f"/>
+    <path d="M836 330l54-54 54 54v72H836z" fill="#3a7657"/>
+    <rect x="852" y="333" width="76" height="69" fill="#d6a146"/>
+    <rect x="874" y="354" width="31" height="48" fill="#61412f"/>
+  </g>
+  <g>
+    <rect x="730" y="370" width="40" height="54" rx="8" fill="#2b67a8"/>
+    <circle cx="750" cy="357" r="20" fill="#e3a06f"/>
+    <path d="M708 424h84l-42 50z" fill="#f1663c" opacity=".28"/>
+    <rect x="272" y="392" width="34" height="46" rx="7" fill="#7a3ba0"/>
+    <circle cx="289" cy="381" r="17" fill="#d99568"/>
+    <rect x="382" y="368" width="34" height="46" rx="7" fill="#277254"/>
+    <circle cx="399" cy="357" r="17" fill="#e0a371"/>
+  </g>
+  <g filter="url(#title-shadow)">
+    <text x="512" y="170" text-anchor="middle" fill="url(#glow)" font-family="Arial Black, Arial, sans-serif" font-size="106" font-weight="900" letter-spacing="-4">BANG-SAK</text>
+    <text x="512" y="228" text-anchor="middle" fill="#f6f7fb" font-family="Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="2">BANG. RUN. HIDE. SAK!</text>
+    <rect x="356" y="257" width="312" height="48" rx="24" fill="#0b0f1b" stroke="#324464" stroke-width="3"/>
+    <text x="512" y="290" text-anchor="middle" fill="#8ee0ad" font-family="Arial, sans-serif" font-size="23" font-weight="700">LOCAL + ONLINE MULTIPLAYER</text>
+  </g>
+</svg>

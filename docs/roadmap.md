@@ -56,17 +56,17 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 34E5 | Android disconnect/reconnect | Handle involuntary disconnect and room-code reconnect only. | Done by authorized self-review on 2026-07-13; real Android network loss returned safely to menu, manual room `1234` rejoin restored the roster, both clients completed one agreed round, 235 tests passed, and build `0.34.7` passed. |
 | 34F | Android performance | Measure and meet the agreed frame-time, memory, and download-size budgets; thermal was removed by the owner. | Done by authorized self-review on 2026-07-13; `59.53–60.00 FPS`, worst P95 `17.711 ms`, peak PSS `276,387 KB`, APK `52,962,378` bytes, 236 tests, and build `0.34.8` passed. |
 | 34G | Signed Play bundle | Produce a versioned, signed Android App Bundle while keeping signing secrets outside Git. | Done by authorized self-review on 2026-07-13; release AAB `0.34.9` validated, its package/version/ARM64 manifest and SHA-256 were recorded, the upload certificate matched, 236 tests passed, and no secret entered Git. |
-| 34H | Play internal test | Create the Play Console app and publish only to the internal testing track. | The owner installs Bang-Sak from its Play Store tester link. |
-| 34I | Play listing and compliance | Add the store listing, screenshots, privacy policy, Data safety declaration, content rating, audience, and required app-content answers. | Play Console shows no unresolved required listing/app-content task. |
-| 34J | Play production access | Complete the required closed test or other account-specific production-access gate. | Play Console grants production access; tester evidence is recorded when required. |
+| 34H | Play internal test | Create the Play Console app and publish only to the internal testing track. | Done on 2026-07-14; signed bundle `0.34.9` / code `1` is registered in Play Console and was reused for the closed track. |
+| 34I | Play listing and compliance | Add the store listing, screenshots, privacy policy, Data safety declaration, content rating, audience, and required app-content answers. | Done and submitted on 2026-07-14 under the owner's explicit authorization; Play showed no unresolved setup task before closed testing unlocked. |
+| 34J | Play production access | Complete the required closed test or other account-specific production-access gate. | In progress; worldwide closed release `0.34.9`, the 45-account tester list, and 16 related changes were sent for Google review on 2026-07-14. The 14-day test/evidence gate remains. |
 | 34K | Public Play Store release | Submit a staged production release, verify the public listing/install, and record rollback/support steps. | Bang-Sak is publicly downloadable from Google Play and a clean device completes the install/open smoke test. |
 
 Phases 32–41, including the small Phase 34A–34K Android/Google Play track, are
 ordered in the [Phase 31 expansion plan](phase-31-polish-content-expansion.md).
 The detailed Android gates are in the
 [Phase 34 Android and Google Play roadmap](phase-34-android-play-roadmap.md).
-Phase 34H is the current implementation checkpoint. Phase 34I and later
-remain blocked by the review rule.
+Phase 34J is the current implementation checkpoint. Phase 34K remains blocked
+until Google grants production access and the closed-test evidence is complete.
 
 The requested closer camera, darkness, cone-only vision, and self-only minimap
 are split into future Phases 42A–42E in the
@@ -75,7 +75,7 @@ planning only and are not part of the current Android Photon phase.
 
 The urgent hostname track is documented in the
 [domain migration roadmap](urgent-domain-migration-roadmap.md). Phases
-29A–29D and Phase 34G are complete, so implementation advances to Phase 34H.
+29A–29D and Phases 34A–34I are complete, so implementation is at Phase 34J.
 
 ## Review rule
 
