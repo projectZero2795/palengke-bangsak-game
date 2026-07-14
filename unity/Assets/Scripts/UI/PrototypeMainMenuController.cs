@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Palengke.BangSak.Api;
+using Palengke.BangSak.Audio;
 using Palengke.BangSak.Network;
 
 namespace Palengke.BangSak.UI
@@ -37,6 +38,7 @@ namespace Palengke.BangSak.UI
         private GameObject ownedEventSystem;
         private GameObject howToPanel;
         private GameObject settingsPanel;
+        private GameObject audioSettingsPanel;
         private GameObject networkPanel;
         private GameObject leaderboardPanel;
         private Text networkStatusLabel;
@@ -46,6 +48,10 @@ namespace Palengke.BangSak.UI
         private Text highContrastStatusLabel;
         private Text reducedMotionStatusLabel;
         private Text visualCuesStatusLabel;
+        private Text audioMutedStatusLabel;
+        private Text masterVolumeLabel;
+        private Text musicVolumeLabel;
+        private Text sfxVolumeLabel;
         private Text accessibilityPreviewLabel;
         private RectTransform motionPreviewMarker;
         private Transform leaderboardRows;
@@ -143,6 +149,11 @@ namespace Palengke.BangSak.UI
                 UpdateAccessibilityPreview();
             }
 
+            if (audioSettingsPanel != null && audioSettingsPanel.activeSelf)
+            {
+                RefreshAudioSettingsPanel();
+            }
+
             if (apiClient != null && playerSummaryLabel != null)
             {
                 RefreshApiLabels();
@@ -189,6 +200,14 @@ namespace Palengke.BangSak.UI
             settingsPanel.SetActive(true);
         }
 
+        public void ShowAudioSettings()
+        {
+            CreateMenu();
+            HidePanels();
+            RefreshAudioSettingsPanel();
+            audioSettingsPanel.SetActive(true);
+        }
+
         public void ShowNetworkRoom()
         {
             CreateMenu();
@@ -207,6 +226,11 @@ namespace Palengke.BangSak.UI
             if (settingsPanel != null)
             {
                 settingsPanel.SetActive(false);
+            }
+
+            if (audioSettingsPanel != null)
+            {
+                audioSettingsPanel.SetActive(false);
             }
 
             if (networkPanel != null)
@@ -258,6 +282,7 @@ namespace Palengke.BangSak.UI
             CreateMainCard(safeAreaRoot);
             CreateHowToPanel(safeAreaRoot);
             CreateSettingsPanel(safeAreaRoot);
+            CreateAudioSettingsPanel(safeAreaRoot);
             CreateNetworkPanel(safeAreaRoot);
             CreateLeaderboardPanel(safeAreaRoot);
             HidePanels();
@@ -273,6 +298,7 @@ namespace Palengke.BangSak.UI
                 ownedEventSystem = null;
                 howToPanel = null;
                 settingsPanel = null;
+                audioSettingsPanel = null;
                 networkPanel = null;
                 leaderboardPanel = null;
                 networkStatusLabel = null;
@@ -282,6 +308,10 @@ namespace Palengke.BangSak.UI
                 highContrastStatusLabel = null;
                 reducedMotionStatusLabel = null;
                 visualCuesStatusLabel = null;
+                audioMutedStatusLabel = null;
+                masterVolumeLabel = null;
+                musicVolumeLabel = null;
+                sfxVolumeLabel = null;
                 accessibilityPreviewLabel = null;
                 motionPreviewMarker = null;
                 leaderboardRows = null;
@@ -541,8 +571,104 @@ namespace Palengke.BangSak.UI
             markerImage.color = new Color(0.35f, 0.85f, 1f, 1f);
             markerImage.raycastTarget = false;
 
-            CreateButton(panel, "BACK", new Vector2(0f, -183f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+            CreateButton(panel, "BACK", new Vector2(-90f, -183f), new Vector2(140f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+            CreateButton(panel, "AUDIO", new Vector2(90f, -183f), new Vector2(140f, 42f), new Color(0.12f, 0.28f, 0.4f, 1f), ShowAudioSettings);
             RefreshAccessibilityPanel();
+        }
+
+        private void CreateAudioSettingsPanel(Transform parent)
+        {
+            audioSettingsPanel = CreatePanel(parent, "Audio Settings Panel", Vector2.zero, new Vector2(560f, 460f), new Color(0.025f, 0.04f, 0.075f, 0.98f)).gameObject;
+            var panel = audioSettingsPanel.transform;
+
+            CreateText(panel, "AUDIO", new Vector2(0f, 188f), new Vector2(500f, 42f), 30, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
+            CreateText(panel, "Saved on this device · sound cues arrive in the next phases", new Vector2(0f, 157f), new Vector2(500f, 24f), 13, FontStyle.Bold, new Color(0.82f, 0.9f, 1f, 1f));
+
+            audioMutedStatusLabel = CreateAudioMuteRow(panel, 105f);
+            masterVolumeLabel = CreateAudioLevelRow(panel, "MASTER", 48f, DecreaseMasterVolume, IncreaseMasterVolume);
+            musicVolumeLabel = CreateAudioLevelRow(panel, "MUSIC", -9f, DecreaseMusicVolume, IncreaseMusicVolume);
+            sfxVolumeLabel = CreateAudioLevelRow(panel, "SFX", -66f, DecreaseSfxVolume, IncreaseSfxVolume);
+
+            CreateButton(panel, "ACCESS", new Vector2(-90f, -183f), new Vector2(140f, 42f), new Color(0.12f, 0.28f, 0.4f, 1f), ShowSettings);
+            CreateButton(panel, "BACK", new Vector2(90f, -183f), new Vector2(140f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+            RefreshAudioSettingsPanel();
+        }
+
+        private Text CreateAudioMuteRow(Transform parent, float y)
+        {
+            var row = CreatePanel(parent, "MUTE ALL Audio Row", new Vector2(0f, y), new Vector2(470f, 46f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
+            CreateText(row, "MUTE ALL", new Vector2(-130f, 0f), new Vector2(190f, 34f), 17, FontStyle.Bold, Color.white);
+            var button = CreateButton(row, "MUTE", new Vector2(174f, 0f), new Vector2(116f, 42f), new Color(0.12f, 0.28f, 0.4f, 1f), ToggleAudioMuted);
+            return button.GetComponentInChildren<Text>();
+        }
+
+        private Text CreateAudioLevelRow(
+            Transform parent,
+            string label,
+            float y,
+            UnityEngine.Events.UnityAction decrease,
+            UnityEngine.Events.UnityAction increase)
+        {
+            var row = CreatePanel(parent, $"{label} Audio Row", new Vector2(0f, y), new Vector2(470f, 46f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
+            CreateText(row, label, new Vector2(-150f, 0f), new Vector2(150f, 34f), 17, FontStyle.Bold, Color.white);
+
+            var decreaseButton = CreateButton(row, $"{label} DECREASE", new Vector2(35f, 0f), new Vector2(44f, 44f), new Color(0.12f, 0.28f, 0.4f, 1f), decrease);
+            decreaseButton.GetComponentInChildren<Text>().text = "-";
+
+            var valueLabel = CreateText(row, $"{label} VALUE", new Vector2(105f, 0f), new Vector2(80f, 34f), 17, FontStyle.Bold, new Color(0.55f, 1f, 0.68f, 1f));
+
+            var increaseButton = CreateButton(row, $"{label} INCREASE", new Vector2(175f, 0f), new Vector2(44f, 44f), new Color(0.12f, 0.28f, 0.4f, 1f), increase);
+            increaseButton.GetComponentInChildren<Text>().text = "+";
+            return valueLabel;
+        }
+
+        public void ToggleAudioMuted()
+        {
+            BangSakAudioSettings.SetMuted(!BangSakAudioSettings.Muted);
+            RefreshAudioSettingsPanel();
+        }
+
+        public void DecreaseMasterVolume() => SetMasterVolume(BangSakAudioSettings.MasterVolume - 0.1f);
+        public void IncreaseMasterVolume() => SetMasterVolume(BangSakAudioSettings.MasterVolume + 0.1f);
+        public void DecreaseMusicVolume() => SetMusicVolume(BangSakAudioSettings.MusicVolume - 0.1f);
+        public void IncreaseMusicVolume() => SetMusicVolume(BangSakAudioSettings.MusicVolume + 0.1f);
+        public void DecreaseSfxVolume() => SetSfxVolume(BangSakAudioSettings.SfxVolume - 0.1f);
+        public void IncreaseSfxVolume() => SetSfxVolume(BangSakAudioSettings.SfxVolume + 0.1f);
+
+        private void SetMasterVolume(float value)
+        {
+            BangSakAudioSettings.SetMasterVolume(value);
+            RefreshAudioSettingsPanel();
+        }
+
+        private void SetMusicVolume(float value)
+        {
+            BangSakAudioSettings.SetMusicVolume(value);
+            RefreshAudioSettingsPanel();
+        }
+
+        private void SetSfxVolume(float value)
+        {
+            BangSakAudioSettings.SetSfxVolume(value);
+            RefreshAudioSettingsPanel();
+        }
+
+        private void RefreshAudioSettingsPanel()
+        {
+            SetToggleStatus(audioMutedStatusLabel, BangSakAudioSettings.Muted);
+            SetVolumeStatus(masterVolumeLabel, BangSakAudioSettings.MasterVolume);
+            SetVolumeStatus(musicVolumeLabel, BangSakAudioSettings.MusicVolume);
+            SetVolumeStatus(sfxVolumeLabel, BangSakAudioSettings.SfxVolume);
+        }
+
+        private static void SetVolumeStatus(Text label, float volume)
+        {
+            if (label == null)
+            {
+                return;
+            }
+
+            label.text = $"{Mathf.RoundToInt(Mathf.Clamp01(volume) * 100f)}%";
         }
 
         private Text CreateAccessibilityToggleRow(
