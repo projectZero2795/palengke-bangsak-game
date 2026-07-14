@@ -50,6 +50,11 @@ build metadata.
 
 ## Artifact record
 
+> **Historical artifact:** Google rejected version code `1` on 2026-07-14
+> because Unity `2022.3.50f1` is affected by CVE-2025-59489. Do not upload this
+> artifact again. Phase 34J records the officially patched replacement, version
+> code `2`.
+
 | Field | Verified value |
 | --- | --- |
 | AAB | `unity/Build/Android/BangSak-0.34.9.aab` |
@@ -90,6 +95,7 @@ build metadata.
 | Play signing handling is defined | Local key is upload-only; Google Play App Signing is reserved for Phase 34H. | Pass |
 | No later phase leaked in | No Play app, upload, tester track, listing, or publication was created. | Pass |
 
-Phase 34G passes the authorized nonvisual self-review. Phase 34H may create the
-Play Console app and publish this exact approved bundle to internal testing
-only.
+Phase 34G passed its original authorized nonvisual self-review, but the later
+Unity security advisory supersedes the artifact's upload approval. Keep it only
+as historical build evidence; use the remediated Phase 34J artifact or rebuild
+with Unity `2022.3.67f2` or newer.
