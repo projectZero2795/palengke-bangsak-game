@@ -8,7 +8,7 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-This repository is currently at **Phase 34H: Play internal test**.
+This repository is currently at **Phase 34J: Play production access**.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
@@ -47,9 +47,14 @@ has 236 passing tests.
 Phase 34G then produced and locally validated the first release-signed Play
 bundle, version `0.34.9` / code `1`. The upload key and passwords remain
 outside Git, Bundletool and `jarsigner` passed, and the bundle certificate
-matches the recorded upload certificate fingerprint. Phase 34H is limited to
-creating the Play Console app and distributing this exact bundle through the
-internal testing track only.
+matches the recorded upload certificate fingerprint. The same bundle was
+uploaded to Play internal testing in Phase 34H. On 2026-07-14 the owner
+explicitly authorized the store submission: Phase 34I completed the listing,
+screenshots, privacy URL, content rating, Data safety, target audience, and all
+required app-content declarations. Phase 34J then attached the existing
+45-account tester list, selected worldwide closed-test availability, and sent
+release `0.34.9` to Google for review. The closed test remains the current gate;
+it is not a public production release.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -262,6 +267,8 @@ Do not skip ahead.
 - [Phase 34E5 Android disconnect and reconnect](docs/phase-34e5-android-disconnect-reconnect.md)
 - [Phase 34F Android performance](docs/phase-34f-android-performance.md)
 - [Phase 34G signed Play bundle](docs/phase-34g-signed-play-bundle.md)
+- [Phase 34I Play listing and compliance](docs/phase-34i-play-listing-compliance.md)
+- [Phase 34J closed testing](docs/phase-34j-closed-test.md)
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)
