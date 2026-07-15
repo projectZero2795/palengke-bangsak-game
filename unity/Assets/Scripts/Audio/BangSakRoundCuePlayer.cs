@@ -3,16 +3,16 @@ using UnityEngine;
 namespace Palengke.BangSak.Audio
 {
     [DisallowMultipleComponent]
-    public sealed class BangSakGameplayCuePlayer : MonoBehaviour
+    public sealed class BangSakRoundCuePlayer : MonoBehaviour
     {
-        public const string ComponentId = "gameplay_action_audio";
+        public const string ComponentId = "round_reveal_result_audio";
         public const int ComponentVersion = 1;
-        public const string ComponentVariant = "phase35d_procedural_v2_distinct";
+        public const string ComponentVariant = "phase35e_procedural_v1_semantic";
         public const int MaximumSimultaneousVoices = 1;
         public const int MaximumQueuedCues = 1;
-        private const string SharedObjectName = "Bang-Sak Gameplay Audio";
+        private const string SharedObjectName = "Bang-Sak Round Audio";
 
-        private static BangSakGameplayCuePlayer sharedInstance;
+        private static BangSakRoundCuePlayer sharedInstance;
 
         private AudioSource output;
         private AudioClip[] clips;
@@ -51,7 +51,7 @@ namespace Palengke.BangSak.Audio
                 return;
             }
 
-            var cue = (BangSakGameplayCue)pendingCueIndex;
+            var cue = (BangSakRoundCue)pendingCueIndex;
             pendingCueIndex = -1;
             if (output.volume > 0f)
             {
@@ -69,7 +69,7 @@ namespace Palengke.BangSak.Audio
             }
         }
 
-        public static bool PlayShared(BangSakGameplayCue cue)
+        public static bool PlayShared(BangSakRoundCue cue)
         {
             if (!Application.isPlaying)
             {
@@ -92,10 +92,10 @@ namespace Palengke.BangSak.Audio
             RefreshOutputVolume();
         }
 
-        public bool Play(BangSakGameplayCue cue)
+        public bool Play(BangSakRoundCue cue)
         {
             Prepare();
-            var definition = BangSakGameplayCueCatalog.Get(cue);
+            var definition = BangSakRoundCueCatalog.Get(cue);
             if (output.volume <= 0f)
             {
                 pendingCueIndex = -1;
@@ -104,8 +104,6 @@ namespace Palengke.BangSak.Audio
 
             if (output.isPlaying)
             {
-                // Keep one bounded pending slot so an immediate confirmed outcome
-                // follows its request instead of overlapping or being discarded.
                 pendingCueIndex = (int)cue;
                 return true;
             }
@@ -115,10 +113,10 @@ namespace Palengke.BangSak.Audio
             return true;
         }
 
-        public AudioClip GetClip(BangSakGameplayCue cue)
+        public AudioClip GetClip(BangSakRoundCue cue)
         {
             Prepare();
-            BangSakGameplayCueCatalog.Get(cue);
+            BangSakRoundCueCatalog.Get(cue);
             return clips[(int)cue];
         }
 
@@ -135,31 +133,31 @@ namespace Palengke.BangSak.Audio
             }
         }
 
-        private void PlayNow(BangSakGameplayCue cue)
+        private void PlayNow(BangSakRoundCue cue)
         {
-            PlayNow(cue, BangSakGameplayCueCatalog.Get(cue));
+            PlayNow(cue, BangSakRoundCueCatalog.Get(cue));
         }
 
-        private void PlayNow(BangSakGameplayCue cue, BangSakGameplayCueDefinition definition)
+        private void PlayNow(BangSakRoundCue cue, BangSakRoundCueDefinition definition)
         {
             output.PlayOneShot(clips[(int)cue], definition.BaseVolume);
         }
 
-        private static BangSakGameplayCuePlayer GetOrCreateShared()
+        private static BangSakRoundCuePlayer GetOrCreateShared()
         {
             if (sharedInstance != null)
             {
                 return sharedInstance;
             }
 
-            sharedInstance = FindObjectOfType<BangSakGameplayCuePlayer>();
+            sharedInstance = FindObjectOfType<BangSakRoundCuePlayer>();
             if (sharedInstance != null)
             {
                 return sharedInstance;
             }
 
             var audioObject = new GameObject(SharedObjectName);
-            sharedInstance = audioObject.AddComponent<BangSakGameplayCuePlayer>();
+            sharedInstance = audioObject.AddComponent<BangSakRoundCuePlayer>();
             DontDestroyOnLoad(audioObject);
             return sharedInstance;
         }
@@ -179,21 +177,21 @@ namespace Palengke.BangSak.Audio
             output.playOnAwake = false;
             output.loop = false;
             output.spatialBlend = 0f;
-            output.priority = 120;
+            output.priority = 116;
         }
 
         private void EnsureClips()
         {
-            if (clips != null && clips.Length == BangSakGameplayCueCatalog.CueCount)
+            if (clips != null && clips.Length == BangSakRoundCueCatalog.CueCount)
             {
                 return;
             }
 
             ReleaseClips();
-            clips = new AudioClip[BangSakGameplayCueCatalog.CueCount];
+            clips = new AudioClip[BangSakRoundCueCatalog.CueCount];
             for (var index = 0; index < clips.Length; index += 1)
             {
-                clips[index] = BangSakGameplayCueCatalog.CreateClip((BangSakGameplayCue)index);
+                clips[index] = BangSakRoundCueCatalog.CreateClip((BangSakRoundCue)index);
             }
         }
 

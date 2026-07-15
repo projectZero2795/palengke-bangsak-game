@@ -68,7 +68,7 @@ result-integrity, moderation, and operational gates pass.
 | 35B | Audio settings controls | Visible mute and master/music/SFX controls only. | Desktop and Android screenshots show accessible, non-overlapping controls and receive owner approval. |
 | 35C | Menu and interface sound cues | Versioned menu navigation, confirm, and back cues only. | Cues respect settings, remain non-startling, and never replace visual state. |
 | 35D | Bang and SAK sound cues | Safe, playful Bang/SAK request and confirmed-outcome cues only. | Cues play once for correct state, respect settings, and retain visual equivalents. |
-| 35E | Round and reveal sound cues | Round, reveal, pickup-ready, and result cues only. | Every cue follows confirmed state and has an equivalent visual cue. |
+| 35E | Round and reveal sound cues | Live round/result cues plus versioned reveal and pickup-ready hooks only. | Live cues follow confirmed state and retain visual equivalents; future hooks remain silent until Phases 42C and 39 provide their real states. |
 | 35F | Ambient sound and audio regression | One restrained ambient loop plus final platform/accessibility/performance checks. | Ambient and SFX controls are independent and the full WebGL/Android regression passes. |
 | 36 | Character and environment art polish | Replace selected placeholders with approved top-down Filipino barangay/palengke sprites, animation variants, readable role/action effects, and an asset import/performance budget. | Approved reference scenes remain readable at gameplay scale on desktop and mobile; colliders/game rules do not change accidentally. |
 | 37 | Map expansion and selectable components | Add one new map first; validated spawn/route/reveal cells; map metadata/versioning; minimum selectable component registry; admin defaults and compatible room map voting. | Both maps pass route, spawn, camera, collision, reveal, mobile readability, and two-client synchronization tests. |
@@ -87,6 +87,10 @@ is approved. Phase 34A–34K is expanded in the
 [Android and Google Play roadmap](phase-34-android-play-roadmap.md). The existing
 selectable-component registry issue is consumed by Phase 37, and the existing
 random power-up issue is consumed by Phase 39.
+
+Phase 35E may define compatible reveal and pickup-ready audio contracts, but it
+must not invent those gameplay states. Live reveal publication belongs to
+Phase 42C and live pickup-ready publication belongs to Phase 39.
 
 ## Random power-up decisions required before Phase 39
 
