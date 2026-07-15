@@ -8,12 +8,13 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-The active development track is now at **Phase 35B: audio settings controls**,
-which is implemented and awaiting the owner's required visual approval. Phase
-35A passed its nonvisual self-review on 2026-07-14. The Google Play distribution
-track remains independently at **Phase 34J: Play production access** while
-Google's review and closed-test clock run. Phase 34K remains blocked and no
-public Play rollout is authorized.
+The active development track is now at **Phase 35C: menu and interface sound
+cues**, which is implemented and awaiting the owner's audio-direction review.
+The owner approved the Phase 35B screens on 2026-07-15 by saying `let's go`
+after that gate and the Phase 35C next step were stated. The Google Play
+distribution track remains independently at **Phase 34J: Play production
+access** while Google's review and closed-test clock run. Phase 34K remains
+blocked and no public Play rollout is authorized.
 Phase 34D was owner-approved after reviewing Android accessibility build
 `0.34.2`. Phase 34E1 passed the authorized self-review after two Android 15
 clients joined room `1234` with the matching `JuanP · Maria` roster. Phase
@@ -70,8 +71,12 @@ to continue while that external gate is pending. Phase 35A added persistent,
 clamped master/music/SFX levels, mute state, and deterministic channel-volume
 resolution without adding UI or sound assets. Phase 35B then added a separate
 touch-safe audio page with mute and independent 10% master/music/SFX controls.
-All 246 EditMode tests pass; desktop and Android screenshots are ready for the
-owner's visual approval, so Phase 35C has not started.
+The owner approved that page on 2026-07-15. Phase 35C then added the versioned
+Navigate, Confirm, and Back cue set, one persistent settings-aware 2D audio
+source, bounded one-voice playback, and inspectable bindings for every menu
+button and keyboard shortcut. All 252 EditMode tests pass, fresh WebGL and
+Android builds pass, and desktop/Pixel 6 menu paths have no new runtime error.
+Phase 35C now waits for the owner's listening approval before Phase 35D.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -292,6 +297,7 @@ Do not skip ahead.
 - [Phase 34J closed testing](docs/phase-34j-closed-test.md)
 - [Phase 35A audio settings foundation](docs/phase-35a-audio-settings-foundation.md)
 - [Phase 35B audio settings controls](docs/phase-35b-audio-settings-controls.md)
+- [Phase 35C menu and interface cues](docs/phase-35c-menu-interface-cues.md)
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)
