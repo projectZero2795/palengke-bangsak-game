@@ -1,3 +1,4 @@
+using Palengke.BangSak.Audio;
 using Palengke.BangSak.Player;
 using Palengke.BangSak.UI;
 using UnityEngine;
@@ -115,6 +116,7 @@ namespace Palengke.BangSak.Game
 
             lastSakTime = now;
             sakSequenceId += 1;
+            BangSakGameplayCueService.PublishSakRequest();
             lastResult = ResolveSakHit(transform.position, CurrentFacingDirection, sakSequenceId);
             ShowEffect(now, lastResult);
             AccessibilityCueService.PublishSak(lastResult.Outcome);

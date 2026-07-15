@@ -1,3 +1,4 @@
+using Palengke.BangSak.Audio;
 using Palengke.BangSak.Player;
 using Palengke.BangSak.UI;
 using UnityEngine;
@@ -130,6 +131,10 @@ namespace Palengke.BangSak.Game
             ApplyCaughtControls();
             ApplyCaughtPulse(Time.time);
             SetIndicatorVisible(true);
+            if (cause == CaughtCause.Bang)
+            {
+                BangSakGameplayCueService.PublishBangCaughtConfirmed();
+            }
             return true;
         }
 
