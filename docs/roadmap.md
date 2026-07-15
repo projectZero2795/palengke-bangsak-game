@@ -62,8 +62,8 @@ Work on one phase at a time. Do not start a later phase until the current phase 
 | 34K | Public Play Store release | Submit a staged production release, verify the public listing/install, and record rollback/support steps. | Bang-Sak is publicly downloadable from Google Play and a clean device completes the install/open smoke test. |
 | 35A | Persistent audio settings foundation | Add stored mute and master/music/SFX levels plus deterministic volume resolution, without UI or sound assets. | Done by authorized nonvisual self-review on 2026-07-14; defaults, persistence, clamping, channel mixing, mute, and change notifications pass in the 242-test suite. |
 | 35B | Audio settings controls | Add only the visible master/music/SFX and mute controls to the existing Settings panel. | Done and owner-approved on 2026-07-15 when the owner said `let's go` after the Phase 35B gate and Phase 35C next step were stated. |
-| 35C | Menu and interface sound cues | Add a small versioned set of friendly menu navigation/confirm/back cues. | Done and owner-approved on 2026-07-15 when the owner said `okay, approved` after confirming the cues were menu-only and Phase 35D was next. |
-| 35D | Bang and SAK sound cues | Add only safe, playful action/outcome cues for Bang and SAK. | Implemented and awaiting owner audio-direction approval; accepted requests and confirmed state transitions play once, cooldown/duplicate paths stay silent, settings and one-voice limits apply, all visual equivalents remain, and 259 tests pass. |
+| 35C | Menu and interface sound cues | Add a small versioned set of friendly menu navigation/confirm/back cues. | Version 2 implemented after the owner reported the original cue family sounded the same; click, two-note confirm, and descending back now have separate semantic signatures and await a renewed listening check. |
+| 35D | Bang and SAK sound cues | Add only safe, playful action/outcome cues for Bang and SAK. | Version 2 implemented and awaiting owner audio-direction approval; Bang pop/success and SAK boing/deflection are semantically distinct, accepted requests and confirmed transitions play once, settings and one-voice limits apply, and 259 tests pass. |
 | 35E | Round and reveal sound cues | Add only round start/end, reveal, pickup-ready, and result cues. | Each cue is synchronized with confirmed state and has an equivalent visual cue. |
 | 35F | Ambient sound and audio regression | Add one restrained loop and finish accessibility, performance, Android, and WebGL audio checks. | The loop is independently controllable, no cue is exclusive, and the full platform regression passes. |
 
@@ -73,8 +73,8 @@ The detailed Android gates are in the
 [Phase 34 Android and Google Play roadmap](phase-34-android-play-roadmap.md).
 Phase 34J remains the current distribution checkpoint. On 2026-07-14 the owner
 authorized independent development to proceed during the external Google review
-and testing wait. Phases 35A–35C are complete, with Phase 35C owner-approved on
-2026-07-15. Phase 35D is implemented at its audio-direction review gate; Phase
+and testing wait. Phases 35C and 35D now use version-2 semantic cues after the
+owner's same-sound feedback and are at a renewed audio-direction review gate; Phase
 35E has not started. Phase 34K remains blocked until Google grants
 production access and the closed-test evidence is complete.
 

@@ -9,9 +9,9 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 ## Current phase
 
 The active development track is now at **Phase 35D: Bang and SAK sound cues**,
-which is implemented and awaiting the owner's audio-direction review. The
-owner approved the Phase 35C menu cues on 2026-07-15 by saying `okay, approved`
-after their menu-only scope and the Phase 35D next step were stated. The Google
+which has a semantic version-2 cue redesign awaiting the owner's listening
+review. The owner initially approved Phase 35C on 2026-07-15, then reported
+that the cue family sounded the same and asked for more meaningful sounds. The Google
 Play
 distribution track remains independently at **Phase 34J: Play production
 access** while Google's review and closed-test clock run. Phase 34K remains
@@ -77,12 +77,15 @@ Navigate, Confirm, and Back cue set, one persistent settings-aware 2D audio
 source, bounded one-voice playback, and inspectable bindings for every menu
 button and keyboard shortcut. All 252 EditMode tests passed, fresh WebGL and
 Android builds passed, and desktop/Pixel 6 menu paths had no new runtime error.
-The owner approved those menu cues on 2026-07-15. Phase 35D then added four
-nonverbal, toy-like Bang/SAK request and confirmed-outcome cues. Accepted
+The owner initially approved those menu cues on 2026-07-15. Phase 35D then
+added four nonverbal Bang/SAK request and confirmed-outcome cues. After the
+owner requested more meaningful sound language, both sets moved to version 2:
+menu click/confirm/back, Bang pop/caught sparkle, and SAK boing/deflection now
+use separate rhythmic and timbral signatures. Accepted
 actions publish once, cooldown rejections stay silent, confirmed state
 transitions reject duplicates, one settings-aware gameplay voice prevents
 stacking, and every existing visual equivalent remains. The complete suite now
-passes 259 EditMode tests; Phase 35D awaits the owner's listening approval.
+passes 259 EditMode tests; the revised cues await the owner's listening approval.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 

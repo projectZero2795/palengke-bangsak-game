@@ -34,7 +34,7 @@ public sealed class Phase35DGameplayCueTests
     public void Catalog_HasFourStableVersionedSafeGameplayDefinitions()
     {
         Assert.That(BangSakGameplayCueCatalog.SetId, Is.EqualTo("bangsak.gameplay_action_cues"));
-        Assert.That(BangSakGameplayCueCatalog.SetVersion, Is.EqualTo(1));
+        Assert.That(BangSakGameplayCueCatalog.SetVersion, Is.EqualTo(2));
         Assert.That(BangSakGameplayCueCatalog.MinimumCompatibleVersion, Is.EqualTo(1));
         Assert.That(BangSakGameplayCueCatalog.CueCount, Is.EqualTo(Enum.GetValues(typeof(BangSakGameplayCue)).Length));
         Assert.That(BangSakGameplayCueCatalog.MigrationNote, Does.Contain("unknown future cues"));
@@ -45,13 +45,18 @@ public sealed class Phase35DGameplayCueTests
             .ToArray();
 
         Assert.That(definitions.Select(definition => definition.StableId).Distinct().Count(), Is.EqualTo(4));
-        Assert.That(definitions.All(definition => definition.Version == 1), Is.True);
-        Assert.That(definitions.All(definition => definition.DurationSeconds >= 0.1f && definition.DurationSeconds <= 0.2f), Is.True);
+        Assert.That(definitions.All(definition => definition.Version == 2), Is.True);
+        Assert.That(definitions.Select(definition => definition.Pattern).Distinct().Count(), Is.EqualTo(4));
+        Assert.That(definitions.All(definition => definition.DurationSeconds >= 0.1f && definition.DurationSeconds <= 0.24f), Is.True);
         Assert.That(definitions.All(definition => definition.BaseVolume > 0f && definition.BaseVolume <= 0.24f), Is.True);
-        Assert.That(definitions.All(definition => definition.StartFrequency >= 250f && definition.StartFrequency <= 800f), Is.True);
-        Assert.That(definitions.All(definition => definition.EndFrequency >= 250f && definition.EndFrequency <= 800f), Is.True);
+        Assert.That(definitions.All(definition => definition.StartFrequency >= 80f && definition.StartFrequency <= 1100f), Is.True);
+        Assert.That(definitions.All(definition => definition.EndFrequency >= 80f && definition.EndFrequency <= 1100f), Is.True);
         Assert.That(definitions.Count(definition => definition.StableId.EndsWith("_request")), Is.EqualTo(2));
         Assert.That(definitions.Count(definition => definition.StableId.EndsWith("_confirmed")), Is.EqualTo(2));
+        Assert.That(BangSakGameplayCueCatalog.Get(BangSakGameplayCue.BangRequest).Pattern, Is.EqualTo(BangSakGameplayCuePattern.BangPercussivePop));
+        Assert.That(BangSakGameplayCueCatalog.Get(BangSakGameplayCue.BangCaughtConfirmed).Pattern, Is.EqualTo(BangSakGameplayCuePattern.BangCaughtSparkle));
+        Assert.That(BangSakGameplayCueCatalog.Get(BangSakGameplayCue.SakRequest).Pattern, Is.EqualTo(BangSakGameplayCuePattern.SakElasticBoing));
+        Assert.That(BangSakGameplayCueCatalog.Get(BangSakGameplayCue.SakCounteredConfirmed).Pattern, Is.EqualTo(BangSakGameplayCuePattern.SakCounteredDeflect));
     }
 
     [Test]
@@ -76,6 +81,27 @@ public sealed class Phase35DGameplayCueTests
 
         Assert.That(uniqueFingerprints.Count, Is.EqualTo(4));
         Assert.That(totalBytes, Is.LessThan(128 * 1024));
+
+        var bang = BangSakGameplayCueCatalog.CreateSamples(BangSakGameplayCue.BangRequest);
+        var caught = BangSakGameplayCueCatalog.CreateSamples(BangSakGameplayCue.BangCaughtConfirmed);
+        var sak = BangSakGameplayCueCatalog.CreateSamples(BangSakGameplayCue.SakRequest);
+        var countered = BangSakGameplayCueCatalog.CreateSamples(BangSakGameplayCue.SakCounteredConfirmed);
+        Assert.That(
+            RootMeanSquare(bang, 0.05f, 0.25f),
+            Is.GreaterThan(RootMeanSquare(bang, 0.75f, 0.95f) * 4f),
+            "Bang must remain a percussive pop rather than a sustained chirp.");
+        Assert.That(
+            RootMeanSquare(caught, 1f / 3f - 0.01f, 1f / 3f + 0.01f),
+            Is.LessThan(RootMeanSquare(caught, 1f / 6f - 0.04f, 1f / 6f + 0.04f) * 0.35f),
+            "Caught confirmation must retain separate success notes.");
+        Assert.That(
+            CountZeroCrossings(sak, 0.05f, 0.45f),
+            Is.GreaterThan(CountZeroCrossings(sak, 0.55f, 0.95f)),
+            "SAK request must retain its falling elastic-boing pitch.");
+        Assert.That(
+            RootMeanSquare(countered, 0.05f, 0.25f),
+            Is.GreaterThan(RootMeanSquare(countered, 0.75f, 0.95f) * 2f),
+            "Successful SAK must retain a struck deflection-ring envelope.");
     }
 
     [Test]
@@ -192,5 +218,38 @@ public sealed class Phase35DGameplayCueTests
         Assert.Throws<ArgumentOutOfRangeException>(() => BangSakGameplayCueCatalog.Get((BangSakGameplayCue)99));
         Assert.Throws<ArgumentOutOfRangeException>(
             () => BangSakGameplayCueCatalog.CreateSamples(BangSakGameplayCue.BangRequest, 0));
+    }
+
+    private static int CountZeroCrossings(float[] samples, float startRatio, float endRatio)
+    {
+        var start = Mathf.Clamp(Mathf.FloorToInt(samples.Length * startRatio), 0, samples.Length - 1);
+        var end = Mathf.Clamp(Mathf.CeilToInt(samples.Length * endRatio), start + 1, samples.Length);
+        var crossings = 0;
+        var previous = samples[start];
+        for (var index = start + 1; index < end; index += 1)
+        {
+            var current = samples[index];
+            if ((previous < 0f && current >= 0f) || (previous > 0f && current <= 0f))
+            {
+                crossings += 1;
+            }
+
+            previous = current;
+        }
+
+        return crossings;
+    }
+
+    private static float RootMeanSquare(float[] samples, float startRatio, float endRatio)
+    {
+        var start = Mathf.Clamp(Mathf.FloorToInt(samples.Length * startRatio), 0, samples.Length - 1);
+        var end = Mathf.Clamp(Mathf.CeilToInt(samples.Length * endRatio), start + 1, samples.Length);
+        var sum = 0f;
+        for (var index = start; index < end; index += 1)
+        {
+            sum += samples[index] * samples[index];
+        }
+
+        return Mathf.Sqrt(sum / (end - start));
     }
 }

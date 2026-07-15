@@ -2,13 +2,16 @@
 
 ## Status
 
-Done and owner-approved on 2026-07-15.
+Version 2 implemented and awaiting a renewed owner listening check.
 
 On 2026-07-15 the owner said `let's go` after being told that Phase 35B was the
 visual-approval gate and Phase 35C was next. That closes Phase 35B and
 authorizes this phase only. After the implementation and its menu-only scope
 were restated, the owner said `okay, approved`, closing this listening gate and
-authorizing Phase 35D.
+authorizing Phase 35D. Later that day the owner reported that the cues sounded
+the same and asked for more meaningful sounds. Version 2 keeps the same stable
+cue IDs and replaces the shared chirp language with semantic click, confirm,
+and back signatures.
 
 ## Scope
 
@@ -18,23 +21,25 @@ change gameplay or Play Console distribution.
 
 ## Versioned cue contract
 
-The set ID is `bangsak.menu_interface_cues`, set version `1`, with minimum
+The set ID is `bangsak.menu_interface_cues`, set version `2`, with minimum
 compatible version `1`. Unknown future cues must be ignored by older clients.
 
-| Cue | Stable ID | Version | Sweep | Duration | Cue level |
-| --- | --- | ---: | ---: | ---: | ---: |
-| Navigate | `menu.navigate` | 1 | 460 → 560 Hz | 65 ms | 16% |
-| Confirm | `menu.confirm` | 1 | 540 → 720 Hz | 105 ms | 20% |
-| Back | `menu.back` | 1 | 520 → 400 Hz | 85 ms | 15% |
+| Cue | Stable ID | Version | Semantic signature | Duration | Cue level |
+| --- | --- | ---: | --- | ---: | ---: |
+| Navigate | `menu.navigate` | 2 | Bright tactile tick, 960 → 1160 Hz | 55 ms | 16% |
+| Confirm | `menu.confirm` | 2 | Two-note affirmative chime, 520 + 850 Hz | 150 ms | 20% |
+| Back | `menu.back` | 2 | Hollow descending back bubble, 620 → 280 Hz | 120 ms | 15% |
 
 The cue level is multiplied by the existing Phase 35A master and SFX levels.
 Mute resolves the live output to zero.
 
 ## Implementation
 
-- `BangSakMenuCueCatalog` deterministically synthesizes the three mono 44.1 kHz
-  clips with a smooth zero-to-zero envelope. No third-party or generated binary
-  sound asset is stored in the repository.
+- `BangSakMenuCueCatalog` deterministically synthesizes three mono 44.1 kHz
+  clips with separate rhythmic and timbral profiles. Navigate is a single
+  bright tick, Confirm is an ascending two-note chime with a real gap, and Back
+  is a hollow downward bubble. Zero-to-zero envelopes prevent clicks. No
+  third-party or generated binary sound asset is stored in the repository.
 - `BangSakMenuCuePlayer` owns one persistent 2D `AudioSource`, caches exactly
   three clips, responds immediately to settings changes, and replaces a
   still-fading cue before playing another. At most one menu voice can play, so
@@ -55,9 +60,9 @@ Mute resolves the live output to zero.
 | --- | --- |
 | Focused Phase 35C tests | 6/6 passed |
 | Complete EditMode suite | 252/252 passed |
-| Procedural sample budget | 44,988 bytes total; test gate remains below 64 KiB |
-| Fresh WebGL build | Passed; 37,589,561 bytes |
-| Desktop browser smoke | Settings → Audio → SFX 90% → mute on/off → Back passed; no runtime exception |
+| Procedural sample budget | 57,332 bytes total; test gate remains below 64 KiB |
+| Fresh WebGL build | Version 2 passed; 37,609,485 bytes |
+| Desktop browser smoke | Fresh build loaded and menu navigation played without an audio/runtime exception |
 | Fresh Android ARM64 debug APK | Passed; 53,047,114-byte APK |
 | Pixel 6 / Android 15 API 35 | Install, cold launch, Settings → Audio, unmute, and SFX 90% touch path passed |
 | Android runtime log | No fatal exception, `NullReferenceException`, `ArgumentException`, `AudioClip`, or `AudioSource` error |
@@ -80,9 +85,9 @@ Use the prepared local WebGL tab or run the fresh build from
 6. Confirm that the tones feel friendly, short, and non-startling, or describe
    the direction to change.
 
-The Phase 31 owner listening gate was closed on 2026-07-15 when the owner said
-`okay, approved` after confirming these sounds were only for the menu and being
-told that Bang/SAK cues were the next separate phase.
+The original listening gate was closed on 2026-07-15, then reopened when the
+owner said the cue family sounded the same. Version 2 requires a fresh check of
+the semantic sound language before Phase 35E begins.
 
 ## Rollback
 

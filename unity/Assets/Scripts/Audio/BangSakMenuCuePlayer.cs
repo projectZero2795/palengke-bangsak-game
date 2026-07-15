@@ -7,7 +7,7 @@ namespace Palengke.BangSak.Audio
     {
         public const string ComponentId = "menu_interface_audio";
         public const int ComponentVersion = 1;
-        public const string ComponentVariant = "phase35c_procedural_v1";
+        public const string ComponentVariant = "phase35c_procedural_v2_distinct";
         public const int MaximumSimultaneousVoices = 1;
         private const string SharedObjectName = "Bang-Sak Menu Audio";
 

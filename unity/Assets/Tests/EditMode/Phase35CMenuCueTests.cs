@@ -33,7 +33,7 @@ public sealed class Phase35CMenuCueTests
     public void Catalog_HasStableVersionedNonStartlingCueDefinitions()
     {
         Assert.That(BangSakMenuCueCatalog.SetId, Is.EqualTo("bangsak.menu_interface_cues"));
-        Assert.That(BangSakMenuCueCatalog.SetVersion, Is.EqualTo(1));
+        Assert.That(BangSakMenuCueCatalog.SetVersion, Is.EqualTo(2));
         Assert.That(BangSakMenuCueCatalog.MinimumCompatibleVersion, Is.EqualTo(1));
         Assert.That(BangSakMenuCueCatalog.CueCount, Is.EqualTo(Enum.GetValues(typeof(BangSakMenuCue)).Length));
         Assert.That(BangSakMenuCueCatalog.MigrationNote, Does.Contain("unknown future cues"));
@@ -45,11 +45,15 @@ public sealed class Phase35CMenuCueTests
 
         Assert.That(definitions.Select(definition => definition.StableId).Distinct().Count(), Is.EqualTo(3));
         Assert.That(definitions.Select(definition => definition.Cue).Distinct().Count(), Is.EqualTo(3));
-        Assert.That(definitions.All(definition => definition.Version == 1), Is.True);
-        Assert.That(definitions.All(definition => definition.DurationSeconds >= 0.05f && definition.DurationSeconds <= 0.11f), Is.True);
+        Assert.That(definitions.All(definition => definition.Version == 2), Is.True);
+        Assert.That(definitions.Select(definition => definition.Pattern).Distinct().Count(), Is.EqualTo(3));
+        Assert.That(definitions.All(definition => definition.DurationSeconds >= 0.05f && definition.DurationSeconds <= 0.16f), Is.True);
         Assert.That(definitions.All(definition => definition.BaseVolume > 0f && definition.BaseVolume <= 0.2f), Is.True);
-        Assert.That(definitions.All(definition => definition.StartFrequency >= 350f && definition.StartFrequency <= 800f), Is.True);
-        Assert.That(definitions.All(definition => definition.EndFrequency >= 350f && definition.EndFrequency <= 800f), Is.True);
+        Assert.That(definitions.All(definition => definition.StartFrequency >= 250f && definition.StartFrequency <= 1200f), Is.True);
+        Assert.That(definitions.All(definition => definition.EndFrequency >= 250f && definition.EndFrequency <= 1200f), Is.True);
+        Assert.That(BangSakMenuCueCatalog.Get(BangSakMenuCue.Navigate).Pattern, Is.EqualTo(BangSakMenuCuePattern.NavigateTick));
+        Assert.That(BangSakMenuCueCatalog.Get(BangSakMenuCue.Confirm).Pattern, Is.EqualTo(BangSakMenuCuePattern.ConfirmDoubleChime));
+        Assert.That(BangSakMenuCueCatalog.Get(BangSakMenuCue.Back).Pattern, Is.EqualTo(BangSakMenuCuePattern.BackDescendingBubble));
     }
 
     [Test]
@@ -78,6 +82,22 @@ public sealed class Phase35CMenuCueTests
         }
 
         Assert.That(totalBytes, Is.LessThan(64 * 1024));
+
+        var navigate = BangSakMenuCueCatalog.CreateSamples(BangSakMenuCue.Navigate);
+        var confirm = BangSakMenuCueCatalog.CreateSamples(BangSakMenuCue.Confirm);
+        var back = BangSakMenuCueCatalog.CreateSamples(BangSakMenuCue.Back);
+        Assert.That(
+            CountZeroCrossings(navigate, 0.05f, 0.45f),
+            Is.LessThan(CountZeroCrossings(navigate, 0.55f, 0.95f)),
+            "Navigate must remain a rising tactile tick.");
+        Assert.That(
+            MaximumAbsoluteSample(confirm, 0.43f, 0.51f),
+            Is.LessThan(0.001f),
+            "Confirm must retain an audible gap between its two notes.");
+        Assert.That(
+            CountZeroCrossings(back, 0.05f, 0.45f),
+            Is.GreaterThan(CountZeroCrossings(back, 0.55f, 0.95f)),
+            "Back must remain a descending cue.");
     }
 
     [Test]
@@ -162,5 +182,38 @@ public sealed class Phase35CMenuCueTests
         var target = root.Find(path);
         Assert.That(target, Is.Not.Null, path);
         Assert.That(target.GetComponent<BangSakMenuCueBinding>().Cue, Is.EqualTo(expected), path);
+    }
+
+    private static int CountZeroCrossings(float[] samples, float startRatio, float endRatio)
+    {
+        var start = Mathf.Clamp(Mathf.FloorToInt(samples.Length * startRatio), 0, samples.Length - 1);
+        var end = Mathf.Clamp(Mathf.CeilToInt(samples.Length * endRatio), start + 1, samples.Length);
+        var crossings = 0;
+        var previous = samples[start];
+        for (var index = start + 1; index < end; index += 1)
+        {
+            var current = samples[index];
+            if ((previous < 0f && current >= 0f) || (previous > 0f && current <= 0f))
+            {
+                crossings += 1;
+            }
+
+            previous = current;
+        }
+
+        return crossings;
+    }
+
+    private static float MaximumAbsoluteSample(float[] samples, float startRatio, float endRatio)
+    {
+        var start = Mathf.Clamp(Mathf.FloorToInt(samples.Length * startRatio), 0, samples.Length - 1);
+        var end = Mathf.Clamp(Mathf.CeilToInt(samples.Length * endRatio), start + 1, samples.Length);
+        var maximum = 0f;
+        for (var index = start; index < end; index += 1)
+        {
+            maximum = Mathf.Max(maximum, Mathf.Abs(samples[index]));
+        }
+
+        return maximum;
     }
 }

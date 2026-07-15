@@ -7,7 +7,7 @@ namespace Palengke.BangSak.Audio
     {
         public const string ComponentId = "gameplay_action_audio";
         public const int ComponentVersion = 1;
-        public const string ComponentVariant = "phase35d_procedural_v1";
+        public const string ComponentVariant = "phase35d_procedural_v2_distinct";
         public const int MaximumSimultaneousVoices = 1;
         public const int MaximumQueuedCues = 1;
         private const string SharedObjectName = "Bang-Sak Gameplay Audio";
