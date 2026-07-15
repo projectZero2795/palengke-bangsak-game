@@ -1,3 +1,4 @@
+using Palengke.BangSak.Audio;
 using Palengke.BangSak.Player;
 using Palengke.BangSak.UI;
 using UnityEngine;
@@ -118,6 +119,7 @@ namespace Palengke.BangSak.Game
             ApplyCounteredControls();
             ApplyCounteredPulse(Time.time);
             SetIndicatorVisible(true);
+            BangSakGameplayCueService.PublishSakCounteredConfirmed();
             return true;
         }
 

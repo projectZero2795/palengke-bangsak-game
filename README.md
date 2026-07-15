@@ -8,10 +8,11 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-The active development track is now at **Phase 35C: menu and interface sound
-cues**, which is implemented and awaiting the owner's audio-direction review.
-The owner approved the Phase 35B screens on 2026-07-15 by saying `let's go`
-after that gate and the Phase 35C next step were stated. The Google Play
+The active development track is now at **Phase 35D: Bang and SAK sound cues**,
+which is implemented and awaiting the owner's audio-direction review. The
+owner approved the Phase 35C menu cues on 2026-07-15 by saying `okay, approved`
+after their menu-only scope and the Phase 35D next step were stated. The Google
+Play
 distribution track remains independently at **Phase 34J: Play production
 access** while Google's review and closed-test clock run. Phase 34K remains
 blocked and no public Play rollout is authorized.
@@ -74,9 +75,14 @@ touch-safe audio page with mute and independent 10% master/music/SFX controls.
 The owner approved that page on 2026-07-15. Phase 35C then added the versioned
 Navigate, Confirm, and Back cue set, one persistent settings-aware 2D audio
 source, bounded one-voice playback, and inspectable bindings for every menu
-button and keyboard shortcut. All 252 EditMode tests pass, fresh WebGL and
-Android builds pass, and desktop/Pixel 6 menu paths have no new runtime error.
-Phase 35C now waits for the owner's listening approval before Phase 35D.
+button and keyboard shortcut. All 252 EditMode tests passed, fresh WebGL and
+Android builds passed, and desktop/Pixel 6 menu paths had no new runtime error.
+The owner approved those menu cues on 2026-07-15. Phase 35D then added four
+nonverbal, toy-like Bang/SAK request and confirmed-outcome cues. Accepted
+actions publish once, cooldown rejections stay silent, confirmed state
+transitions reject duplicates, one settings-aware gameplay voice prevents
+stacking, and every existing visual equivalent remains. The complete suite now
+passes 259 EditMode tests; Phase 35D awaits the owner's listening approval.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -298,6 +304,7 @@ Do not skip ahead.
 - [Phase 35A audio settings foundation](docs/phase-35a-audio-settings-foundation.md)
 - [Phase 35B audio settings controls](docs/phase-35b-audio-settings-controls.md)
 - [Phase 35C menu and interface cues](docs/phase-35c-menu-interface-cues.md)
+- [Phase 35D Bang and SAK cues](docs/phase-35d-bang-sak-cues.md)
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)

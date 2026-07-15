@@ -2,11 +2,13 @@
 
 ## Status
 
-Implemented and awaiting the project owner's audio-direction approval.
+Done and owner-approved on 2026-07-15.
 
 On 2026-07-15 the owner said `let's go` after being told that Phase 35B was the
 visual-approval gate and Phase 35C was next. That closes Phase 35B and
-authorizes this phase only. Phase 35D has not started.
+authorizes this phase only. After the implementation and its menu-only scope
+were restated, the owner said `okay, approved`, closing this listening gate and
+authorizing Phase 35D.
 
 ## Scope
 
@@ -78,9 +80,9 @@ Use the prepared local WebGL tab or run the fresh build from
 6. Confirm that the tones feel friendly, short, and non-startling, or describe
    the direction to change.
 
-The implementation may be objectively self-reviewed, but the Phase 31 plan
-reserves Phases 35C–35F audio direction and mix defaults for the owner. Do not
-begin Phase 35D until this listening review is approved.
+The Phase 31 owner listening gate was closed on 2026-07-15 when the owner said
+`okay, approved` after confirming these sounds were only for the menu and being
+told that Bang/SAK cues were the next separate phase.
 
 ## Rollback
 

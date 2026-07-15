@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Palengke.BangSak.Audio;
 using Palengke.BangSak.Player;
 using Palengke.BangSak.UI;
 using UnityEngine;
@@ -174,6 +175,7 @@ namespace Palengke.BangSak.Game
             RememberBangTime(CurrentCooldownTargetName, now);
             lastBangDirection = CurrentFacingDirection;
             bangSequenceId += 1;
+            BangSakGameplayCueService.PublishBangRequest();
             lastHitResult = ResolveBangHit(transform.position, lastBangDirection, bangSequenceId);
             ShowBangEffect(now, lastBangDirection, lastHitResult);
             AccessibilityCueService.PublishBang(lastHitResult.Outcome);
