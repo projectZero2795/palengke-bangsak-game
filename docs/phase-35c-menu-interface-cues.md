@@ -2,7 +2,7 @@
 
 ## Status
 
-Version 2 implemented and awaiting a renewed owner listening check.
+Done; version 2 was owner-approved on 2026-07-15.
 
 On 2026-07-15 the owner said `let's go` after being told that Phase 35B was the
 visual-approval gate and Phase 35C was next. That closes Phase 35B and
@@ -12,6 +12,9 @@ authorizing Phase 35D. Later that day the owner reported that the cues sounded
 the same and asked for more meaningful sounds. Version 2 keeps the same stable
 cue IDs and replaces the shared chirp language with semantic click, confirm,
 and back signatures.
+
+After the fresh semantic build was left open for review, the owner said
+`okay, lets continue next phases`, closing the renewed version-2 listening gate.
 
 ## Scope
 
@@ -86,8 +89,8 @@ Use the prepared local WebGL tab or run the fresh build from
    the direction to change.
 
 The original listening gate was closed on 2026-07-15, then reopened when the
-owner said the cue family sounded the same. Version 2 requires a fresh check of
-the semantic sound language before Phase 35E begins.
+owner said the cue family sounded the same. The owner closed the version-2 gate
+by approving continuation to the next phases.
 
 ## Rollback
 

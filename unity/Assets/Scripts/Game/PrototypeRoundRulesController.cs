@@ -1,4 +1,5 @@
 using Palengke.BangSak.Api;
+using Palengke.BangSak.Audio;
 using Palengke.BangSak.Player;
 using UnityEngine;
 
@@ -170,6 +171,7 @@ namespace Palengke.BangSak.Game
             Result = PrototypeRoundResult.None;
             ResultTitle = "Round running";
             ResultMessage = "Taya catches all hiders. Hiders can counter with SAK.";
+            BangSakRoundCueService.PublishRoundStartedConfirmed();
         }
 
         public void RestartRound()
@@ -208,6 +210,10 @@ namespace Palengke.BangSak.Game
                 return false;
             }
 
+            var previousState = State;
+            var previousResult = Result;
+            var previousRoundNumber = RoundNumber;
+
             State = snapshot.State;
             Result = snapshot.Result;
             ResultTitle = snapshot.ResultTitle;
@@ -216,6 +222,17 @@ namespace Palengke.BangSak.Game
             RemainingHiders = Mathf.Clamp(snapshot.RemainingHiders, 0, TotalHiders);
             RemainingSeconds = Mathf.Max(0f, snapshot.RemainingSeconds);
             RoundNumber = Mathf.Max(0, snapshot.RoundNumber);
+
+            var roundChanged = RoundNumber != previousRoundNumber;
+            if (IsRunning && (previousState != PrototypeRoundState.Running || roundChanged))
+            {
+                BangSakRoundCueService.PublishRoundStartedConfirmed();
+            }
+            else if (IsFinished &&
+                     (previousState != PrototypeRoundState.Finished || roundChanged || previousResult != Result))
+            {
+                BangSakRoundCueService.PublishResultConfirmed(Result);
+            }
 
             if (IsFinished && freezeActorsWhenRoundEnds)
             {
@@ -283,6 +300,7 @@ namespace Palengke.BangSak.Game
             ResultTitle = title;
             ResultMessage = message;
             RemainingSeconds = Mathf.Max(0f, RemainingSeconds);
+            BangSakRoundCueService.PublishResultConfirmed(result);
 
             if (freezeActorsWhenRoundEnds)
             {

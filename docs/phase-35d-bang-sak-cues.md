@@ -2,7 +2,7 @@
 
 ## Status
 
-Version 2 implemented and awaiting the project owner's audio-direction approval.
+Done; version 2 was owner-approved on 2026-07-15.
 
 On 2026-07-15 the owner confirmed that Phase 35C audio was menu-only. After
 being told that Bang/SAK request and confirmed-outcome cues were the separate
@@ -10,8 +10,9 @@ Phase 35D scope, the owner said `okay, approved`. Phase 35C is therefore closed
 and this phase is authorized. After hearing version 1, the owner reported that
 everything sounded the same and clarified that the cues should be more
 meaningful. Version 2 therefore replaces four related chirps with action-shaped
-pop, success, elastic-counter, and deflection signatures. Phase 35E has not
-started.
+pop, success, elastic-counter, and deflection signatures. After the semantic
+build was left open for review, the owner said `okay, lets continue next
+phases`, closing this listening gate and authorizing Phase 35E.
 
 ## Scope and safety
 
@@ -104,9 +105,8 @@ Use the prepared local WebGL tab or run the fresh build from
 7. Confirm each sound communicates its action without looking at the screen,
    while remaining friendly, short, and non-startling.
 
-The Phase 31 plan reserves Phases 35C–35F audio direction and final mix
-defaults for the owner. Do not begin Phase 35E until this listening review is
-approved.
+The Phase 31 owner listening gate was closed on 2026-07-15 when the owner
+approved continuing to the next phases after the semantic version-2 review.
 
 ## Rollback
 

@@ -8,10 +8,10 @@ Canonical visual reference: [Bang-Sak roadmap reference](docs/reference/bang-sak
 
 ## Current phase
 
-The active development track is now at **Phase 35D: Bang and SAK sound cues**,
-which has a semantic version-2 cue redesign awaiting the owner's listening
-review. The owner initially approved Phase 35C on 2026-07-15, then reported
-that the cue family sounded the same and asked for more meaningful sounds. The Google
+The active development track is now at **Phase 35E: round, reveal,
+pickup-ready, and result sound cues**, which is implemented and awaiting the
+owner's listening review. The owner approved the semantic version-2 Phase
+35C/35D direction and continuation on 2026-07-15. The Google
 Play
 distribution track remains independently at **Phase 34J: Play production
 access** while Google's review and closed-test clock run. Phase 34K remains
@@ -85,7 +85,12 @@ use separate rhythmic and timbral signatures. Accepted
 actions publish once, cooldown rejections stay silent, confirmed state
 transitions reject duplicates, one settings-aware gameplay voice prevents
 stacking, and every existing visual equivalent remains. The complete suite now
-passes 259 EditMode tests; the revised cues await the owner's listening approval.
+passes 259 EditMode tests. The owner then approved continuing. Phase 35E adds
+semantic count-in/go, Taya-win, and Hiders-win cues bound to confirmed local and
+remote round transitions. Duplicate snapshots stay silent. Reveal and
+pickup-ready definitions have no runtime caller until Phases 42C and 39 provide
+their real authoritative mechanics and visual equivalents. The complete suite
+now passes 267 EditMode tests; Phase 35E awaits listening approval.
 
 Phase 0 contains docs, architecture, roadmap, object catalog, maintenance rules, and GitHub issues.
 
@@ -308,6 +313,7 @@ Do not skip ahead.
 - [Phase 35B audio settings controls](docs/phase-35b-audio-settings-controls.md)
 - [Phase 35C menu and interface cues](docs/phase-35c-menu-interface-cues.md)
 - [Phase 35D Bang and SAK cues](docs/phase-35d-bang-sak-cues.md)
+- [Phase 35E round, reveal, pickup-ready, and result cues](docs/phase-35e-round-reveal-result-cues.md)
 - [Phase 29A domain migration audit](docs/phase-29a-domain-migration-audit.md)
 - [Phase 29B dual-host routing](docs/phase-29b-dual-host-routing.md)
 - [Phase 29B1 signed-in auth bridge hotfix](docs/phase-29b1-auth-bridge-hotfix.md)
