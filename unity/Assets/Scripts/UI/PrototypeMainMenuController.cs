@@ -92,19 +92,19 @@ namespace Palengke.BangSak.UI
             {
                 if (Input.GetKeyDown(KeyCode.C))
                 {
-                    OnCreateRoomClicked();
+                    InvokeWithCue(OnCreateRoomClicked, BangSakMenuCue.Confirm);
                     return;
                 }
 
                 if (Input.GetKeyDown(KeyCode.J))
                 {
-                    OnJoinDefaultRoomClicked();
+                    InvokeWithCue(OnJoinDefaultRoomClicked, BangSakMenuCue.Confirm);
                     return;
                 }
 
                 if (Input.GetKeyDown(KeyCode.B))
                 {
-                    HidePanels();
+                    InvokeWithCue(HidePanels, BangSakMenuCue.Back);
                     return;
                 }
             }
@@ -112,31 +112,31 @@ namespace Palengke.BangSak.UI
 
             if (Input.GetKeyDown(KeyCode.P))
             {
-                PlayLocal();
+                InvokeWithCue(PlayLocal, BangSakMenuCue.Confirm);
                 return;
             }
 
             if (Input.GetKeyDown(KeyCode.H))
             {
-                ShowHowTo();
+                InvokeWithCue(ShowHowTo, BangSakMenuCue.Navigate);
                 return;
             }
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                ShowNetworkRoom();
+                InvokeWithCue(ShowNetworkRoom, BangSakMenuCue.Navigate);
                 return;
             }
 
             if (Input.GetKeyDown(KeyCode.L))
             {
-                ShowLeaderboard();
+                InvokeWithCue(ShowLeaderboard, BangSakMenuCue.Navigate);
                 return;
             }
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                HidePanels();
+                InvokeWithCue(HidePanels, BangSakMenuCue.Back);
             }
 
             if (networkPanel != null && networkPanel.activeSelf)
@@ -419,7 +419,8 @@ namespace Palengke.BangSak.UI
                 new Vector2(112f, 122f),
                 new Color(0.1f, 0.2f, 0.34f, 1f),
                 new Color(0.36f, 0.58f, 1f, 1f),
-                PlayLocal);
+                PlayLocal,
+                BangSakMenuCue.Confirm);
 
             CreateDashboardTile(
                 card,
@@ -487,7 +488,8 @@ namespace Palengke.BangSak.UI
             Vector2 size,
             Color fillColor,
             Color accentColor,
-            UnityEngine.Events.UnityAction onClick)
+            UnityEngine.Events.UnityAction onClick,
+            BangSakMenuCue cue = BangSakMenuCue.Navigate)
         {
             var tileObject = new GameObject($"{title} Dashboard Tile");
             tileObject.transform.SetParent(parent, false);
@@ -507,7 +509,8 @@ namespace Palengke.BangSak.UI
 
             var button = tileObject.AddComponent<Button>();
             button.targetGraphic = image;
-            button.onClick.AddListener(onClick);
+            tileObject.AddComponent<BangSakMenuCueBinding>().Configure(cue);
+            button.onClick.AddListener(() => InvokeWithCue(onClick, cue));
 
             var colors = button.colors;
             colors.highlightedColor = Color.Lerp(fillColor, accentColor, 0.28f);
@@ -538,8 +541,8 @@ namespace Palengke.BangSak.UI
                 new Color(0.86f, 0.93f, 1f, 1f));
 
             CreateText(panel, "No realistic weapons. No blood. Cartoon tag energy only.", new Vector2(0f, -84f), new Vector2(470f, 34f), 15, FontStyle.Bold, new Color(0.72f, 1f, 0.72f, 1f));
-            CreateButton(panel, "BACK", new Vector2(-90f, -160f), new Vector2(150f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
-            CreateButton(panel, "PLAY", new Vector2(90f, -160f), new Vector2(150f, 42f), new Color(0.94f, 0.3f, 0.12f, 1f), PlayLocal);
+            CreateButton(panel, "BACK", new Vector2(-90f, -160f), new Vector2(150f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels, BangSakMenuCue.Back);
+            CreateButton(panel, "PLAY", new Vector2(90f, -160f), new Vector2(150f, 42f), new Color(0.94f, 0.3f, 0.12f, 1f), PlayLocal, BangSakMenuCue.Confirm);
         }
 
         private void CreateSettingsPanel(Transform parent)
@@ -571,7 +574,7 @@ namespace Palengke.BangSak.UI
             markerImage.color = new Color(0.35f, 0.85f, 1f, 1f);
             markerImage.raycastTarget = false;
 
-            CreateButton(panel, "BACK", new Vector2(-90f, -183f), new Vector2(140f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+            CreateButton(panel, "BACK", new Vector2(-90f, -183f), new Vector2(140f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels, BangSakMenuCue.Back);
             CreateButton(panel, "AUDIO", new Vector2(90f, -183f), new Vector2(140f, 42f), new Color(0.12f, 0.28f, 0.4f, 1f), ShowAudioSettings);
             RefreshAccessibilityPanel();
         }
@@ -582,7 +585,7 @@ namespace Palengke.BangSak.UI
             var panel = audioSettingsPanel.transform;
 
             CreateText(panel, "AUDIO", new Vector2(0f, 188f), new Vector2(500f, 42f), 30, FontStyle.Bold, new Color(1f, 0.82f, 0.23f, 1f));
-            CreateText(panel, "Saved on this device · sound cues arrive in the next phases", new Vector2(0f, 157f), new Vector2(500f, 24f), 13, FontStyle.Bold, new Color(0.82f, 0.9f, 1f, 1f));
+            CreateText(panel, "Saved on this device · menu cues use SFX", new Vector2(0f, 157f), new Vector2(500f, 24f), 13, FontStyle.Bold, new Color(0.82f, 0.9f, 1f, 1f));
 
             audioMutedStatusLabel = CreateAudioMuteRow(panel, 105f);
             masterVolumeLabel = CreateAudioLevelRow(panel, "MASTER", 48f, DecreaseMasterVolume, IncreaseMasterVolume);
@@ -590,7 +593,7 @@ namespace Palengke.BangSak.UI
             sfxVolumeLabel = CreateAudioLevelRow(panel, "SFX", -66f, DecreaseSfxVolume, IncreaseSfxVolume);
 
             CreateButton(panel, "ACCESS", new Vector2(-90f, -183f), new Vector2(140f, 42f), new Color(0.12f, 0.28f, 0.4f, 1f), ShowSettings);
-            CreateButton(panel, "BACK", new Vector2(90f, -183f), new Vector2(140f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+            CreateButton(panel, "BACK", new Vector2(90f, -183f), new Vector2(140f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels, BangSakMenuCue.Back);
             RefreshAudioSettingsPanel();
         }
 
@@ -598,7 +601,7 @@ namespace Palengke.BangSak.UI
         {
             var row = CreatePanel(parent, "MUTE ALL Audio Row", new Vector2(0f, y), new Vector2(470f, 46f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
             CreateText(row, "MUTE ALL", new Vector2(-130f, 0f), new Vector2(190f, 34f), 17, FontStyle.Bold, Color.white);
-            var button = CreateButton(row, "MUTE", new Vector2(174f, 0f), new Vector2(116f, 42f), new Color(0.12f, 0.28f, 0.4f, 1f), ToggleAudioMuted);
+            var button = CreateButton(row, "MUTE", new Vector2(174f, 0f), new Vector2(116f, 42f), new Color(0.12f, 0.28f, 0.4f, 1f), ToggleAudioMuted, BangSakMenuCue.Confirm);
             return button.GetComponentInChildren<Text>();
         }
 
@@ -612,12 +615,12 @@ namespace Palengke.BangSak.UI
             var row = CreatePanel(parent, $"{label} Audio Row", new Vector2(0f, y), new Vector2(470f, 46f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
             CreateText(row, label, new Vector2(-150f, 0f), new Vector2(150f, 34f), 17, FontStyle.Bold, Color.white);
 
-            var decreaseButton = CreateButton(row, $"{label} DECREASE", new Vector2(35f, 0f), new Vector2(44f, 44f), new Color(0.12f, 0.28f, 0.4f, 1f), decrease);
+            var decreaseButton = CreateButton(row, $"{label} DECREASE", new Vector2(35f, 0f), new Vector2(44f, 44f), new Color(0.12f, 0.28f, 0.4f, 1f), decrease, BangSakMenuCue.Confirm);
             decreaseButton.GetComponentInChildren<Text>().text = "-";
 
             var valueLabel = CreateText(row, $"{label} VALUE", new Vector2(105f, 0f), new Vector2(80f, 34f), 17, FontStyle.Bold, new Color(0.55f, 1f, 0.68f, 1f));
 
-            var increaseButton = CreateButton(row, $"{label} INCREASE", new Vector2(175f, 0f), new Vector2(44f, 44f), new Color(0.12f, 0.28f, 0.4f, 1f), increase);
+            var increaseButton = CreateButton(row, $"{label} INCREASE", new Vector2(175f, 0f), new Vector2(44f, 44f), new Color(0.12f, 0.28f, 0.4f, 1f), increase, BangSakMenuCue.Confirm);
             increaseButton.GetComponentInChildren<Text>().text = "+";
             return valueLabel;
         }
@@ -678,7 +681,7 @@ namespace Palengke.BangSak.UI
             UnityEngine.Events.UnityAction onClick)
         {
             CreateText(parent, label, new Vector2(-105f, y), new Vector2(290f, 36f), 17, FontStyle.Bold, Color.white);
-            var button = CreateButton(parent, "TOGGLE", new Vector2(174f, y), new Vector2(116f, 38f), new Color(0.12f, 0.28f, 0.4f, 1f), onClick);
+            var button = CreateButton(parent, "TOGGLE", new Vector2(174f, y), new Vector2(116f, 38f), new Color(0.12f, 0.28f, 0.4f, 1f), onClick, BangSakMenuCue.Confirm);
             var existingLabel = button.GetComponentInChildren<Text>();
             if (existingLabel != null)
             {
@@ -762,11 +765,11 @@ namespace Palengke.BangSak.UI
             var statusCard = CreatePanel(panel, "Room Status Card", new Vector2(0f, 42f), new Vector2(470f, 168f), new Color(0.012f, 0.024f, 0.045f, 0.95f));
             networkStatusLabel = CreateText(statusCard, "ROOM STATUS", Vector2.zero, new Vector2(430f, 142f), 14, FontStyle.Bold, new Color(0.86f, 0.93f, 1f, 1f));
 
-            CreateButton(panel, "CREATE", new Vector2(-170f, -82f), new Vector2(140f, 42f), new Color(0.94f, 0.3f, 0.12f, 1f), OnCreateRoomClicked);
-            CreateButton(panel, "JOIN 1234", new Vector2(0f, -82f), new Vector2(150f, 42f), new Color(0.22f, 0.42f, 0.92f, 1f), OnJoinDefaultRoomClicked);
-            CreateButton(panel, "LEAVE", new Vector2(170f, -82f), new Vector2(140f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), OnLeaveRoomClicked);
+            CreateButton(panel, "CREATE", new Vector2(-170f, -82f), new Vector2(140f, 42f), new Color(0.94f, 0.3f, 0.12f, 1f), OnCreateRoomClicked, BangSakMenuCue.Confirm);
+            CreateButton(panel, "JOIN 1234", new Vector2(0f, -82f), new Vector2(150f, 42f), new Color(0.22f, 0.42f, 0.92f, 1f), OnJoinDefaultRoomClicked, BangSakMenuCue.Confirm);
+            CreateButton(panel, "LEAVE", new Vector2(170f, -82f), new Vector2(140f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), OnLeaveRoomClicked, BangSakMenuCue.Back);
 
-            CreateButton(panel, "BACK", new Vector2(0f, -156f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+            CreateButton(panel, "BACK", new Vector2(0f, -156f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels, BangSakMenuCue.Back);
             RefreshNetworkPanel();
         }
 
@@ -791,7 +794,7 @@ namespace Palengke.BangSak.UI
             PopulateLeaderboardRows();
 
             apiStatusLabel = CreateText(panel, apiClient.StatusMessage, new Vector2(0f, -122f), new Vector2(430f, 34f), 13, FontStyle.Bold, new Color(0.62f, 0.76f, 0.94f, 1f));
-            CreateButton(panel, "BACK", new Vector2(0f, -177f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels);
+            CreateButton(panel, "BACK", new Vector2(0f, -177f), new Vector2(160f, 42f), new Color(0.16f, 0.22f, 0.32f, 1f), HidePanels, BangSakMenuCue.Back);
         }
 
         private void RefreshLeaderboardPanel()
@@ -948,7 +951,14 @@ namespace Palengke.BangSak.UI
             return panel.transform;
         }
 
-        private Button CreateButton(Transform parent, string label, Vector2 position, Vector2 size, Color color, UnityEngine.Events.UnityAction onClick)
+        private Button CreateButton(
+            Transform parent,
+            string label,
+            Vector2 position,
+            Vector2 size,
+            Color color,
+            UnityEngine.Events.UnityAction onClick,
+            BangSakMenuCue cue = BangSakMenuCue.Navigate)
         {
             var buttonObject = new GameObject($"{label} Button");
             buttonObject.transform.SetParent(parent, false);
@@ -966,7 +976,8 @@ namespace Palengke.BangSak.UI
 
             var button = buttonObject.AddComponent<Button>();
             button.targetGraphic = image;
-            button.onClick.AddListener(onClick);
+            buttonObject.AddComponent<BangSakMenuCueBinding>().Configure(cue);
+            button.onClick.AddListener(() => InvokeWithCue(onClick, cue));
 
             var colors = button.colors;
             colors.highlightedColor = Color.Lerp(color, Color.white, 0.16f);
@@ -976,6 +987,12 @@ namespace Palengke.BangSak.UI
 
             CreateText(buttonObject.transform, label, Vector2.zero, size, Mathf.RoundToInt(size.y * 0.42f), FontStyle.Bold, Color.white);
             return button;
+        }
+
+        private static void InvokeWithCue(UnityEngine.Events.UnityAction action, BangSakMenuCue cue)
+        {
+            action?.Invoke();
+            BangSakMenuCuePlayer.PlayShared(cue);
         }
 
         private Text CreateText(Transform parent, string text, Vector2 position, Vector2 size, int fontSize, FontStyle fontStyle, Color color)
